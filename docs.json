@@ -1,13 +1,16 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Namespace",
+  "seo": {
+    "metatags": {}
+  },
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
     "dark": "#15803D"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.ico",
   "navigation": {
     "tabs": [
       {
@@ -15,11 +18,7 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
+            "pages": ["index", "quickstart", "development"]
           },
           {
             "group": "Essentials",
@@ -39,9 +38,7 @@
         "groups": [
           {
             "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
+            "pages": ["api-reference/introduction"]
           },
           {
             "group": "Endpoint Examples",
@@ -76,27 +73,107 @@
     }
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png"
   },
   "navbar": {
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "https://t.me/+5FAwyiKOTeswNTIy"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Dev Dashboard",
+      "href": "https://dev.namespace.ninja/"
     }
   },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      {
+        "title": "Ask Perplexity",
+        "description": "Ask Perplexity about the current page",
+        "icon": "search",
+        "href": {
+          "base": "https://www.perplexity.ai/search",
+          "query": [
+            {
+              "key": "q",
+              "value": "Ask question about https://mintlify.com/docs$path.md"
+            }
+          ]
+        }
+      }
+    ]
+  },
+
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+      "x": "https://x.com/namespace_eth",
+      "github": "https://github.com/thenamespace",
+      "discord": "https://discord.gg/W5pgT3wsnv"
+    },
+    "links": [
+      {
+        "header": "Product",
+        "items": [
+          {
+            "label": "Website",
+            "href": "https://www.namespace.ninja"
+          },
+          {
+            "label": "Web App",
+            "href": "https://app.namespace.ninja"
+          },
+          {
+            "label": "Dev Portal",
+            "href": "https://dev.namespace.ninja/"
+          },
+          {
+            "label": "API Reference",
+            "href": "https://docs.namespace.ninja/"
+          }
+        ]
+      },
+      {
+        "header": "Company",
+        "items": [
+          {
+            "label": "GitHub",
+            "href": "https://github.com/thenamespace"
+          },
+          {
+            "label": "Blog",
+            "href": "https://thenamespace.substack.com/"
+          },
+          {
+            "label": "Newsletter",
+            "href": "https://paragraph.xyz/@namespace"
+          }
+        ]
+      },
+      {
+        "header": "Community",
+        "items": [
+          {
+            "label": "Twitter / X",
+            "href": "https://x.com/namespace_eth"
+          },
+          {
+            "label": "Discord",
+            "href": "https://discord.gg/W5pgT3wsnv"
+          },
+          {
+            "label": "Telegram (Builders)",
+            "href": "https://t.me/+5FAwyiKOTeswNTIy"
+          }
+        ]
+      }
+    ]
   }
 }
