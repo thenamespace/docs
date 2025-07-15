@@ -1,0 +1,90 @@
+---
+title: "Search Subnames"
+description: "Query and filter subnames using flexible search criteria. No authentication required."
+openapi: "/openapi/offchain-openapi.json POST /api/v1/subnames/search"
+---
+
+<Info>
+  Query multiple subnames with flexible search criteria. No authentication
+  required.
+</Info>
+
+## Search Options
+
+<ParamField body="parentName" type="string" required>
+  Primary parent name to search within
+</ParamField>
+
+<ParamField body="parentNames" type="array">
+  Array of parent names to search across multiple domains
+</ParamField>
+
+<ParamField body="labelSearch" type="string">
+  Search subnames by label pattern
+</ParamField>
+
+<ParamField body="owner" type="string">
+  Filter by subname owner address
+</ParamField>
+
+<ParamField body="metadata" type="object">
+  Search by metadata properties
+</ParamField>
+
+<ParamField body="page" type="number" default="1">
+  Page number for pagination
+</ParamField>
+
+<ParamField body="size" type="number" default="25">
+  Number of results per page
+</ParamField>
+
+## Request Examples
+
+<CodeGroup>
+
+```javascript Basic Search
+{
+  "parentName": "oppunk.eth",
+  "page": 1,
+  "size": 10
+}
+```
+
+```javascript Label Search
+{
+  "parentName": "oppunk.eth",
+  "labelSearch": "alice",
+  "page": 1,
+  "size": 25
+}
+```
+
+```javascript Owner Search
+{
+  "parentName": "oppunk.eth",
+  "owner": "0x1234567890123456789012345678901234567890",
+  "page": 1,
+  "size": 50
+}
+```
+
+```javascript Multiple Domains
+{
+  "parentNames": ["oppunk.eth", "example.eth"],
+  "labelSearch": "test",
+  "page": 1,
+  "size": 25
+}
+```
+
+</CodeGroup>
+
+## Response Structure
+
+The response includes pagination metadata and an array of subname objects:
+
+- **size**: Current page size
+- **page**: Current page number
+- **totalItems**: Total number of matching subnames
+- **items**: Array of subname objects matching the search criteria

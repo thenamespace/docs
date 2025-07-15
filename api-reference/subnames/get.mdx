@@ -1,0 +1,16 @@
+---
+title: "Retrieve Subname Details"
+description: "Get detailed information about a specific subname by its full name. No authentication required."
+openapi: "/openapi/offchain-openapi.json GET /api/v1/subnames/{fullSubname}"
+---
+
+<Info>
+  Retrieve detailed information about a specific subname by its full name. No
+  authentication required.
+</Info>
+
+## Path Parameters
+
+<ParamField path="fullSubname" type="string" required>
+  The complete subname to retrieve (e.g., `alice.oppunk.eth`)
+</ParamField>

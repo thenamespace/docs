@@ -1,0 +1,313 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/subnames": {
+      "post": {
+        "operationId": "SubnameNodeController_createSubname",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateSubnameRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Subname/Updated created successfully" },
+          "401": { "description": "Api key not present or invalid" }
+        },
+        "security": [{ "x-auth-token": [] }],
+        "summary": "Create a new subname or updates an existing subname ( *Api Key Required )",
+        "tags": ["Subnames"]
+      }
+    },
+    "/api/v1/subnames/{fullSubname}": {
+      "get": {
+        "operationId": "SubnameNodeController_getSingleName",
+        "parameters": [
+          {
+            "name": "fullSubname",
+            "required": true,
+            "in": "path",
+            "description": "The full subname to retrieve (e.g., subname.eth)",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the subname details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSubnameResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid subname format or length"
+          }
+        },
+        "summary": "Get a single subname by its full name",
+        "tags": ["Subnames"]
+      },
+      "delete": {
+        "operationId": "SubnameNodeController_deleteSubname",
+        "parameters": [
+          {
+            "name": "fullSubname",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Subname deleted successfully" },
+          "401": { "description": "Api key not present or invalid" },
+          "404": { "description": "Not Found - Subname not found" }
+        },
+        "security": [{ "x-auth-token": [] }],
+        "summary": "Deletes an existing subname ( *Api Key Required )",
+        "tags": ["Subnames"]
+      }
+    },
+    "/api/v1/subnames/search": {
+      "post": {
+        "operationId": "SubnameNodeController_querySubnames",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuerySubnamesRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a paged response of subnames",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuerySubnamesResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Query multiple subnames",
+        "tags": ["Subnames"]
+      }
+    }
+  },
+  "info": {
+    "title": "Subname API",
+    "description": "Offchain subname manager, an API for managing offchain subnames",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "https://offchain-manager.namespace.ninja",
+      "description": "Production server"
+    },
+    {
+      "url": "https://staging.offchain-manager.namespace.ninja",
+      "description": "Staging server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "x-auth-token": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-auth-token"
+      }
+    },
+    "schemas": {
+      "KeyValueRequest": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Text key"
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Text value"
+          }
+        },
+        "required": ["key", "value"]
+      },
+      "AddressRecordRequest": {
+        "type": "object",
+        "properties": {
+          "coin": {
+            "type": "number",
+            "description": "Coin type (e.g., 60 for ETH)"
+          },
+          "value": {
+            "type": "string",
+            "description": "Coin-specific address string",
+            "minLength": 5,
+            "maxLength": 255
+          }
+        },
+        "required": ["coin", "value"]
+      },
+      "CreateSubnameRequest": {
+        "type": "object",
+        "properties": {
+          "parentName": {
+            "type": "string",
+            "description": "Parent ENS name (e.g., oppunk.eth)",
+            "minLength": 7,
+            "maxLength": 255
+          },
+          "label": {
+            "type": "string",
+            "description": "Subname label (e.g., alice if full name is alice.oppunk.eth)",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "texts": {
+            "description": "Text records to set on the subname",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/KeyValueRequest" }
+          },
+          "addresses": {
+            "description": "Address records to set on the subname",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AddressRecordRequest" }
+          },
+          "metadata": {
+            "description": "Arbitrary metadata stored offchain or in ENS records",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/KeyValueRequest" }
+          },
+          "owner": {
+            "type": "string",
+            "description": "Address of the new subname owner (must be a valid Ethereum address)",
+            "example": "0x1234...abcd"
+          },
+          "contenthash": {
+            "type": "string",
+            "description": "Contenthash (e.g., for IPFS/IPNS/Skynet)",
+            "example": "ipfs://0xe30101701220eec561a728cb61c29cfae..."
+          },
+          "ttl": { "type": "number", "description": "TTL value in seconds" }
+        },
+        "required": ["parentName", "label"]
+      },
+      "GetSubnameResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the subname"
+          },
+          "fullName": {
+            "type": "string",
+            "description": "Full name of the subname (e.g., subname.eth)"
+          },
+          "parentName": {
+            "type": "string",
+            "description": "Parent name (e.g., eth)"
+          },
+          "label": {
+            "type": "string",
+            "description": "Label of the subname (e.g., subname)"
+          },
+          "texts": {
+            "type": "object",
+            "description": "Text records associated with the subname"
+          },
+          "addresses": {
+            "type": "object",
+            "description": "Address records associated with the subname"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Metadata associated with the subname"
+          },
+          "contenthash": {
+            "type": "string",
+            "description": "Content hash of the subname"
+          },
+          "namehash": {
+            "type": "string",
+            "description": "Namehash of the subname"
+          }
+        },
+        "required": [
+          "id",
+          "fullName",
+          "parentName",
+          "label",
+          "texts",
+          "addresses",
+          "metadata",
+          "namehash"
+        ]
+      },
+      "QuerySubnamesRequest": {
+        "type": "object",
+        "properties": {
+          "parentName": {
+            "type": "string",
+            "description": "Subname parent name"
+          },
+          "parentNames": {
+            "description": "List of subname parent names",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "labelSearch": {
+            "type": "string",
+            "description": "Search subnames by label"
+          },
+          "page": {
+            "type": "number",
+            "description": "Current page. Defaults to 1"
+          },
+          "size": {
+            "type": "number",
+            "description": "Page size. Defaults to 25"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Search by subname ownership"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Search by metadata properties"
+          }
+        },
+        "required": ["parentName"]
+      },
+      "QuerySubnamesResponse": {
+        "type": "object",
+        "properties": {
+          "size": { "type": "number", "description": "Page size" },
+          "page": { "type": "number", "description": "Current page" },
+          "totalItems": {
+            "type": "number",
+            "description": "Total subnames with the seach query"
+          },
+          "items": {
+            "description": "List of subname response",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/GetSubnameResponseDto" }
+          }
+        },
+        "required": ["size", "page", "totalItems", "items"]
+      }
+    }
+  }
+}

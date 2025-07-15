@@ -35,18 +35,19 @@
       },
       {
         "tab": "API Reference",
+        "icon": "terminal",
         "groups": [
           {
             "group": "API Documentation",
             "pages": ["api-reference/introduction"]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "Offchain Subnames",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/subnames/get",
+              "api-reference/subnames/create",
+              "api-reference/subnames/delete",
+              "api-reference/subnames/search"
             ]
           }
         ]
@@ -55,14 +56,14 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "App",
+          "href": "https://app.namespace.ninja",
+          "icon": "desktop"
         },
         {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
+          "anchor": "Dev Portal",
+          "href": "https://dev.namespace.ninja/",
+          "icon": "terminal"
         },
         {
           "anchor": "Blog",
