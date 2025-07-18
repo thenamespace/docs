@@ -1,0 +1,50 @@
+---
+title: How the Infrastructure Works
+description: Overview of Namespace L2 Subnames activation, minting, and resolution processes
+---
+
+# Namespace L2 Subnames Infrastructure
+
+This page describes the process of how L2 activation and subname minting works in Namespace.
+
+The whole process is separated between offchain servers and smart contracts deployed on multiple chains.
+
+Everything starts with the user activating a name on the Namespace platform.
+
+## 1. Activating an ENS Name
+
+Creating an L2 activation involves:
+
+1. Storing the activation configuration on an offchain backend server
+2. Deploying ERC721 Registry contract on selected L2 chain
+3. Updating activated ENS name on L1 with a special offchain resolver contract
+
+The offchain backend server controls which wallet is allowed to activate an ENS name, so whenever a user wants to activate their ENS name, they will need to sign a message proving ownership of the address. Using this information, the backend checks if the wallet address is the rightful ENS name owner before allowing it to activate a name and deploy the ERC721 registry contract for a given ENS name.
+
+**High-level overview:**
+
+<img src="images/l2-activation-flow.png" alt="L2 Activation Flow" />
+
+## 2. Minting L2 Subname
+
+Subname minting process is controlled by an offchain server. Since the activation configuration has complex rules (prices based on complex label rules, whitelisting, token-gated access, name reservation, etc.), whenever an address wants to mint a subname, it will have to create a request towards an offchain server. The server will respond with minting parameters and a signature. The signature is used so that the smart contract can verify that minting parameters are coming from a valid source.
+
+So the minting process consists of:
+
+1. Request signed minting parameters from offchain server
+2. Call the contracts with the provided parameters and mint a subname
+
+**High-level overview:** (Diagram placeholder - add visual representation of the minting flow)
+
+## 3. Subname Resolution
+
+All minted subnames, even though they do not come from official ENS contracts, are resolvable to all clients that support Wildcard resolution (wallets, dApps, etc.). This is achieved using [ENSIP-10 Wildcard Resolution](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution) and the CCIP-Read protocol.
+
+As per ENSIP-10, the resolution always starts on L1:
+
+1. The client first calls the ENS registry to try to fetch a resolver address for a given name.
+2. If the Registry returns `address(0)` for a resolver, the client will strip the label from the left side and try again.
+3. If the proper registry is found, the client is going to call a "resolve" function.
+4. Since the OffchainResolver contract uses the CCIP-Read protocol, the function call will revert with OffchainLookup, pointing the client to a gateway which will return the proper data.
+
+For more on CCIP-Read: [EIP-3668](https://eips.ethereum.org/EIPS/eip-3668)

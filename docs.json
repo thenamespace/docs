@@ -14,15 +14,85 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Overview",
         "groups": [
           {
-            "group": "Get Started",
-            "pages": ["index", "quickstart", "development"]
+            "group": "Introduction",
+            "pages": ["index", "quickstart"]
           },
           {
-            "group": "Essentials",
+            "group": "Concepts",
             "pages": [
+              "overview/what-is-ens",
+              "overview/ecosystem",
+              "overview/use-cases",
+              "overview/how-infra-works"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "User Guide",
+        "groups": [
+          {
+            "group": "Namespace App",
+            "pages": [
+              "user-guide/app",
+              "user-guide/app/search-register",
+              "user-guide/app/registration-wizard",
+              "user-guide/app/manage-names",
+              "user-guide/app/widget",
+              "user-guide/app/subpages-starter-kit"
+            ]
+          },
+          {
+            "group": "Dev App (Power Users)",
+            "pages": [
+              "user-guide/dev-app",
+              "user-guide/dev-app/list-ens-names",
+              "user-guide/dev-app/register-subnames",
+              "user-guide/dev-app/view-issued-subnames",
+              "user-guide/dev-app/update-resolver",
+              "user-guide/dev-app/get-api-keys"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Developer Guide",
+        "groups": [
+          {
+            "group": "API Reference",
+            "pages": [
+              "api-reference/introduction",
+              "api-reference/subnames/get",
+              "api-reference/subnames/create",
+              "api-reference/subnames/delete",
+              "api-reference/subnames/search"
+            ]
+          },
+          {
+            "group": "SDKs",
+            "pages": [
+              "developer-guide/sdks/mint-sdk",
+              "developer-guide/sdks/offchain-sdk",
+              "developer-guide/sdks/indexer-sdk",
+              "developer-guide/sdks/install-setup",
+              "developer-guide/sdks/usage-examples"
+            ]
+          },
+          {
+            "group": "Dev App (Developer Features)",
+            "pages": [
+              "developer-guide/dev-app/integrate-api-sdk",
+              "developer-guide/dev-app/manage-subnames-programmatically",
+              "developer-guide/dev-app/update-resolver-api"
+            ]
+          },
+          {
+            "group": "Development Essentials",
+            "pages": [
+              "development",
               "essentials/markdown",
               "essentials/code",
               "essentials/images",
@@ -34,21 +104,34 @@
         ]
       },
       {
-        "tab": "API Reference",
-        "icon": "terminal",
+        "tab": "How-To & Tutorials",
         "groups": [
           {
-            "group": "API Documentation",
-            "pages": ["api-reference/introduction"]
+            "group": "How-To Guides",
+            "pages": [
+              "how-to/mint-l1-l2-subnames",
+              "how-to/generate-api-key",
+              "how-to/tokenize-web2-domains",
+              "how-to/mint-subnames-website",
+              "how-to/sell-ens-widget"
+            ]
           },
           {
-            "group": "Offchain Subnames",
+            "group": "Demos",
             "pages": [
-              "api-reference/subnames/get",
-              "api-reference/subnames/create",
-              "api-reference/subnames/delete",
-              "api-reference/subnames/search"
+              "demos/tokenize-web2-domains",
+              "demos/mint-subnames-website",
+              "demos/sell-ens-widget"
             ]
+          }
+        ]
+      },
+      {
+        "tab": "Reference & Support",
+        "groups": [
+          {
+            "group": "Reference",
+            "pages": ["reference/faqs"]
           }
         ]
       }
