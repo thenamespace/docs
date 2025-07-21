@@ -39,14 +39,15 @@
             "pages": [
               "user-guide/app",
               "user-guide/app/search-register",
-              "user-guide/app/registration-wizard",
+              "user-guide/app/wizard",
+              "user-guide/app/features-list",
               "user-guide/app/manage-names",
               "user-guide/app/widget",
-              "user-guide/app/subpages-starter-kit"
+              "user-guide/app/subpages"
             ]
           },
           {
-            "group": "Dev App (Power Users)",
+            "group": "Dev App",
             "pages": [
               "user-guide/dev-app",
               "user-guide/dev-app/list-ens-names",

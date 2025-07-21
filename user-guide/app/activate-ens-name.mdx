@@ -1,0 +1,115 @@
+---
+description: Steps to successfully activate an ENS Name and start minting subnames!
+---
+
+# Activate an ENS Name
+
+Activating your ENS Name(s) on the Namespace platforms allows you, and your community or your users, to mint subnames from that name. Subnames can be minted on **Ethereum, Base, or Optimism,** and in the future, we'll support more chains.
+
+## Important to know
+
+<Callout intent="info">
+  To mint subnames from 1) Namespace platform, 2) ENS Widget, 3) Farcaster
+  frame, or 4) using our SDK, you need to activate that ENS Name first on our
+  platform using the Wizard!
+</Callout>
+
+## Activating an ENS Name
+
+1. Go to [https://app.namespace.ninja/](https://app.namespace.ninja/).
+2. Connect your wallet that has an ENS name you want to activate and issue Subnames from it
+   1. In this example, I'll activate `ninjademo.eth`
+3. Click on the "Account" icon in the navigation bar (next to Wallet Connect)
+4. Click on the "Wizard" tab
+5. Click on the "+Activate"
+
+<img
+  src="images/screenshot-2025-06-24-132938.png"
+  alt="Activate ENS Name step 1"
+/>
+
+6. Select the Name you want to activate and issue subnames from.
+   1. As we said, for us it's ninjademo.eth
+
+<img
+  src="images/screenshot-2025-06-24-133207.png"
+  alt="Select ENS Name to activate"
+/>
+
+## Choose from Two different options
+
+1. Activate the name and issue subnames on Ethereum
+2. Activate the name and issue subnames on L2s (Base, Optimism, etc.)
+   1. I'll use Base as an example.
+
+<img
+  src="images/screenshot-2025-06-24-133323.png"
+  alt="Choose L2 for subnames"
+/>
+
+## Activate and Mint on L2 chain
+
+Activating an ENS name so that people can mint subnames on L2 chains involves deploying a registry on that L2 chain and other customizations. Let's walk through the entire setup.
+
+1. **Step:** Select "Issue L2 Subnames"
+
+<img src="images/screenshot-2025-06-24-133537.png" alt="Issue L2 Subnames" />
+
+**Setup**:
+
+- Give your listing a name (collection name, could be anything)
+- Give your listing a symbol (token symbol, could be anything)
+- Decide if you want to retain the ability to take away ownership from someone who mints a subname by having the ability to burn subnames from that collection.
+- Choose if you want to 'Rent' them, in which case all prices set up in the next step would apply on a 'per year' basis.
+
+2. **Step**: Define the minting price for Subnames.
+
+<img src="images/screenshot-2025-06-24-133721.png" alt="Define minting price" />
+
+- Base minting price - general price for all subnames
+- Price based on length - custom pricing for subnames based on their length
+- Special subname price rules for Subnames containing:
+  - Numbers-only
+  - Letter-only
+  - Emoji-only
+
+3. **Step**: Reserve (blacklist) some Subnames from being minted, or making them mintable but for a special price. You can blacklist some swear words, and you can reserve names for your team members, community members, etc.
+
+<img
+  src="images/screenshot-2025-06-24-134030.png"
+  alt="Reserve or blacklist subnames"
+/>
+
+4. **Step:** Optionally set a Deadline which allows you to control at which date and time in the future the minting will stop.
+
+<img src="images/screenshot-2025-06-24-134220.png" alt="Set minting deadline" />
+
+5. **Step:** Two Whitelisting options you can choose from:
+
+<img src="images/screenshot-2025-06-24-134110.png" alt="Whitelisting options" />
+
+- Only whitelisted wallet addresses will be able to mint a Subname
+- Whitelisted wallet addresses can be minted for free and everyone else will have to pay for the prices you had set up in the "Minting Price" customization.
+
+6. **Step:** The last one is Token-gated minting, which allows you to token-gate who gets to mint a Subname from the ENS name you're listing by requiring them to hold:
+
+<img src="images/screenshot-2025-06-24-134200.png" alt="Token-gated minting" />
+
+- A certain amount of some ERC20 token
+- Some specific ERC721 tokens (NFTs usually from some collection)
+
+That's all.
+
+---
+
+Once you're happy with everything, just click on "List Name" and you're good to go. People can now mint subnames from your ENS Name through:
+
+1. Namespace platform ([app.namespace.ninja/"yourENSname.eth"](https://app.namespace.ninja/))
+2. Custom-built solution you build yourself (your wallet, game, community page, etc.) [using our SDK](../../../dev-docs/sdk/)
+3. [ENS Widget](../ens-widget.md) - you can configure and add to your website/blog and allow people to mint subnames directly from there
+4. [Farcaster Frame](../farcaster-frames/) - you can create a Frame through which people will be able to mint subnames
+5. [Subpage](https://github.com/thenamespace/subpages) - you can create your own custom-branded Subname minting website with our pre-built template, with subname registrations embedded.
+
+**If you need any help, let your ninjas know in our** [**Namespace Devs**](https://t.me/+oN2UXSbd-C42NWNi) **Telegram group chat**
+
+## 🥷🥷🥷
