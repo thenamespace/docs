@@ -41,7 +41,6 @@
               "user-guide/app/search-register",
               "user-guide/app/wizard",
               "user-guide/app/features-list",
-              "user-guide/app/manage-names",
               "user-guide/app/widget",
               "user-guide/app/subpages"
             ]
@@ -50,11 +49,10 @@
             "group": "Dev App",
             "pages": [
               "user-guide/dev-app",
-              "user-guide/dev-app/list-ens-names",
-              "user-guide/dev-app/register-subnames",
-              "user-guide/dev-app/view-issued-subnames",
-              "user-guide/dev-app/update-resolver",
-              "user-guide/dev-app/get-api-keys"
+
+              "user-guide/dev-app/subnames",
+              "user-guide/dev-app/resolver-set",
+              "user-guide/dev-app/api-keys"
             ]
           }
         ]
@@ -89,18 +87,6 @@
               "developer-guide/dev-app/manage-subnames-programmatically",
               "developer-guide/dev-app/update-resolver-api"
             ]
-          },
-          {
-            "group": "Development Essentials",
-            "pages": [
-              "development",
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
-            ]
           }
         ]
       },
@@ -110,6 +96,7 @@
           {
             "group": "How-To Guides",
             "pages": [
+              "how-to/guide",
               "how-to/mint-l1-l2-subnames",
               "how-to/generate-api-key",
               "how-to/tokenize-web2-domains",
