@@ -11,6 +11,11 @@
     "dark": "#15803D"
   },
   "favicon": "/favicon.ico",
+  "integrations": {
+    "posthog": {
+      "apiKey": "phc_m34ZAW7cLSFC3o4eipnrMG3GONeV40GXARnD3bJCap7"
+    }
+  },
   "navigation": {
     "tabs": [
       {
