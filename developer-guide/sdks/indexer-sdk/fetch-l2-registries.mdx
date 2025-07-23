@@ -1,0 +1,29 @@
+# Fetch L2 Registries
+
+## getL2Registry
+
+Fetches the information about the deployed NFT registry for an ENS name on a specific L2 network using its `chainId` and either the name or namehash.
+
+### Usage
+
+```typescript
+client.getL2Registry({
+  chainId: 8453,
+  nameOrNamehash: "example.eth",
+});
+```
+
+### Return Type
+
+```typescript
+export interface L2RegistryResponse {
+  name: string; // ENS subname (e.g., "alice.example.eth")
+  owner: string; // Address of the subname owner
+  tokenSymbol: string; // Symbol of the ERC-721 token (e.g., "OPN")
+  tokenName: string; // Name of the ERC-721 token (e.g., "Oppunk Names")
+  tokenAddress: string; // Address of the subname contract on L2
+  is_expirable: boolean; // Whether the subnames have an expiry date
+  is_burnable: boolean; // Whether the subnames can be burned
+  chain_id: number; // ID of the L2 network
+}
+```

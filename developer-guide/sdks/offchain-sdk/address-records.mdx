@@ -1,0 +1,42 @@
+# AddressRecords
+
+These methods allow you to add, update, or delete blockchain address records associated with a subname.
+
+### 1. addAddressRecord
+
+The `addAddressRecord` method adds or updates an address record for the specified subname on the given blockchain network.
+
+### Usage Example
+
+```typescript
+client.addAddressRecord({
+  subname: "ns.myensname.eth",
+  chain: ChainName.Ethereum,
+  value: "0x0123...",
+});
+```
+
+- `subname`: The full ENS subname (e.g., `"ns.myensname.eth"`).
+- `chain`: A value from the `ChainName` enum representing the target blockchain.
+- `value`: The address to associate with the subname for the specified chain.
+
+### 2. deleteAddressRecord
+
+The `deleteAddressRecord` method removes an address record for a specific blockchain from a given subname.
+
+- `subname`: The full ENS subname.
+- `chain`: The blockchain network whose address record should be removed.
+
+<Hint type="info">
+  <strong>Note:</strong> Removing an address record will disassociate the
+  blockchain address from the subname but does not affect other records.
+</Hint>
+
+### Usage Example
+
+```typescript
+client.deleteAddressRecord({
+  subname: "ns.myensname.eth",
+  chain: ChainName.Ethereum,
+});
+```

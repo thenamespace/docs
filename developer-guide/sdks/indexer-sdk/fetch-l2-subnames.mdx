@@ -1,0 +1,97 @@
+# Fetch L2 Subnames
+
+Indexer has methods for fetching single or multiple L2 subnames.
+
+## 1. **getL2Subname**
+
+The `getL2Subname` method retrieves a single subname registered on an L2 chain.
+
+### Usage
+
+```typescript
+const response = await client.getL2Subname({
+  chainId: 8453,
+  namehashOrName: "namespace.eth",
+});
+```
+
+- `chainId`: The id of the target L2 network (e.g., `base(8453)`, `optimism(10)`, `baseSepolia(84532)`)
+- `namehashOrName`: Name or namehash representation of an ENS name
+
+### Return Type
+
+```typescript
+export interface L2SubnameResponse {
+  name: string;
+  namehash: string;
+  label: string;
+  parentNamehash: string;
+  owner: string;
+  texts: Record<string, string>;
+  addresses: Record<string, string>;
+  contenthash?: string;
+  chainId: number;
+  expiry: number;
+  mintTransaction?: {
+    price: number;
+    paymentReceiver: string;
+  };
+}
+```
+
+### Field Description
+
+| Field                | Description                                                                           |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| `name`               | Full subname (e.g., `alice.oppunk.eth`)                                               |
+| `namehash`           | ENS-compatible namehash of the subname                                                |
+| `label`              | The label (left-most part) of the subname                                             |
+| `parentNamehash`     | Namehash of the parent domain (e.g., `oppunk.eth`)                                    |
+| `owner`              | Ethereum address of the current owner                                                 |
+| `texts`              | Map of text records associated with the subname                                       |
+| `addresses`          | Map of address records (coin type → address)                                          |
+| `contenthash`        | Optional content hash (e.g., IPFS, Arweave link)                                      |
+| `chainId`            | Chain ID where the subname is registered (e.g., `8453` for Base)                      |
+| `expiry`             | Unix timestamp indicating when the subname will expire (0 for non-expirable subnames) |
+| `mintTransaction`    | Optional object describing the minting transaction                                    |
+| ├─ `price`           | Minting price in ETH                                                                  |
+| └─ `paymentReceiver` | Ethereum address that received the mint payment                                       |
+
+## 2. **getL2Subnames**
+
+The `getL2Subnames` method allows you to retrieve a paginated list of Layer 2 (L2) subnames based on various filter criteria.
+
+### Usage
+
+```typescript
+client.getL2Subnames({
+  chainId: 8453, // base
+  parentName: "example.eth",
+  pageSize: 200,
+});
+```
+
+### Query Parameters
+
+```typescript
+export interface GetL2SubnamesQuery {
+  owner?: string;
+  chainId?: number;
+  page?: number;
+  size?: number;
+  parent?: string;
+  isTestnet?: boolean;
+  stringSearch?: string;
+}
+```
+
+### Return Type
+
+```typescript
+export interface L2SubnamePagedResponse {
+  items: L2SubnameResponse[];
+  totalItems: number;
+  page: number;
+  pageSize: number;
+}
+```

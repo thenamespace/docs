@@ -1,0 +1,51 @@
+# Installation
+
+Install the required packages, depending on your package manager:
+
+<Tabs>
+<Tab title="Npm">
+
+```bash
+npm install @namespacesdk/mint-manager@latest viem
+```
+
+</Tab>
+<Tab title="Yarn">
+
+```bash
+yarn add @namespacesdk/mint-manager@latest viem
+```
+
+</Tab>
+</Tabs>
+
+Create an instance of mint client with a proper configuration:
+
+```typescript
+import {
+  MintClientConfig,
+  createMintClient,
+  MintClient,
+} from "@namespacesdk/mint-manager";
+
+const TOKEN = process.env.ALCHEMY_TOKEN;
+
+const clientConfig: MintClientConfig = {
+  isTestnet: false,
+  customRpcUrls: {
+    [mainnet.id]: `https://eth-mainnet.g.alchemy.com/v2/${TOKEN}`,
+    [base.id]: `https://base-mainnet.g.alchemy.com/v2/${TOKEN}`,
+  },
+  mintSource: "my-perfect-app",
+};
+
+const mintClient: MintClient = createMintClient(clientConfig);
+```
+
+### MintClientConfig
+
+| Parameter     | Default       | Description                                                                                                                                                                                    |
+| ------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| isTestnet     | false         | Specifies whether the testnet app is used or not.                                                                                                                                              |
+| customRpcUrls | undefined     | Sets a map of chain.id - rpc urls that a mint client is going to use when making external calls. If the rpc url is not specified, the client will default to a public client for a given chain |
+| mintSource    | namespace-sdk | When a subname is minted, the mint event also emits a source parameter which is useful to track where the subname mints are coming from                                                        |

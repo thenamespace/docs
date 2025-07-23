@@ -1,0 +1,70 @@
+# GetFilteredSubnames
+
+The `getFilteredSubnames` method allows you to retrieve a list of subnames based on various filtering parameters such as label search, owner, pagination, and metadata.
+
+### Request Interface
+
+To use this method, provide a `QuerySubnamesRequest` object containing your desired filters.
+
+```typescript
+export interface QuerySubnamesRequest {
+  parentName?: string;
+  parentNames?: string;
+  labelSearch?: string;
+  page?: number;
+  size?: number;
+  metadata?: Record<string, string>;
+  owner?: string;
+}
+```
+
+- `parentName`: The ENS name under which to search for subnames.
+- `parentNames`: The list of ENS names under which to search for subnames.
+- `labelSearch`: Optional substring to match against subname labels.
+- `page`: Optional page number for paginated results (default is 1).
+- `size`: Optional page size (number of items per page).
+- `metadata`: Optional metadata key-value filters.
+- `owner`: Optional Ethereum address to filter subnames by owner.
+
+<Hint type="info">
+  It is mandatory to provide either <code>parentName</code> or{" "}
+  <code>parentNames</code> parameter in a request.
+</Hint>
+
+### **Usage Example**
+
+```typescript
+client.getFilteredSubnames({ parentName: "myensname.eth", labelSearch: "ns" });
+```
+
+### **Return Type**
+
+The method returns a paginated response containing a list of subnames.
+
+```typescript
+export interface PagedResponse<SubnameResponse> {
+  page: number;
+  size: number;
+  items: SubnameResponse[];
+  totalItems: number;
+}
+
+export interface SubnameResponse {
+  id: string;
+  fullName: string;
+  parentName: string;
+  label: string;
+  texts: Record<string, string>;
+  addresses: Record<string, string>;
+  metadata: Record<string, string>;
+  contenthash?: string;
+  namehash: string;
+  owner?: string;
+}
+```
+
+- `page`: Current page number.
+- `size`: Number of items per page.
+- `items`: Array of subnames matching the filters.
+- `totalItems`: Total number of matching subnames.
+- `SubnameResponse`: Detailed info for each subname.

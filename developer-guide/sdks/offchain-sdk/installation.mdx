@@ -1,0 +1,32 @@
+# Installation
+
+<Tabs>
+<Tab title="Npm">
+
+```bash
+npm install @namespacesdk/offchain-manager
+```
+
+</Tab>
+<Tab title="Yarn">
+
+```bash
+yarn add @namespacesdk/offchain-manager
+```
+
+</Tab>
+</Tabs>
+
+### Creating client
+
+The `createOffchainClient` function sets up an Offchain Client.
+
+```typescript
+import { createOffchainClient } from "@namespacesdk/offchain-manager";
+
+const client = createOffchainClient({
+  timeout: 5000,
+});
+
+client.setApiKey("example.eth", "your-api-key");
+```

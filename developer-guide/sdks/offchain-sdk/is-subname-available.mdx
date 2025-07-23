@@ -1,0 +1,20 @@
+# IsSubnameAvailable
+
+The `isSubnameAvailable` method allows you to check whether a specific subname is available for registration.
+
+### Usage Example
+
+```typescript
+const response = client.isSubnameAvailable("ns.myensname.eth");
+const isAvailable = response.isAvailable;
+```
+
+### **Return Type**
+
+```typescript
+export interface GetAvailableResponse {
+  isAvailable: boolean;
+}
+```
+
+`isAvailable` — A boolean value indicating whether the provided subname is available (`true`) or already taken (`false`).

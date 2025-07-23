@@ -71,19 +71,42 @@
           {
             "group": "SDKs",
             "pages": [
-              "developer-guide/sdks/mint-sdk",
-              "developer-guide/sdks/offchain-sdk",
-              "developer-guide/sdks/indexer-sdk",
-              "developer-guide/sdks/install-setup",
-              "developer-guide/sdks/usage-examples"
-            ]
-          },
-          {
-            "group": "Dev App (Developer Features)",
-            "pages": [
-              "developer-guide/dev-app/integrate-api-sdk",
-              "developer-guide/dev-app/manage-subnames-programmatically",
-              "developer-guide/dev-app/update-resolver-api"
+              "developer-guide/sdks/introduction",
+              {
+                "group": "Mint SDK",
+                "pages": [
+                  "developer-guide/sdks/mint-manager",
+                  "developer-guide/sdks/mint-sdk/installation",
+                  "developer-guide/sdks/mint-sdk/get-mint-details",
+                  "developer-guide/sdks/mint-sdk/get-mint-transaction-parameters",
+                  "developer-guide/sdks/mint-sdk/is-subname-available"
+                ]
+              },
+              {
+                "group": "Offchain SDK",
+                "pages": [
+                  "developer-guide/sdks/offchain-manager",
+                  "developer-guide/sdks/offchain-sdk/installation",
+                  "developer-guide/sdks/offchain-sdk/generate-api-key",
+                  "developer-guide/sdks/offchain-sdk/create-update-subname",
+                  "developer-guide/sdks/offchain-sdk/delete-subname",
+                  "developer-guide/sdks/offchain-sdk/is-subname-available",
+                  "developer-guide/sdks/offchain-sdk/get-filtered-subnames",
+                  "developer-guide/sdks/offchain-sdk/address-records",
+                  "developer-guide/sdks/offchain-sdk/chainname",
+                  "developer-guide/sdks/offchain-sdk/text-records",
+                  "developer-guide/sdks/offchain-sdk/data-records"
+                ]
+              },
+              {
+                "group": "Indexer SDK",
+                "pages": [
+                  "developer-guide/sdks/indexer-manager",
+                  "developer-guide/sdks/indexer-sdk/installation",
+                  "developer-guide/sdks/indexer-sdk/fetch-l2-subnames",
+                  "developer-guide/sdks/indexer-sdk/fetch-l2-registries"
+                ]
+              }
             ]
           }
         ]

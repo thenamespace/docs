@@ -1,0 +1,24 @@
+# IsSubnameAvailable
+
+**IsSubnameAvailable** function is used to check for the availability of a subname before minting is attempted. Subnames which are already registered cannot be minted.
+
+### IsL1SubnameAvailable
+
+Used to check the availability of a subname when minting happens on the L1 Chain.
+
+```typescript
+public async isL1SubnameAvailable(
+  subname: string,
+): Promise<boolean>
+```
+
+### IsL2SubnameAvailable
+
+Used to check the availability of a subname when minting happens on the L2 Chain.
+
+```typescript
+public async isL2SubnameAvailable(
+  subname: string,
+  chainId: number
+): Promise<boolean>
+```

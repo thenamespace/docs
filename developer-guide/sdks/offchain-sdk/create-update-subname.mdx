@@ -1,0 +1,78 @@
+# Create or Update Subname
+
+### **CreateSubname**
+
+The `createSubname` method allows you to create a subname under an existing ENS name. It accepts a `CreateSubnameRequest` object containing all the necessary data for the subname, including text records, address records, and other metadata.
+
+### **Request Interface**
+
+```typescript
+import { ChainName } from "@namespacesdk/offchain-manager";
+
+export interface CreateSubnameRequest {
+  parentName: string;
+  label: string;
+  texts?: KeyValueRequest[];
+  addresses?: AddressRecordRequest[];
+  metadata?: KeyValueRequest[];
+  contenthash?: string;
+  owner?: string;
+}
+
+export interface KeyValueRequest {
+  key: string;
+  value: string;
+}
+
+export interface AddressRecordRequest {
+  chain: ChainName;
+  value: string;
+}
+```
+
+#### Chain Mapping
+
+The [`ChainName`](addressrecords/chainname) enum is used to map blockchain networks to their corresponding SLIP-0044 coin types, which are used internally by ENS to store address records.
+
+### Usage Example
+
+```typescript
+import { ChainName } from "@namespacesdk/offchain-manager";
+
+client.createSubname({
+  label: "subname",
+  parentName: "example.eth",
+  textRecords: [
+    { key: "avatar", value: "avatar url..." },
+    { key: "name", value: "superman" },
+  ],
+  addressRecords: [
+    { chain: ChainName.Ethereum, value: "0x123..." },
+    { chain: ChainName.Bitcoin, value: "qgds..." },
+  ],
+});
+```
+
+### **UpdateSubname**
+
+The `updateSubname` method allows you to update an existing subname's data, including text records, address records, content hash, and metadata.
+
+### **Request Interface**
+
+```typescript
+export interface UpdateSubnameRequest {
+  texts?: TextRecord[];
+  addresses?: AddressRecord[];
+  metadata?: TextRecord[];
+  contenthash?: string;
+  ttl?: number;
+}
+```
+
+### Usage Example
+
+```typescript
+client.updateSubname("superman.namespace.eth", {
+  textRecords: [{ key: "avatar", value: "updated-avatar" }],
+});
+```

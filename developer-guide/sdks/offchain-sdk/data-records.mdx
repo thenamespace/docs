@@ -1,0 +1,55 @@
+---
+description: >-
+  Data Record methods allow for fetching, adding, updating, or deleting key-value data records for a given subname.
+---
+
+# DataRecords
+
+Data Records are key-value pairs that are not necessarily needed or used for ENS Resolution, but can be helpful for storing metadata which can be used for filtering.
+
+**addDataRecord** method adds a data record to the subname.
+
+#### Usage
+
+```typescript
+client.addDataRecord({
+  subname: "ns.myensname.eth",
+  key: "data",
+  data: "HODL ENS!",
+});
+```
+
+**deleteDataRecord** method deletes a data record from the subname.
+
+#### Usage
+
+```typescript
+client.deleteDataRecord({ subname: "ns.myensname.eth", key: "data" });
+```
+
+**getDataRecords** method returns all data records of the provided subname.
+
+#### Usage
+
+```typescript
+client.getDataRecords("ns.myensname.eth");
+```
+
+**getDataRecord** method returns the requested data record of the provided subname.
+
+#### Usage
+
+```typescript
+const response = await client.getDataRecord("ns.myensname.eth", "data");
+const data = response.record;
+```
+
+#### Return Type
+
+```typescript
+export interface GetRecordResponse {
+  record: string;
+}
+```
+
+- `record`: Value of the requested data record.

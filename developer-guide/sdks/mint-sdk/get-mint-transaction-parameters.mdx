@@ -1,0 +1,59 @@
+# GetMintTransactionParameters
+
+**GetMintTransactionParameters** is a function which generates all the required parameters needed to send a successful transaction and mint a subname on a given chain.
+
+### Usage
+
+```typescript title="index.ts" data-overflow="wrap"
+import {
+  MintTransactionRequest,
+  MintTransactionResponse,
+} from "@namespacesdk/mint-manager";
+
+const request: MintTransactionRequest = {
+  parentName: "namespace.eth",
+  label: "superman",
+  owner: "0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8", // optional
+  minterAddress: "0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8",
+  expiryInYears: 1, // optional
+  records: {
+    texts: {
+      name: "Superman",
+      avatar: "https://my-avatar-uri",
+      description: "I am superman",
+    },
+    addresses: {
+      60: "0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8",
+    },
+  },
+};
+
+const response: MintTransactionResponse =
+  await mintClient.getMintTransactionParameters(request);
+```
+
+### MintTransactionRequest
+
+| Parameter     | Description                                                                 | Required                       |
+| ------------- | --------------------------------------------------------------------------- | ------------------------------ |
+| parentName    | Name of listed ENS name                                                     | Yes                            |
+| label         | The full subname will be `${label}.${parentName}`                           | Yes                            |
+| owner         | The owner of minted subname NFT                                             | No, defaults to minter address |
+| minterAddress | Address of a wallet which is going to perform mint transaction              | Yes                            |
+| expiryInYears | For subnames which are expirable, this is where the expiry in years is set. | No, defaults to 1 year         |
+| records       | Text and Address records to be set in the same transaction                  | No                             |
+
+### MintTransactionResponse
+
+The response object contains all the needed information that can be used to send a transaction and mint a subname.
+
+```typescript
+export interface MintTransactionResponse {
+  contractAddress: Address;
+  args: any[];
+  account: string;
+  abi: any;
+  functionName: string;
+  value: bigint;
+}
+```

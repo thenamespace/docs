@@ -1,0 +1,15 @@
+# Offchain Manager
+
+## Offchain Client
+
+An Offchain Manager is a library for interacting with subnames, text records, data records in an ENS-like system. It is built on top of Axios and provides a convenient API for managing off-chain data.
+
+The `createOffchainClient` function sets up an Offchain Client.
+
+```typescript
+import { createOffchainClient } from "@namespacesdk/offchain-manager";
+
+const client = createOffchainClient({
+  timeout: 5000,
+});
+```

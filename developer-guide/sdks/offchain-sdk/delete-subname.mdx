@@ -1,0 +1,17 @@
+# DeleteSubname
+
+The `deleteSubname` method allows you to delete an existing subname from ENS.
+
+### Usage Example
+
+```typescript
+client.deleteSubname("ns.myensname.eth");
+```
+
+This will remove the specified subname and clear any associated records such as text records, address records, and content hash.
+
+<Hint type="info">
+  <strong>Note:</strong> Deleting a subname is a permanent operation. Ensure
+  that you intend to remove the subname and its records before calling this
+  method.
+</Hint>{" "}
