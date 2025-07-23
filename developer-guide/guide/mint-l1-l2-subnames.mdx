@@ -1,0 +1,141 @@
+---
+title: How To Mint L1 & L2 subname via mint-manager
+description: Guide to minting L1 & L2 subnames using the @namespacesdk/mint-manager library
+---
+
+# How To Mint L1 & L2 subname via mint-manager
+
+This guide will show you how to implement a subname minting functionality using **@namespacesdk/mint-manager** library
+
+Namespace SDK is a TypeScript library, that can be used to interact with the Namespace API and smart contracts. It currently allows devs to mint subnames under activated ENS names and abstracts the different chain logic.
+
+### 01. Activating an ENS name
+
+The prerequisite for minting is for the parent ENS name to be activated on the Namespace platform. This can be done using the Manager on our [platform](https://dapp.namespace.ninja).
+
+### 02. Installing **@namespacesdk/mint-manager** library
+
+The second step would be to include the mint-manager dependency in our typescript project. Since the SDK uses [viem](https://viem.sh/) under the hood, we would also need to include it as a dependency.
+
+<CodeGroup>
+  <CodeGroupItem title="Npm">
+
+```bash
+npm install @namespacesdk/mint-manager@latest viem
+```
+
+  </CodeGroupItem>
+  <CodeGroupItem title="Yarn">
+
+```bash
+yarn add @namespacesdk/mint-manager viem
+```
+
+  </CodeGroupItem>
+</CodeGroup>
+
+### **03. Create and configure Instance of MintClient**
+
+```typescript title="mint-client.ts"
+import {
+  MintClientConfig,
+  createMintClient,
+  MintClient,
+} from "@namespacesdk/mint-manager";
+
+export const MY_ENS_NAME = "namespace.eth";
+const TOKEN = process.env.ALCHEMY_TOKEN;
+
+const clientConfig: MintClientConfig = {
+  customRpcUrls: {
+    [base.id]: `https://base-mainnet.g.alchemy.com/v2/${TOKEN}`,
+  },
+  mintSource: "my-ens-dapp",
+};
+export const mintClient: MintClient = createMintClient(clientConfig);
+```
+
+### **04. Create Instances of Viem Public and Wallet Client**
+
+Since we use Viem under the hood, we would need to instantiate Viem client, which will be used to actually interact with ethereum/base chain
+
+```typescript title="web3-client.ts"
+import { createPublicClient, createWalletClient } from "viem";
+import { base } from "viem/chains";
+import { privateKeyToAccount } from "viem/account";
+
+const TOKEN = process.env.ALCHEMY_TOKEN;
+const WALLET_KEY = process.env.WALLET_PRIVATE_KEY;
+const ALCHEMY_RPC = `https://base-mainnet.g.alchemy.com/v2/${TOKEN}`;
+
+const wallet = privateKeyToAccount(WALLET_KEY);
+
+export const BASE_ID = base.id;
+export const WALLET_ADDRESS = wallet.address;
+export const publicClient = createPublicClient({
+  transport: http(ALCHEMY_RPC),
+  chain: base,
+});
+
+export const walletClient = createWalletClient({
+  transport: http(ALCHEMY_RPC),
+  chain: base,
+});
+```
+
+### **05. Implement mint functionality**
+
+```typescript
+default
+import { publicClient, walletClient, MY_ENS_NAME } from "./web3-client";
+import { mintClient, BASE_ID, WALLET_ADDRESS } from "./mint-client";
+
+const ETH_COIN = 60;
+
+const mintSubname = async () => {
+   const subnameLabel = "superman";
+   // we will mint superman.namespace.eth
+   const fullName = `${subnameLabel}.${MY_ENS_NAME}`
+
+   const isAvailable = await mintClient.isL2SubnameAvailable(fullName, BASE_ID)
+   if (!isAvailable) {
+      throw new Error(`${fullName} is already taken!`);
+   }
+
+   const mintDetails = await mintClient.getMintDetails({
+      minterAddress: WALLET_ADDRESS,
+      parentName: MY_ENS_NAME,
+      label: subnameLabel
+   });
+
+   if (!mintDetails.canMint) {
+      throw new Error(`Subname cannot be minted, reason:    ${mintDetails.validationErrors[0] || "Unknown Reason"} `)
+   }
+
+   const totalPrice = mintDetails.estimatedPriceEth + mintDetails.estimatedFeeEth;
+   console.log(`The price for minting a subname will be: ${totalPrice} ETH`)
+
+   const txParameters = await mintClient.getMintTransactionParameters({
+      parentName: MY_ENS_NAME,
+      label: subnameLabel,
+      minterAddress: WALLET_ADDRESS,
+      records: {
+         addresses: {
+            [ETH_COIN]: WALLET_ADDRESS
+         }
+      }
+   })
+
+   const { request } = await publicClient.simulateContract({
+      address: txParameters.contractAddress,
+      args: txParameters.args,
+      value: txParameters.value,
+      account: WALLET_ADDRESS,
+      functionName: txParameters.functionName,
+      abi: txParameters.abi
+   })
+
+   const transactionHash = await walletClient.writeContract(request);
+   console.log(`Subname ${fullName} has been minted! Transaction hash: ${transactionHash}`)
+}
+```

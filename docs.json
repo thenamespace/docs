@@ -61,14 +61,12 @@
         "tab": "Developer Guide",
         "groups": [
           {
-            "group": "API Reference",
-            "pages": [
-              "api-reference/introduction",
-              "api-reference/subnames/get",
-              "api-reference/subnames/create",
-              "api-reference/subnames/delete",
-              "api-reference/subnames/search"
-            ]
+            "group": "Offchain API Reference",
+            "openapi": "/openapi/offchain-openapi.json"
+          },
+          {
+            "group": "Mint API Reference",
+            "openapi": "/openapi/mint-openapi.json"
           },
           {
             "group": "SDKs",
@@ -111,15 +109,6 @@
               "demos/mint-subnames-website",
               "demos/sell-ens-widget"
             ]
-          }
-        ]
-      },
-      {
-        "tab": "Reference & Support",
-        "groups": [
-          {
-            "group": "Reference",
-            "pages": ["reference/faqs"]
           }
         ]
       }
