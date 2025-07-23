@@ -1,1 +1,373 @@
-{"openapi":"3.0.0","paths":{"/api/v1/mint/estimate":{"get":{"operationId":"MintController_getEstimatedParameters","parameters":[{"name":"parentName","required":true,"in":"query","description":"The parent name (e.g., domain) under which the label will be minted.","schema":{"minLength":3,"maxLength":100,"example":"example.eth","type":"string"}},{"name":"label","required":true,"in":"query","description":"The label or subname to be minted under the parent name.","schema":{"minLength":1,"maxLength":100,"example":"subname","type":"string"}},{"name":"minterAddress","required":true,"in":"query","description":"Ethereum address of the minter.","schema":{"example":"0x1234567890abcdef1234567890abcdef12345678","type":"string"}},{"name":"isTestnet","required":false,"in":"query","description":"Indicates whether the operation is on a sepolia testnet.","schema":{"example":true,"type":"boolean"}}],"responses":{"200":{"description":"Estimated price, fee, and validation status for requested subname.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/MintEstimateResponse"}}}}},"summary":"Get estimated minting parameters and validation results","tags":["Mint Manager"]}},"/api/v1/mint":{"post":{"operationId":"MintController_generateMintParameters","parameters":[],"requestBody":{"required":true,"description":"Mint request including label, parent name, minter address, etc.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/MintParametersRequest"}}}},"responses":{"200":{"description":"Signed mint parameters ready to be used on-chain.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/SignedMintParameterersResponse"}}}}},"summary":"Generate mint parameters and return a signed payload","tags":["Mint Manager"]}}},"info":{"title":"Namespace: Minting Manager","description":"Microservice that knows all about minting.","version":"1.0","contact":{}},"tags":[],"servers":[],"components":{"schemas":{"MintEstimateResponse":{"type":"object","properties":{"canMint":{"type":"boolean","description":"Indicates if the subname can be minted.","example":true},"estimatedPriceEth":{"type":"number","description":"Estimated price in ETH for the minting operation.","example":0.01},"estimatedFeeEth":{"type":"number","description":"Estimated protocol/platform fee in ETH.","example":0.002},"isStandardFee":{"type":"boolean","description":"Indicates whether the estimated fee is a standard fixed fee.","example":true},"validationErrors":{"type":"array","description":"List of validation error types if minting is not allowed.","example":["SUBNAME_TAKEN","MINTER_NOT_WHITELISTED"],"items":{"type":"string","enum":["SUBNAME_TAKEN","MINTER_NOT_TOKEN_OWNER","MINTER_NOT_WHITELISTED","LISTING_EXPIRED","SUBNAME_RESERVED","VERIFIED_MINTER_ADDRESS_REQUIRED"]}}},"required":["canMint","estimatedPriceEth","estimatedFeeEth","isStandardFee","validationErrors"]},"MintParametersRequest":{"type":"object","properties":{"label":{"type":"string","description":"Label or subname to mint (e.g., \"satoshi\"). Must be 1-255 characters.","example":"satoshi","minLength":1,"maxLength":255},"parentName":{"type":"string","description":"Parent ENS name under which the label is being minted (e.g., \"universe.eth\").","example":"universe.eth","minLength":1,"maxLength":255},"expiryInYears":{"type":"number","description":"Optional number of years the subname will be valid for. Used for expirable names. Defaults to 1 if not provided","example":1},"minterAddress":{"type":"string","description":"Ethereum address of the minter.","example":"0x1234567890abcdef1234567890abcdef12345678"},"isTestnet":{"type":"boolean","description":"Whether the operation is being performed on a testnet.","example":true},"owner":{"type":"object","description":"Optional custom owner address of the subname (if different from minter).","example":"0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"}},"required":["label","parentName","minterAddress"]},"MintParametersResponse":{"type":"object","properties":{"label":{"type":"string","description":"Subname to mint, provided in the request.","example":"satoshi"},"owner":{"type":"object","description":"Owner of the subname to be minted.","example":"0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"},"fee":{"type":"string","description":"Fee charged by the platform to mint the requested subname (in ETH, as a string).","example":"0.002"},"price":{"type":"string","description":"Price to mint the requested subname (in ETH, as a string).","example":"0.01"},"parentNode":{"type":"string","description":"Namehash of the parent ENS name under which the subname is being minted.","example":"0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1"},"paymentReceiver":{"type":"object","description":"Recipient of the payment. Defaults to the owner of the listing.","example":"0x1234567890abcdef1234567890abcdef12345678"},"verifiedMinter":{"type":"object","description":"Address that is authorized as a verified minter. Set if the listing requires one.","example":"0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"},"signatureExpiry":{"type":"number","description":"Unix timestamp of when the minting signature will expire.","example":1726425612},"expiry":{"type":"number","description":"Unix timestamp of when the subname will expire. Defaults to max integer or follows parent name expiry.","example":4294967295},"fuses":{"type":"number","description":"Optional ENS fuses value (bitmask representing restrictions).","example":65536}},"required":["label","owner","fee","price","parentNode","paymentReceiver","verifiedMinter","signatureExpiry","expiry"]},"SignedMintParameterersResponse":{"type":"object","properties":{"content":{"description":"The structured mint parameters used for generating the signature.","allOf":[{"$ref":"#/components/schemas/MintParametersResponse"}]},"signature":{"type":"string","description":"Cryptographic signature of the mint parameters.","example":"0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef1b"}},"required":["content","signature"]}}}}
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/mint/estimate": {
+      "get": {
+        "description": "Get estimated minting parameters and validation results.",
+        "operationId": "MintController_getEstimatedParameters",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "query",
+            "description": "The parent name (e.g., domain) under which the label will be minted.",
+            "schema": {
+              "minLength": 3,
+              "maxLength": 100,
+              "example": "example.eth",
+              "type": "string"
+            }
+          },
+          {
+            "name": "label",
+            "required": true,
+            "in": "query",
+            "description": "The label or subname to be minted under the parent name.",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 100,
+              "example": "subname",
+              "type": "string"
+            }
+          },
+          {
+            "name": "minterAddress",
+            "required": true,
+            "in": "query",
+            "description": "Ethereum address of the minter.",
+            "schema": {
+              "example": "0x1234567890abcdef1234567890abcdef12345678",
+              "type": "string"
+            }
+          },
+          {
+            "name": "isTestnet",
+            "required": false,
+            "in": "query",
+            "description": "Indicates whether the operation is on a sepolia testnet.",
+            "schema": { "example": true, "type": "boolean" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estimated price, fee, and validation status for requested subname.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MintEstimateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Invalid parameters or validation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "statusCode": 400,
+                    "message": "Invalid parameters or validation failed.",
+                    "error": "Bad Request"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Listing not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "statusCode": 404,
+                    "message": "Listing not found.",
+                    "error": "Not Found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "statusCode": 500,
+                    "message": "Internal server error.",
+                    "error": "Internal Server Error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Estimate mint params",
+        "tags": ["Mint Manager"]
+      }
+    },
+    "/api/v1/mint": {
+      "post": {
+        "description": "Generate mint parameters and return a signed payload.",
+        "operationId": "MintController_generateMintParameters",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Mint request including label, parent name, minter address, etc.",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MintParametersRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signed mint parameters ready to be used on-chain.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedMintParameterersResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Validation failed or cannot mint.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "statusCode": 400,
+                    "message": "Validation failed or cannot mint.",
+                    "error": "Bad Request"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Listing not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "statusCode": 404,
+                    "message": "Listing not found.",
+                    "error": "Not Found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "statusCode": 500,
+                    "message": "Internal server error.",
+                    "error": "Internal Server Error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Generate mint params",
+        "tags": ["Mint Manager"]
+      }
+    }
+  },
+  "info": {
+    "title": "Namespace Mint Manager API",
+    "description": "API for managing onchain subname minting on L1 and L2. Supports estimation, validation, and signed parameter generation.",
+    "version": "1.0",
+    "contact": {
+      "name": "Namespace Dev Team",
+      "url": "https://namespace.ninja",
+      "email": "cap@namespace.ninja"
+    },
+    "termsOfService": "https://namespace.ninja/tos"
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "https://mint-manager.namespace.ninja",
+      "description": "Production"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "MintEstimateResponse": {
+        "type": "object",
+        "properties": {
+          "canMint": {
+            "type": "boolean",
+            "description": "Indicates if the subname can be minted.",
+            "example": true
+          },
+          "estimatedPriceEth": {
+            "type": "number",
+            "description": "Estimated price in ETH for the minting operation.",
+            "example": 0.01
+          },
+          "estimatedFeeEth": {
+            "type": "number",
+            "description": "Estimated protocol/platform fee in ETH.",
+            "example": 0.002
+          },
+          "isStandardFee": {
+            "type": "boolean",
+            "description": "Indicates whether the estimated fee is a standard fixed fee.",
+            "example": true
+          },
+          "validationErrors": {
+            "type": "array",
+            "description": "List of validation error types if minting is not allowed.",
+            "example": ["SUBNAME_TAKEN", "MINTER_NOT_WHITELISTED"],
+            "items": {
+              "type": "string",
+              "enum": [
+                "SUBNAME_TAKEN",
+                "MINTER_NOT_TOKEN_OWNER",
+                "MINTER_NOT_WHITELISTED",
+                "LISTING_EXPIRED",
+                "SUBNAME_RESERVED",
+                "VERIFIED_MINTER_ADDRESS_REQUIRED"
+              ]
+            }
+          }
+        },
+        "required": [
+          "canMint",
+          "estimatedPriceEth",
+          "estimatedFeeEth",
+          "isStandardFee",
+          "validationErrors"
+        ]
+      },
+      "MintParametersRequest": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Label or subname to mint (e.g., \"satoshi\"). Must be 1-255 characters.",
+            "example": "satoshi",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "parentName": {
+            "type": "string",
+            "description": "Parent ENS name under which the label is being minted (e.g., \"universe.eth\").",
+            "example": "universe.eth",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "expiryInYears": {
+            "type": "number",
+            "description": "Optional number of years the subname will be valid for. Used for expirable names. Defaults to 1 if not provided",
+            "example": 1
+          },
+          "minterAddress": {
+            "type": "string",
+            "description": "Ethereum address of the minter.",
+            "example": "0x1234567890abcdef1234567890abcdef12345678"
+          },
+          "isTestnet": {
+            "type": "boolean",
+            "description": "Whether the operation is being performed on a testnet.",
+            "example": true
+          },
+          "owner": {
+            "type": "object",
+            "description": "Optional custom owner address of the subname (if different from minter).",
+            "example": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"
+          }
+        },
+        "required": ["label", "parentName", "minterAddress"]
+      },
+      "MintParametersResponse": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Subname to mint, provided in the request.",
+            "example": "satoshi"
+          },
+          "owner": {
+            "type": "object",
+            "description": "Owner of the subname to be minted.",
+            "example": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"
+          },
+          "fee": {
+            "type": "string",
+            "description": "Fee charged by the platform to mint the requested subname (in ETH, as a string).",
+            "example": "0.002"
+          },
+          "price": {
+            "type": "string",
+            "description": "Price to mint the requested subname (in ETH, as a string).",
+            "example": "0.01"
+          },
+          "parentNode": {
+            "type": "string",
+            "description": "Namehash of the parent ENS name under which the subname is being minted.",
+            "example": "0xabc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1"
+          },
+          "paymentReceiver": {
+            "type": "object",
+            "description": "Recipient of the payment. Defaults to the owner of the listing.",
+            "example": "0x1234567890abcdef1234567890abcdef12345678"
+          },
+          "verifiedMinter": {
+            "type": "object",
+            "description": "Address that is authorized as a verified minter. Set if the listing requires one.",
+            "example": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"
+          },
+          "signatureExpiry": {
+            "type": "number",
+            "description": "Unix timestamp of when the minting signature will expire.",
+            "example": 1726425612
+          },
+          "expiry": {
+            "type": "number",
+            "description": "Unix timestamp of when the subname will expire. Defaults to max integer or follows parent name expiry.",
+            "example": 4294967295
+          },
+          "fuses": {
+            "type": "number",
+            "description": "Optional ENS fuses value (bitmask representing restrictions).",
+            "example": 65536
+          }
+        },
+        "required": [
+          "label",
+          "owner",
+          "fee",
+          "price",
+          "parentNode",
+          "paymentReceiver",
+          "verifiedMinter",
+          "signatureExpiry",
+          "expiry"
+        ]
+      },
+      "SignedMintParameterersResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "description": "The structured mint parameters used for generating the signature.",
+            "allOf": [{ "$ref": "#/components/schemas/MintParametersResponse" }]
+          },
+          "signature": {
+            "type": "string",
+            "description": "Cryptographic signature of the mint parameters.",
+            "example": "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef1b"
+          }
+        },
+        "required": ["content", "signature"]
+      }
+    }
+  }
+}
