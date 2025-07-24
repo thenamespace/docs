@@ -127,19 +127,8 @@
             "group": "How-To Guides",
             "pages": [
               "how-to/guide",
-              "how-to/mint-l1-l2-subnames",
-              "how-to/generate-api-key",
-              "how-to/tokenize-web2-domains",
-              "how-to/mint-subnames-website",
-              "how-to/sell-ens-widget"
-            ]
-          },
-          {
-            "group": "Demos",
-            "pages": [
-              "demos/tokenize-web2-domains",
-              "demos/mint-subnames-website",
-              "demos/sell-ens-widget"
+              "developer-guide/guide/mint-l1-l2-subnames",
+              "user-guide/app/activate-ens-name"
             ]
           }
         ]
