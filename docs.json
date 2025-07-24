@@ -44,6 +44,7 @@
             "pages": [
               "user-guide/app",
               "user-guide/app/search-register",
+              "user-guide/app/activate-ens-name",
               "user-guide/app/wizard",
               "user-guide/app/features-list",
               "user-guide/app/widget",
