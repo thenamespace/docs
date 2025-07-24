@@ -66,6 +66,10 @@
         "tab": "Developer Guide",
         "groups": [
           {
+            "group": "API Reference",
+            "pages": ["api-reference/introduction"]
+          },
+          {
             "group": "Offchain API Reference",
             "openapi": "/openapi/offchain-openapi.json"
           },

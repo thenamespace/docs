@@ -1,65 +1,87 @@
 ---
-title: "Introduction"
-description: "API reference for the Offchain Manager - manage offchain ENS subnames. It allows clients to create, update, delete, and retrieve subnames and their associated records. This documentation covers only the Offchain API endpoints as defined in the OpenAPI spec."
+title: "API Reference"
+description: "API reference for the Mint Manager and Offchain Manager (Subnames) APIs."
 ---
 
 <Note>
-  This documentation covers the <strong>Offchain Manager API endpoints</strong>{" "}
-  for managing offchain ENS subnames. It is{" "}
-  <strong>not a reference for all Namespace APIs</strong>. All endpoints and
-  schemas are sourced directly from the OpenAPI spec (
-  <code>offchain-openapi.json</code>).
+  This documentation covers the <strong>Mint Manager</strong> and{" "}
+  <strong>Offchain Manager (Subnames)</strong> API endpoints for ENS subnames.
+
 </Note>
 
 ## Authentication
 
-API endpoints that require authentication use API key authentication via the `x-auth-token` header. You can generate API keys through the [Namespace Dev Portal](https://dev.namespace.ninja/).
+Some endpoints require authentication via API key using the `x-auth-token` header. You can generate API keys through the [Namespace Dev Portal](https://dev.namespace.ninja/).
 
 ```bash
 x-auth-token: YOUR_API_KEY
 ```
 
-Required for:
+---
 
-- Creating subnames
-- Deleting subnames
+## Mint Manager API
 
-## Key Features
+The Mint Manager API allows you to estimate and generate mint parameters for ENS subnames.
 
 <CardGroup cols={2}>
-    <Card
+  <Card
+    title="Estimate Mint Parameters"
+    icon="calculator"
+    href="/api-reference/mint-manager/estimate-mint-params"
+    arrow="true"
+  >
+    Get estimated price, fee, and validation status for a requested subname.
+  </Card>
+  <Card
+    title="Generate Mint Parameters"
+    icon="key"
+    href="/api-reference/mint-manager/generate-mint-params"
+    arrow="true"
+  >
+    Generate signed mint parameters ready to be used on-chain.
+  </Card>
+</CardGroup>
+
+---
+
+## Offchain Manager (Subnames) API
+
+The Offchain Manager API allows you to create, update, delete, and retrieve ENS subnames and their associated records.
+
+<CardGroup cols={2}>
+  <Card
     title="Create Subnames"
     icon="plus"
-    href="/api-reference/subnames/create"
+    href="/api-reference/subnames/create-or-update-a-subname"
     arrow="true"
->
+  >
     Register new subnames with text records, addresses, and metadata.
   </Card>
-
-<Card
-  title="Retrieve Subnames"
-  icon="info"
-  href="/api-reference/subnames/get"
-  arrow="true"
->
-  Get detailed information about existing subnames by full name.
-</Card>
-
-<Card
-  title="Delete Subnames"
-  icon="trash"
-  href="/api-reference/subnames/delete"
-  arrow="true"
->
-  Remove subnames from the system (requires API key).
-</Card>
-
+  <Card
+    title="Retrieve Subnames"
+    icon="info"
+    href="/api-reference/subnames/get-subname-by-full-name"
+    arrow="true"
+  >
+    Get detailed information about existing subnames by full name.
+  </Card>
+  <Card
+    title="Delete Subnames"
+    icon="trash"
+    href="/api-reference/subnames/delete-a-subname"
+    arrow="true"
+  >
+    Remove subnames from the system (requires API key).
+  </Card>
   <Card
     title="Search Subnames"
     icon="search"
-    href="/api-reference/subnames/search"
+    href="/api-reference/subnames/query-subnames"
     arrow="true"
   >
-    Query multiple subnames with flexible filters including parent name, label search, ownership, and metadata.
+    Query multiple subnames with flexible filters including parent name, label
+    search, ownership, and metadata.
   </Card>
-    </CardGroup>
+</CardGroup>
+
+---
