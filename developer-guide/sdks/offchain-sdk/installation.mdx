@@ -1,4 +1,10 @@
-# Installation
+---
+title: "Offchain SDK Installation"
+description: "Learn how to install and initialize the Namespace Offchain SDK for managing ENS subnames and records."
+sidebarTitle: "Installation"
+---
+
+Install the Offchain SDK using your preferred package manager:
 
 <Tabs>
 <Tab title="Npm">
@@ -17,16 +23,20 @@ yarn add @namespacesdk/offchain-manager
 </Tab>
 </Tabs>
 
-### Creating client
+## Creating a Client
 
-The `createOffchainClient` function sets up an Offchain Client.
+To interact with the Offchain SDK, create a client instance:
 
 ```typescript
 import { createOffchainClient } from "@namespacesdk/offchain-manager";
 
 const client = createOffchainClient({
-  timeout: 5000,
+  timeout: 5000, // Optional: request timeout in milliseconds
 });
 
 client.setApiKey("example.eth", "your-api-key");
 ```
+
+> **Tip:**  
+> Always set your API key for the ENS name you want to manage.  
+> See [Generate API Key](./generate-api-key) for details.

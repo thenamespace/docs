@@ -1,28 +1,28 @@
-# Generate API key
+---
+title: "Generate API Key"
+description: "How to generate and use an API key for Namespace Offchain SDK operations."
+sidebarTitle: "API Key"
+---
 
-To interact with the offchain system, an API key is required for each ENS name. Here's how you can generate and manage API keys:
+To interact with the offchain system, each ENS name requires an API key.
 
 ### Generating an API Key
 
-<Hint type="info">
-  The best and easiest way to generate an API key is through our Dev Portal (
-  <a href="https://dev.namespace.ninja/" target="_blank" rel="noopener">
-    https://dev.namespace.ninja/
-  </a>
-  ). See the Loom demo video below on how to do it. 👇
-</Hint>
+<Card
+  title="Generate API Key"
+  icon="link"
+  href="/user-guide/dev-app/api-keys"
+  horizontal
+>
+  This is an example of a horizontal card.
+</Card>
 
-<Embed
-  url="https://www.loom.com/share/b19d490f44d741ed93c70cdbd998a0fd?sid=ae379437-6897-460c-bbd2-0f253da5e7dd"
-  alt="Loom video showing how to generate an API key in the Namespace Dev Portal"
-/>
+## Using the API Key
 
-### Using the API Key
-
-Once the API key is generated, you can set it for an ENS name using the setApiKey method:
+After generating your API key, set it for your ENS name:
 
 ```typescript
 client.setApiKey("example.eth", "your-api-key");
 ```
 
-This ensures all subsequent requests for the ENS name use the provided API key.
+All subsequent requests for this ENS name will use the provided API key.

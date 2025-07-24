@@ -1,17 +1,16 @@
-# DeleteSubname
+---
+title: "Delete Subname"
+description: "Permanently remove an ENS subname and all associated records using the Offchain SDK."
+sidebarTitle: "Delete Subname"
+---
 
-The `deleteSubname` method allows you to delete an existing subname from ENS.
-
-### Usage Example
+Use `deleteSubname` to permanently remove a subname and all its records.
 
 ```typescript
 client.deleteSubname("ns.myensname.eth");
 ```
 
-This will remove the specified subname and clear any associated records such as text records, address records, and content hash.
-
-<Hint type="info">
-  <strong>Note:</strong> Deleting a subname is a permanent operation. Ensure
-  that you intend to remove the subname and its records before calling this
-  method.
-</Hint>{" "}
+<Warning>
+  Deleting a subname is irreversible. All associated text records, address
+  records, and content hash will be removed.
+</Warning>

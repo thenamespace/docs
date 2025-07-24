@@ -1,10 +1,18 @@
-# GetFilteredSubnames
+---
+title: "Get Filtered Subnames"
+description: "Retrieve a list of subnames using flexible filters such as label, owner, metadata, and pagination."
+sidebarTitle: "Filtered Subnames"
+---
 
-The `getFilteredSubnames` method allows you to retrieve a list of subnames based on various filtering parameters such as label search, owner, pagination, and metadata.
+Retrieve subnames using filters like label search, owner, metadata, and pagination.
 
-### Request Interface
+## Usage
 
-To use this method, provide a `QuerySubnamesRequest` object containing your desired filters.
+```typescript
+client.getFilteredSubnames({ parentName: "myensname.eth", labelSearch: "ns" });
+```
+
+## Request Parameters
 
 ```typescript
 export interface QuerySubnamesRequest {
@@ -18,28 +26,19 @@ export interface QuerySubnamesRequest {
 }
 ```
 
-- `parentName`: The ENS name under which to search for subnames.
-- `parentNames`: The list of ENS names under which to search for subnames.
-- `labelSearch`: Optional substring to match against subname labels.
-- `page`: Optional page number for paginated results (default is 1).
-- `size`: Optional page size (number of items per page).
-- `metadata`: Optional metadata key-value filters.
-- `owner`: Optional Ethereum address to filter subnames by owner.
+- `parentName` or `parentNames`: ENS name(s) to search under (**required**)
+- `labelSearch`: Substring to match subname labels (optional)
+- `page`: Page number for pagination (default: 1)
+- `size`: Number of items per page (optional)
+- `metadata`: Metadata key-value filters (optional)
+- `owner`: Filter by Ethereum address (optional)
 
-<Hint type="info">
-  It is mandatory to provide either <code>parentName</code> or{" "}
-  <code>parentNames</code> parameter in a request.
-</Hint>
+<Note>
+ You must provide either `parentName` or `parentNames`.
 
-### **Usage Example**
+</Note>
 
-```typescript
-client.getFilteredSubnames({ parentName: "myensname.eth", labelSearch: "ns" });
-```
-
-### **Return Type**
-
-The method returns a paginated response containing a list of subnames.
+## Response
 
 ```typescript
 export interface PagedResponse<SubnameResponse> {
@@ -62,9 +61,3 @@ export interface SubnameResponse {
   owner?: string;
 }
 ```
-
-- `page`: Current page number.
-- `size`: Number of items per page.
-- `items`: Array of subnames matching the filters.
-- `totalItems`: Total number of matching subnames.
-- `SubnameResponse`: Detailed info for each subname.
