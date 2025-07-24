@@ -5,15 +5,15 @@ description: "Get started with Namespace subnames: Offchain, Onchain, and integr
 
 ## What is Namespace & ENS?
 
-Namespace extends the power of [ENS](https://ens.domains/) (Ethereum Name Service) by enabling flexible subname issuance for your community, app, or project. Subnames let you create human-readable identities like `alice.yourdao.eth` for users, wallets, or resources.
+Namespace extends [ENS](https://ens.domains/) (Ethereum Name Service) by enabling flexible subname issuance for your community, app, or project. Subnames like `alice.yourdao.eth` provide human-readable identities for users, wallets, or resources.
 
 ## Types of Subnames
 
 <Steps>
   <Step title="Offchain Subnames (Recommended)">
-    Offchain subnames are the fastest, most flexible way to issue and manage subnames for your users. They are gasless, instantly updatable, and ideal for most integrations.
+    Offchain subnames are gasless, instantly updatable, and ideal for most integrations. Integrate easily with our JS SDK or API.
     <br/>
-    <b>Why choose Offchain?</b>
+    <b>Benefits:</b>
     <ul>
       <li>No gas fees</li>
       <li>Instant issuance and updates</li>
@@ -41,6 +41,7 @@ apiKey: 'YOUR_API_KEY',
 });
 
 console.log(result); // { success: true, subname: 'alice.yourdao.eth' }`}
+
 </CodeBlock>
 </CodeGroup>
 </Step>
@@ -52,9 +53,9 @@ See the <a href="/api-reference/offchain/" aria-label="Offchain API Reference">O
 
   </Step>
   <Step title="Onchain Subnames (L1/L2)">
-    Onchain subnames are registered directly on Ethereum (L1) or supported L2s. Use these when you need full onchain guarantees or compatibility with ENS-native tooling.
+    Onchain subnames are registered on Ethereum (L1) or supported L2s for full onchain guarantees and ENS compatibility.
     <br/>
-    <b>When to use Onchain?</b>
+    <b>Benefits:</b>
     <ul>
       <li>Maximum decentralization</li>
       <li>Direct ENS compatibility</li>
@@ -82,6 +83,7 @@ signer, // ethers.js signer
 });
 
 console.log(tx.hash); // Ethereum transaction hash`}
+
 </CodeBlock>
 </CodeGroup>
 </Step>
@@ -108,7 +110,7 @@ See the <a href="/api-reference/mint-manager/" aria-label="Mint Manager API Refe
   </Card>
   <Card
     title="Embed the Widget"
-    icon="widget"
+    icon="block"
     href="/user-guide/app/widget"
     aria-label="Widget Integration Guide"
   >

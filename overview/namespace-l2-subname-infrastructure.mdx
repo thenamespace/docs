@@ -1,0 +1,42 @@
+---
+title: Namespace L2 Subnames Infrastructure
+description: Overview of Namespace L2 Subnames activation, minting, and resolution processes
+---
+
+### 1. Activating an ENS Name
+
+- Store activation configuration on an offchain backend server.
+- Deploy ERC721 Registry contract on the selected L2 chain.
+- Update the activated ENS name on L1 with a special offchain resolver contract.
+
+The backend server verifies wallet ownership before allowing activation and contract deployment.
+
+**High-level overview:**
+
+<img
+  src="/assets/l2-activation-flow.png"
+  alt="Diagram showing the L2 activation flow for Namespace subnames, including backend and contract interactions."
+/>
+
+### 2. Minting L2 Subnames
+
+- Request signed minting parameters from the offchain server (handles rules, whitelisting, token-gating, reservations, etc.).
+- Call the smart contract with the provided parameters and signature to mint a subname.
+
+<img
+  src="/assets/l2-minting.png"
+  alt="Diagram showing the L2 activation flow for Namespace subnames, including backend and contract interactions."
+/>
+
+### 3. Subname Resolution
+
+All minted subnames are resolvable by clients supporting Wildcard resolution (wallets, dApps, etc.) using [ENSIP-10 Wildcard Resolution](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution) and the CCIP-Read protocol.
+
+Resolution process:
+
+1. Client queries the ENS registry for a resolver address.
+2. If `address(0)`, strips the leftmost label and retries.
+3. Once found, calls the resolver's "resolve" function.
+4. OffchainResolver uses CCIP-Read, reverting with OffchainLookup and pointing to a gateway for the correct data.
+
+For more on CCIP-Read: [EIP-3668](https://eips.ethereum.org/EIPS/eip-3668)

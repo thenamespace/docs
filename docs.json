@@ -22,7 +22,7 @@
         "tab": "Overview",
         "groups": [
           {
-            "group": "Introduction",
+            "group": "Getting Started",
             "pages": ["index", "quickstart"]
           },
           {
@@ -31,7 +31,7 @@
               "overview/what-is-ens",
               "overview/ecosystem",
               "overview/use-cases",
-              "overview/how-infra-works"
+              "overview/namespace-l2-subname-infrastructure"
             ]
           }
         ]
@@ -179,26 +179,7 @@
     }
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      {
-        "title": "Ask Perplexity",
-        "description": "Ask Perplexity about the current page",
-        "icon": "search",
-        "href": {
-          "base": "https://www.perplexity.ai/search",
-          "query": [
-            {
-              "key": "q",
-              "value": "Ask question about https://mintlify.com/docs$path.md"
-            }
-          ]
-        }
-      }
-    ]
+    "options": ["copy", "view", "chatgpt", "claude"]
   },
 
   "footer": {
