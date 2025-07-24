@@ -55,7 +55,6 @@
             "group": "Dev App",
             "pages": [
               "user-guide/dev-app",
-
               "user-guide/dev-app/subnames",
               "user-guide/dev-app/resolver-set",
               "user-guide/dev-app/api-keys"
