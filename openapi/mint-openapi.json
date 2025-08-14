@@ -195,6 +195,10 @@
     {
       "url": "https://mint-manager.namespace.ninja",
       "description": "Production"
+    },
+    {
+      "url": "https://staging.mint-manager.namespace.ninja",
+      "description": "Staging"
     }
   ],
   "components": {
