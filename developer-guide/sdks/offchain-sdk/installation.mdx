@@ -25,14 +25,40 @@ yarn add @namespacesdk/offchain-manager
 
 ## Creating a Client
 
-To interact with the Offchain SDK, create a client instance:
+To interact with the Offchain SDK, create a client instance. You can select between mainnet and sepolia modes:
+
+<Tabs>
+<Tab title="Mainnet">
 
 ```typescript
 import { createOffchainClient } from "@namespacesdk/offchain-manager";
 
 const client = createOffchainClient({
   timeout: 5000, // Optional: request timeout in milliseconds
+  mode: "mainnet", // Use Ethereum mainnet
 });
 
 client.setApiKey("example.eth", "your-api-key");
 ```
+
+</Tab>
+<Tab title="Sepolia">
+
+```typescript
+import { createOffchainClient } from "@namespacesdk/offchain-manager";
+
+const client = createOffchainClient({
+  timeout: 5000, // Optional: request timeout in milliseconds
+  mode: "sepolia", // Use Sepolia testnet
+});
+
+client.setApiKey("example.eth", "your-api-key");
+```
+
+</Tab>
+</Tabs>
+
+### Configuration Options
+
+- `timeout`: Request timeout in milliseconds (optional)
+- `mode`: Network mode - choose between "mainnet" for production or "sepolia" for testing

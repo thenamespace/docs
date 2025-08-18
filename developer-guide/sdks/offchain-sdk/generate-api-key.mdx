@@ -1,28 +1,52 @@
 ---
-title: "Generate API Key"
-description: "How to generate and use an API key for Namespace Offchain SDK operations."
+title: "Initialize API Key"
+description: "Learn how to generate and configure API keys for Namespace Offchain SDK operations, including address-based and domain-specific keys."
 sidebarTitle: "API Key"
 ---
 
-To interact with the offchain system, each ENS name requires an API key.
+To interact with the offchain system, you'll need an API key. You can configure your API key either for all domains associated with an address (recommended) or for specific ENS domains.
 
-### Generating an API Key
+### Get API Key from Namespace Dev Portal
 
 <Card
-  title="Generate API Key"
+  title="Get API Key"
   icon="link"
   href="/user-guide/dev-app/api-keys"
   horizontal
 >
-  This is an example of a horizontal card.
+  Guide on how to get an API key from the Namespace Dev Portal.
 </Card>
 
-## Using the API Key
+## Configuring Your API Key
 
-After generating your API key, set it for your ENS name:
+<Tabs>
+  <Tab title="Address-Based (Default)">
+    Set a default API key that works for all ENS domains associated with your address. This is the recommended approach for most users.
 
-```typescript
-client.setApiKey("example.eth", "your-api-key");
-```
+    ```typescript
+    // Set default API key for all your domains
+    client.setDefaultApiKey('your-api-key');
 
-All subsequent requests for this ENS name will use the provided API key.
+    // Using an environment variable (recommended)
+    client.setDefaultApiKey(process.env.NAMESPACE_API_KEY);
+    ```
+
+    The default API key will be used for all domains unless overridden by a domain-specific key.
+  </Tab>
+
+  <Tab title="Domain-Specific">
+    For cases where you need different API keys for specific domains, you can set them individually:
+
+    ```typescript
+    // Set API key for a specific domain
+    client.setApiKey("example.eth", "domain-specific-api-key");
+    ```
+
+    Domain-specific keys take precedence over the default API key for that particular domain.
+  </Tab>
+</Tabs>
+
+## API Key Priority
+
+1. Domain-specific API key (if set)
+2. Default address-based API key

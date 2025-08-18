@@ -9,7 +9,7 @@ Retrieve subnames using filters like label search, owner, metadata, and paginati
 ## Usage
 
 ```typescript
-client.getFilteredSubnames({ parentName: "myensname.eth", labelSearch: "ns" });
+client.getFilteredSubnames({ parentName: "myensname.eth",  metadata: { "sender": "0x123..." }, });
 ```
 
 ## Request Parameters
@@ -40,24 +40,62 @@ export interface QuerySubnamesRequest {
 
 ## Response
 
-```typescript
-export interface PagedResponse<SubnameResponse> {
-  page: number;
-  size: number;
-  items: SubnameResponse[];
-  totalItems: number;
-}
+<ResponseField name="PagedResponse" type="object">
+  <Expandable title="properties">
+    <ResponseField name="page" type="number">Current page number.</ResponseField>
+    <ResponseField name="size" type="number">Number of items per page.</ResponseField>
+    <ResponseField name="totalItems" type="number">Total number of items matching the query.</ResponseField>
+    <ResponseField name="items" type="SubnameResponse[]">
+      Array of subname objects.
+      <Expandable title="SubnameResponse">
+        <ResponseField name="id" type="string">Unique identifier for the subname record.</ResponseField>
+        <ResponseField name="fullName" type="string">Fully-qualified ENS name (e.g., <code>alice.example.eth</code>).</ResponseField>
+        <ResponseField name="parentName" type="string">Parent ENS name.</ResponseField>
+        <ResponseField name="label" type="string">Label portion of the subname (e.g., <code>alice</code>).</ResponseField>
+        <ResponseField name="texts" type="Record&lt;string, string&gt;">Text records associated with the subname.</ResponseField>
+        <ResponseField name="addresses" type="Record&lt;string, string&gt;">Address records keyed by chain name or coin type.</ResponseField>
+        <ResponseField name="metadata" type="Record&lt;string, string&gt;">Custom metadata key-value pairs.</ResponseField>
+        <ResponseField name="contenthash" type="string">Content hash if set.</ResponseField>
+        <ResponseField name="namehash" type="string">ENS namehash of the subname.</ResponseField>
+        <ResponseField name="owner" type="string">Ethereum address of the owner, if present.</ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+  
+</ResponseField>
 
-export interface SubnameResponse {
-  id: string;
-  fullName: string;
-  parentName: string;
-  label: string;
-  texts: Record<string, string>;
-  addresses: Record<string, string>;
-  metadata: Record<string, string>;
-  contenthash?: string;
-  namehash: string;
-  owner?: string;
+### Example
+
+```json
+{
+  "page": 1,
+  "size": 2,
+  "totalItems": 42,
+  "items": [
+    {
+      "id": "01J9Q3TF3C2Z2S2X9K0V3Q6Y2B",
+      "fullName": "ns.myensname.eth",
+      "parentName": "myensname.eth",
+      "label": "ns",
+      "texts": { "name": "Namespace" },
+      "addresses": { "60": "0x1234567890abcdef1234567890abcdef12345678" },
+      "metadata": { "sender": "0x1234567890abcdef1234567890abcdef12345678" },
+      "contenthash": null,
+      "namehash": "0x5f16f2e6b2b3d1e7c3a91e8f27f5b9c3c2b7f6e2a1c0d9e8f6a5b4c3d2e1f0a9",
+      "owner": "0x1234567890abcdef1234567890abcdef12345678"
+    },
+    {
+      "id": "01J9Q3TH3D4A5B6C7D8E9F0G1H",
+      "fullName": "blog.myensname.eth",
+      "parentName": "myensname.eth",
+      "label": "blog",
+      "texts": { "url": "https://example.com" },
+      "addresses": {},
+      "metadata": {},
+      "contenthash": "ipfs://bafybeigdyrztxotk3kxne",
+      "namehash": "0xa9f0e1d2c3b4a5f6e8d9c0a1e2f6b7c2c3b9f5f7e8a1c3d7e1b2b3e6f2f6155f",
+      "owner": null
+    }
+  ]
 }
 ```

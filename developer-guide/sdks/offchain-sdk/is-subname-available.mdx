@@ -8,15 +8,20 @@ Use `isSubnameAvailable` to check if a subname can be registered.
 
 ```typescript
 const response = client.isSubnameAvailable("ns.myensname.eth");
-const isAvailable = response.isAvailable;
+const isAvailable = response.isAvailable; // true if the subname is available, false if already taken.
 ```
 
-## Return Type
+#### Parameters
 
-```typescript
-export interface GetAvailableResponse {
-  isAvailable: boolean;
-}
-```
+- `subname`: Subname to check availability for (e.g., `"ns.myensname.eth"`)
+
+#### Return Type
 
 - `isAvailable`: `true` if the subname is available, `false` if already taken.
+
+
+<Danger>
+Always check subname availability before attempting to create or update a subname.  
+It may overwrite the existing subname.
+</Danger>
+

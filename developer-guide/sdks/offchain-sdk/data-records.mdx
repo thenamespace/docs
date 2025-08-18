@@ -1,48 +1,103 @@
 ---
-title: "Data Records"
+title: "Metadata Records"
 description: >-
-  Data Record methods allow for fetching, adding, updating, or deleting key-value data records for a given subname.
+  Metadata Record methods allow for fetching, adding, updating, or deleting key-value metadata records for a given subname.
 ---
 
-Data Records are key-value pairs that are not necessarily needed or used for ENS Resolution, but can be helpful for storing metadata which can be used for filtering.
+## Overview
 
-### addDataRecord
+Metadata records are custom key-value pairs you can attach to an offchain ENS subname. They are not used for onchain ENS resolution but are useful for discovery and filtering (e.g., via `getFilteredSubnames`) because they are indexed in the Namespace offchain service.
 
-The `addDataRecord` method adds a data record to the subname.
+<Hint type="warning">
+  Do not store sensitive or private information in metadata records. Values are retrievable by anyone with read access to the subname's metadata.
+</Hint>
 
-#### Usage
+## Methods
+
+### 1. addDataRecord
+
+Adds or updates a metadata record for the specified subname.
+
+#### Usage Example
 
 ```typescript
-client.addDataRecord({
-  subname: "ns.myensname.eth",
-  key: "data",
-  data: "HODL ENS!",
-});
+try {
+  await client.addDataRecord({
+    subname: "ns.myensname.eth",
+    key: "token-holder",
+    data: "1200", // number of tokens held by the owner
+  });
+  console.log("Metadata saved.");
+} catch (error) {
+  // Handle network, auth, or validation errors
+  console.error("Failed to add data record:", error);
+}
 ```
 
-**deleteDataRecord** method deletes a data record from the subname.
+- `subname`: The full ENS subname (e.g., `"ns.myensname.eth"`).
+- `key`: Case-sensitive metadata key (e.g., `"token-holder"`).
+- `data`: Value to store for the key (string).
 
-#### Usage
+<Warning>
+  If the key already exists, its value will be overwritten.
+</Warning>
+
+### 2. deleteDataRecord
+
+Deletes a data record from the subname.
+
+#### Usage Example
 
 ```typescript
-client.deleteDataRecord({ subname: "ns.myensname.eth", key: "data" });
+try {
+  await client.deleteDataRecord({
+    subname: "ns.myensname.eth",
+    key: "token-holder",
+  });
+  console.log("Metadata key deleted.");
+} catch (error) {
+  console.error("Failed to delete data record:", error);
+}
 ```
 
-**getDataRecords** method returns all data records of the provided subname.
+- `subname`: The full ENS subname.
+- `key`: The metadata key to delete.
 
-#### Usage
+### 3. getDataRecords
+
+Returns all data records of the provided subname as a key-value map.
+
+#### Usage Example
 
 ```typescript
-client.getDataRecords("ns.myensname.eth");
+const allMetadata = await client.getDataRecords("ns.myensname.eth");
+// allMetadata: Record<string, string>
 ```
 
-**getDataRecord** method returns the requested data record of the provided subname.
-
-#### Usage
+#### Return Type
 
 ```typescript
-const response = await client.getDataRecord("ns.myensname.eth", "data");
-const data = response.record;
+type DataRecords = Record<string, string>;
+```
+
+##### Example Result
+
+```json
+{
+  "token-holder": "1200",
+  "segment": "pro",
+}
+```
+
+### 4. getDataRecord
+
+Returns the requested data record for the provided subname and key.
+
+#### Usage Example
+
+```typescript
+const response = await client.getDataRecord("ns.myensname.eth", "token-holder");
+const data = response.record; // "1200"
 ```
 
 #### Return Type
@@ -53,4 +108,4 @@ export interface GetRecordResponse {
 }
 ```
 
-- `record`: Value of the requested data record.
+- `record`: The value associated with the requested key.
