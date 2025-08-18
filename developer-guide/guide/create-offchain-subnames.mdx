@@ -1,0 +1,281 @@
+---
+title: How To Create Offchain Subnames
+description: A simple, end-to-end guide to creating and using offchain ENS subnames with the @namespacesdk/offchain-manager SDK
+---
+
+## Overview
+
+This guide walks you through creating and using offchain ENS subnames with the `@namespacesdk/offchain-manager` SDK. You'll be able to create a subname, and then read records.
+
+## Prerequisites
+
+- Node.js 18+ and a package manager (npm or yarn)
+- An ENS name you manage (e.g., `myensname.eth`)
+- A Namespace API key (from the Dev Portal)
+
+<Card
+  title="Get an API Key"
+  icon="link"
+  href="/user-guide/dev-app/api-keys"
+  horizontal
+>
+  Follow this guide to create and copy your API key from the Namespace Dev Portal.
+</Card>
+
+<Steps>
+  <Step title="Install and initialize the SDK">
+
+Install the Offchain SDK and dotenv to load your API key from an environment variable:
+
+<Tabs>
+  <Tab title="npm">
+
+```bash
+npm install @namespacesdk/offchain-manager dotenv
+```
+
+  </Tab>
+  <Tab title="yarn">
+
+```bash
+yarn add @namespacesdk/offchain-manager dotenv
+```
+
+  </Tab>
+</Tabs>
+
+Initialise the client with the network you want to use and your API key. We recommend setting your API key via an environment variable and keeping it secret by using server-side code. 
+
+<CodeGroup>
+  ```ts index.ts
+  import 'dotenv/config';
+  import { createOffchainClient } from '@namespacesdk/offchain-manager';
+
+  // Required: set NAMESPACE_API_KEY in your environment
+  const API_KEY = process.env.NAMESPACE_API_KEY as string;
+  if (!API_KEY) throw new Error('Missing NAMESPACE_API_KEY');
+
+  // Use 'sepolia' for testing, 'mainnet' for production
+  export const client = createOffchainClient({ mode: 'mainnet', timeout: 5000 });
+  client.setDefaultApiKey(API_KEY);
+
+  console.log('Offchain client initialized');
+  ```
+
+</CodeGroup>
+
+  </Step>
+
+  <Step title="Check if a subname is available">
+
+Use `isSubnameAvailable` before creating a subname to avoid overwriting an existing one.
+
+<CodeGroup>
+  ```ts check-availability.ts
+  import { client } from './index';
+
+  async function main() {
+    const subname = 'alice.myensname.eth';
+    const { isAvailable } = await client.isSubnameAvailable(subname);
+    console.log('isAvailable:', isAvailable);
+  }
+
+  main().catch((err) => {
+    console.error('Availability check failed:', err);
+    process.exit(1);
+  });
+  ```
+</CodeGroup>
+
+Expected output (if available):
+
+```bash
+isAvailable: true
+```
+
+  </Step>
+
+  <Step title="Create the subname with optional records">
+<Tip>
+You can use the `owner` field to filter subnames by their associated address, enabling efficient reverse lookups (from address to name).
+</Tip>  
+Create a subname under your parent name. You can include text records, address records, owner, and metadata.
+
+<CodeGroup>
+  ```ts create-subname.ts
+  import { client } from './index';
+  import { ChainName } from '@namespacesdk/offchain-manager';
+
+  async function main() {
+    const PARENT_NAME = 'myensname.eth';
+    const SUB_LABEL = 'alice'; // results in alice.myensname.eth
+    const OWNER_ADDRESS = '0x1234567890abcdef1234567890abcdef12345678';
+
+    // After checking the subname is available, create it with the following parameters:
+
+    await client.createSubname({
+      label: SUB_LABEL,
+      parentName: PARENT_NAME,
+      texts: [
+        { key: 'name', value: 'Alice' },
+        { key: 'url', value: 'https://example.com' },
+      ],
+      addresses: [
+        { chain: ChainName.Ethereum, value: OWNER_ADDRESS },
+      ],
+      owner: OWNER_ADDRESS,
+      metadata: [{ key: 'sender', value: OWNER_ADDRESS }],
+    });
+
+    console.log(`Created ${SUB_LABEL}.${PARENT_NAME}`);
+  }
+
+  main().catch((err) => {
+    console.error('Create subname failed:', err);
+    process.exit(1);
+  });
+  ```
+   ```ts index.ts
+  import 'dotenv/config';
+  import { createOffchainClient } from '@namespacesdk/offchain-manager';
+
+  // Required: set NAMESPACE_API_KEY in your environment
+  const API_KEY = process.env.NAMESPACE_API_KEY as string;
+  if (!API_KEY) throw new Error('Missing NAMESPACE_API_KEY');
+
+  // Use 'sepolia' for testing, 'mainnet' for production
+  export const client = createOffchainClient({ mode: 'mainnet', timeout: 5000 });
+  client.setDefaultApiKey(API_KEY);
+
+  console.log('Offchain client initialized');
+  ```
+
+</CodeGroup>
+
+Expected output:
+
+```bash
+Created alice.myensname.eth
+```
+
+  </Step>
+
+  <Step title="Filter subnames by owner">
+
+<Tip>
+We recommend associating a single address with a single subname to do reverse lookup.
+</Tip>  
+Fetch all subnames you own or created by filtering on `owner` (or by `metadata`).
+
+```ts
+import { client } from './index';
+
+async function main() {
+  const PARENT_NAME = 'myensname.eth';
+  const OWNER_ADDRESS = '0x1234567890abcdef1234567890abcdef12345678';
+
+  // Get all subnames owned by the address
+  const page = await client.getFilteredSubnames({
+    parentName: PARENT_NAME,
+    owner: OWNER_ADDRESS,
+    page: 1,
+    size: 5,
+  });
+
+  console.log(JSON.stringify(page.items, null, 2));
+}
+
+main();
+```
+
+Example output:
+
+```json
+[
+  {
+    "fullName": "alice.myensname.eth",
+    "parentName": "myensname.eth",
+    "label": "alice",
+    "texts": { "name": "Alice", "url": "https://example.com" },
+    "addresses": { "60": "0x1234567890abcdef1234567890abcdef12345678" },
+    "metadata": { "sender": "0x1234567890abcdef1234567890abcdef12345678" },
+    "owner": "0x1234567890abcdef1234567890abcdef12345678"
+  }
+]
+```
+
+
+  </Step>
+
+  <Step title="Look up text records">
+
+Retrieve a single text record or all text records on a subname.
+
+<CodeGroup>
+  ```ts get-text-records.ts
+  import { client } from './index';
+
+  async function main() {
+    const subname = 'alice.myensname.eth';
+
+    // You can retrieve all text records on a subname
+    const all = await client.getTextRecords(subname);
+
+    // You can also retrieve a single text record based on a key on a subname
+    const { record: name } = await client.getTextRecord(subname, 'name');
+
+    console.log('all text records:', all);
+    console.log('name:', name);
+  }
+
+  main();
+  ```
+</CodeGroup>
+
+Example output:
+
+```bash
+all text records: { name: 'Alice', url: 'https://example.com' }
+name: Alice
+```
+
+  </Step>
+
+  <Step title="Look up address records">
+
+Address records are included in the subname response. A simple way to read them is via `getFilteredSubnames` and then inspecting `addresses`.
+
+```ts
+import { client } from './index';
+
+async function main() {
+  const subnamesPage = await client.getFilteredSubnames({ parentName: 'myensname.eth', labelSearch: 'alice' });
+  const item = subnamesPage.items.find((i) => i.fullName === 'alice.myensname.eth');
+  console.log('addresses:', item?.addresses);
+}
+
+main();
+```
+
+Example output:
+
+```bash
+addresses: { "60": "0x1234567890abcdef1234567890abcdef12345678" }
+```
+
+  </Step>
+</Steps>
+
+### Next steps
+
+- Update records on an existing subname using [`updateSubname`](/developer-guide/sdks/offchain-sdk/create-update-subname)
+- Explore more filters with [`getFilteredSubnames`](/developer-guide/sdks/offchain-sdk/get-filtered-subnames)
+- See supported chains in [`ChainName`](/developer-guide/sdks/offchain-sdk/chainname)
+
+## ENS Client Compatibility
+
+Subnames created with the Offchain SDK can be accessed and resolved using any of the eligible ENS client libraries like [wagmi](https://wagmi.sh/), [viem](https://viem.sh//), [ethers](https://docs.ethers.org/v6/), and others listed in the [ENS Tools & Libraries documentation](https://docs.ens.domains/web/libraries/#libraries/).
+
+<Note>
+  <strong>Reverse Resolution Limitation:</strong> Offchain subnames do not support reverse resolution, so you cannot fetch a profile from an address. However, you can still set address records on offchain subnames for forward resolution.
+</Note>
