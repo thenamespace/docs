@@ -1,0 +1,156 @@
+---
+title: Building with AI
+description: These docs are LLM-friendly so you can use the latest models to build your applications. Access per-page and full-corpus text endpoints, and connect to our hosted Model Context Protocol (MCP) server.
+---
+
+<Note>
+  Use the <strong>Copy</strong> and <strong>Ask in ChatGPT/Claude</strong> buttons on each page to quickly work with the docs.
+</Note>
+
+export const PreviewButton = ({children, href}) => {
+  return <a href={href} className="text-sm font-medium text-white dark:!text-zinc-950 bg-zinc-900 hover:bg-zinc-700 dark:bg-zinc-100 hover:dark:bg-zinc-300 rounded-full px-3.5 py-1.5 not-prose">{children}</a>;
+};
+
+## LLM-friendly documentation
+
+Get AI-optimized plain text for any page or the entire corpus.
+
+<PreviewButton href="/llms.txt">Open llms.txt</PreviewButton>
+ <PreviewButton href="/llms-full.txt">Open llms-full.txt</PreviewButton>
+
+### Markdown export
+
+- Press Command + C (Ctrl + C on Windows) to copy a page as Markdown to your clipboard.
+- Append `.md` to any docs page URL for a markdown version of the page.
+
+### llms.txt
+
+- Access a concise overview of the docs and list of pages at `/llms.txt`.
+- Download the complete documentation at `/llms-full.txt`.
+
+
+<Note>
+  `llms.txt` and `llms-full.txt` return markdown text, condensed for AI consumption.
+</Note>
+
+---
+
+##  MCP Server 
+
+Browse our documentation from your AI IDE via our hosted MCP server.
+
+### Connection details
+
+- **MCP Server URL**: `https://namespace-1f56cc70.mintlify.app/mcp`
+
+### Available tools
+
+- **Search**: Query docs to find examples, API references, and guides. Returns titles, context, and deep links.
+
+### Use with AI applications
+
+Steps
+1. In your MCP client (e.g., Cursor, Claude Desktop), add a new MCP server.
+2. Use the URL `https://namespace-1f56cc70.mintlify.app/mcp`.
+3. Test and run `Search` (e.g., "Offchain SDK create subname").
+
+
+### Example: Connecting to the Namespace MCP server
+
+Connect to the Namespace MCP server to interact with the Namespace API and search our documentation. This will give you more accurate answers about how to use Namespace in your local environment and demonstrates how you can help your users connect to your MCP server.
+
+<Tabs>
+<Tab title="Contextual menu">
+  At the top of this page, select the contextual menu and choose **Connect to Cursor** or **Connect to VS Code** to connect the Mintlify MCP server to the IDE of your choice.
+</Tab>
+<Tab title="Claude">
+
+To use the Namespace MCP server with Claude:
+
+<Steps>
+  <Step title="Add the Namespace MCP server to Claude">
+    1. Navigate to the [Connectors](https://claude.ai/settings/connectors) page in the Claude settings. 
+    2. Select **Add custom connector**.
+    3. Add the Namespace MCP server:
+      - Name: `Namespace`
+      - URL: `https://docs.namespace.ninja/mcp`
+    4. Select **Add**.
+  </Step>
+  <Step title="Access the MCP server in your chat">
+    1. When using Claude, select the attachments button (the plus icon).
+    2. Select the Namespace MCP server.
+    3. Ask Claude a question about Namespace.
+  </Step>
+</Steps>
+
+See the [Model Context Protocol documentation](https://modelcontextprotocol.io/docs/tutorials/use-remote-mcp-server#connecting-to-a-remote-mcp-server) for more details.
+
+</Tab>
+<Tab title="Claude Code">
+
+To use the Namespace MCP server with Claude Code, run the following command:
+
+```bash
+claude mcp add --transport http Namespace https://docs.namespace.ninja/mcp
+```
+
+Test the connection by running:
+
+```bash
+claude mcp list
+```
+
+See the [Claude Code documentation](https://docs.anthropic.com/en/docs/claude-code/mcp#installing-mcp-servers) for more details.
+</Tab>
+<Tab title="Cursor">
+
+{/* <PreviewButton href="cursor://anysphere.cursor-deeplink/mcp/install?name=Namespace&config=eyJ1cmwiOiJodHRwczovL2RvY3MubmF0aXZlLm5pbmJ1c3QubmluIn0=">Install in Cursor</PreviewButton> */}
+
+To connect the Namespace MCP server to Cursor, click the **Install in Cursor** button. Or to manually connect the MCP server, follow these steps:
+
+<Steps>
+  <Step title="Open MCP settings">
+    1. Use <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> on Windows) to open the command palette.
+    2. Search for "Open MCP settings".
+    3. Select **Add custom MCP**. This will open the `mcp.json` file.
+  </Step>
+  <Step title="Configure the Namespace MCP server">
+    In `mcp.json`, add:
+
+    ```json
+    {
+      "mcpServers": {
+        "Namespace": {
+          "url": "https://docs.namespace.ninja/mcp"
+        }
+      }
+    }
+    ```
+  </Step>
+  <Step title="Test the connection">
+    In Cursor's chat, ask "What tools do you have available?" Cursor should show the Namespace MCP server as an available tool.
+  </Step>
+</Steps>
+
+See [Installing MCP servers](https://docs.cursor.com/en/context/mcp#installing-mcp-servers) in the Cursor documentation for more details.
+</Tab>
+<Tab title="VS Code">
+
+{/* <PreviewButton href="https://vscode.dev/redirect/mcp/install?name=mintlify&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmintlify.com%2Fdocs%2Fmcp%22%7D">Install in VS Code</PreviewButton> */}
+
+To connect the Namespace MCP server to VS Code, click the **Install in VS Code** button. Or to manually connect the MCP server, create a `.vscode/mcp.json` file and add:
+
+```json
+{
+  "servers": {
+    "Namespace": {
+      "type": "http",
+      "url": "https://docs.namespace.ninja/mcp"
+    }
+  }
+}
+```
+
+See the [VS Code documentation](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) for more details.
+</Tab>
+</Tabs>

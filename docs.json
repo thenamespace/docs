@@ -16,6 +16,9 @@
       "apiKey": "phc_m34ZAW7cLSFC3o4eipnrMG3GONeV40GXARnD3bJCap7"
     }
   },
+  "mcp": {
+    "enabled": true
+  },
   "navigation": {
     "tabs": [
       {
@@ -117,6 +120,12 @@
                 ]
               }
             ]
+          },
+          {
+            "group": "AI Development",
+            "pages": [
+              "developer-guide/ai-development"
+            ]
           }
         ]
       },
@@ -179,7 +188,7 @@
     }
   },
   "contextual": {
-    "options": ["copy", "view", "chatgpt", "claude"]
+    "options": ["chatgpt", "claude", "cursor", "vscode"]
   },
 
   "footer": {
