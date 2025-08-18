@@ -1,8 +1,33 @@
 ---
 title: API Keys
-description: Generate an API key, enable Subname registrations in your app and manage subnames programatically
+description: Generate and manage API keys for Offchain subnames.
 ---
 
-Easily generate an API key to programatically manage Offchain subnames in your app, and plug in Subname registrations in your project.
+Easily generate an API key to programmatically manage Offchain subnames in your app, and enable Subname registrations in your project on the [Namespace Dev Portal](https://dev.namespace.ninja).
 
-<img src="/assets/api-keys.png" alt="API Key generation screenshot" />{" "}
+## Types of API Keys
+
+There are two types of API keys you can generate:
+
+| Type           | Scope                                             | Use Case                                      |
+|----------------|--------------------------------------------------|-----------------------------------------------|
+| **Address Based** | Works for all ENS names owned by your address    | Use one key for all your domains               |
+| **Domain Based**  | Specific to a single ENS domain (e.g., example.eth) | Use different keys for different domains       |
+
+
+<img src="/assets/api-keys.png" alt="Screenshot of the API Key generation interface in the Namespace Dev Portal" />
+
+
+## API Key Expiry
+
+You can set an expiry date for your API keys when generating them. This helps you control access and rotate keys for better security. Expired keys will no longer be valid for API requests.
+
+### Address-based API Key
+- Works for all ENS names owned by your wallet address
+- Convenient for managing multiple domains with a single key
+
+### Domain-based API Key
+- Tied to a specific ENS domain
+- Useful for delegating access or using different keys for different domains
+
+<Tip> You can always revoke or regenerate your API keys from the Dev Portal for enhanced security. </Tip>
