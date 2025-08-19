@@ -1,143 +1,27 @@
 ---
 title: "Quickstart"
-description: "Get started with Namespace subnames: Offchain, Onchain, and integration options."
+description: "Pick Offchain or L2 subnames and jump to the right guide."
 ---
 
-## What is Namespace & ENS?
+## Get started
 
-Namespace extends [ENS](https://ens.domains/) (Ethereum Name Service) by enabling flexible subname issuance for your community, app, or project. Subnames like `alice.yourdao.eth` provide human-readable identities for users, wallets, or resources.
-
-## Types of Subnames
-
-<Steps>
-  <Step title="Offchain Subnames (Recommended)">
-    Offchain subnames are gasless, instantly updatable, and ideal for most integrations. Integrate easily with our JS SDK or API.
-    <br/>
-    <b>Benefits:</b>
-    <ul>
-      <li>No gas fees</li>
-      <li>Instant issuance and updates</li>
-      <li>Easy integration with our JS SDK or API</li>
-    </ul>
-    <Expandable summary="How to issue Offchain Subnames">
-      <Steps>
-        <Step title="Install the JS SDK">
-          <CodeGroup>
-            <CodeBlock language="bash" filename="Terminal">
-              npm install @namespaceid/offchain-sdk
-            </CodeBlock>
-          </CodeGroup>
-        </Step>
-        <Step title="Issue a subname">
-          <CodeGroup>
-            <CodeBlock language="js" filename="issue-subname.js">
-              {`import { issueSubname } from '@namespaceid/offchain-sdk';
-
-const result = await issueSubname({
-parent: 'yourdao.eth',
-subname: 'alice',
-address: '0x123...abc',
-apiKey: 'YOUR_API_KEY',
-});
-
-console.log(result); // { success: true, subname: 'alice.yourdao.eth' }`}
-
-</CodeBlock>
-</CodeGroup>
-</Step>
-<Step title="API Reference for Other Languages">
-See the <a href="/api-reference/offchain/" aria-label="Offchain API Reference">Offchain API Reference</a> for REST API usage and more examples.
-</Step>
-</Steps>
-</Expandable>
-
-  </Step>
-  <Step title="Onchain Subnames (L1/L2)">
-    Onchain subnames are registered on Ethereum (L1) or supported L2s for full onchain guarantees and ENS compatibility.
-    <br/>
-    <b>Benefits:</b>
-    <ul>
-      <li>Maximum decentralization</li>
-      <li>Direct ENS compatibility</li>
-      <li>Permanent, censorship-resistant records</li>
-    </ul>
-    <Expandable summary="How to issue Onchain Subnames">
-      <Steps>
-        <Step title="Install the Mint Manager SDK (JS)">
-          <CodeGroup>
-            <CodeBlock language="bash" filename="Terminal">
-              npm install @namespaceid/mint-manager-sdk
-            </CodeBlock>
-          </CodeGroup>
-        </Step>
-        <Step title="Register a subname (JS)">
-          <CodeGroup>
-            <CodeBlock language="js" filename="register-onchain.js">
-              {`import { registerSubname } from '@namespaceid/mint-manager-sdk';
-
-const tx = await registerSubname({
-parent: 'yourdao.eth',
-subname: 'bob',
-owner: '0x456...def',
-signer, // ethers.js signer
-});
-
-console.log(tx.hash); // Ethereum transaction hash`}
-
-</CodeBlock>
-</CodeGroup>
-</Step>
-<Step title="API Reference for Other Languages">
-See the <a href="/api-reference/mint-manager/" aria-label="Mint Manager API Reference">Mint Manager API Reference</a> for REST API usage and more examples.
-</Step>
-</Steps>
-</Expandable>
-
-  </Step>
-</Steps>
-
-## Integration Options
+Pick a path to issue subnames for your app or community.
 
 <CardGroup>
   <Card
-    title="Build Your Own Portal (Subpages)"
-    icon="puzzle-piece"
-    href="/user-guide/app/subpages"
-    aria-label="Subpages Guide"
-  >
-    Fork our Subpages repo to launch your own branded subname portal. Full
-    customization, open source.
-  </Card>
-  <Card
-    title="Embed the Widget"
+    title="Offchain Subnames (Recommended)"
     icon="block"
-    href="/user-guide/app/widget"
-    aria-label="Widget Integration Guide"
+    href="/developer-guide/guide/create-offchain-subnames"
+    aria-label="Create Offchain Subnames Guide"
   >
-    Add a ready-made subname registration widget to any website with a simple
-    embed.
+    Gasless, instant, and easy to manage via API or JS SDK. Best for most integrations.
   </Card>
   <Card
-    title="API Reference"
-    icon="book"
-    href="/api-reference/"
-    aria-label="API Reference"
-  >
-    Explore all endpoints, parameters, and code samples for Offchain and Onchain
-    subname management.
-  </Card>
-  <Card
-    title="SDK Guides"
+    title="L2 Subnames (Onchain)"
     icon="square-code"
-    href="/developer-guide/sdks/"
-    aria-label="SDK Guides"
+    href="/developer-guide/guide/mint-l1-l2-subnames"
+    aria-label="Mint L2 Subnames Guide"
   >
-    Step-by-step guides for integrating with our JS SDKs and more.
+    Onchain registration on supported L2s for ENS-compatible, decentralized records.
   </Card>
 </CardGroup>
-
-## Next Steps
-
-- See the <a href="/overview/namespace-l2-subname-infrastructure" aria-label="How Namespace Infra Works">How Namespace Infra Works</a> for technical details.
-- Explore <a href="/overview/use-cases" aria-label="Subname Use Cases">Subname Use Cases</a> for inspiration.
-- Need help? <a href="https://discord.gg/namespaceid" aria-label="Join Namespace Discord">Join our Discord</a> for support.

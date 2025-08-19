@@ -32,9 +32,14 @@
             "group": "Concepts",
             "pages": [
               "overview/what-is-ens",
-              "overview/ecosystem",
-              "overview/use-cases",
               "overview/namespace-l2-subname-infrastructure"
+            ]
+          },
+          {
+            "group": "Others",
+            "pages": [
+              "overview/ecosystem",
+              "overview/use-cases"
             ]
           }
         ]
