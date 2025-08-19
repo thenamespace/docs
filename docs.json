@@ -261,5 +261,159 @@
         ]
       }
     ]
+  },
+  "redirects": [
+  {
+    "source": "/apps/onchain-subnames-app",
+    "destination": "/user-guide/app"
+  },
+  {
+    "source": "/apps/onchain-subnames-app/search-and-register",
+    "destination": "/user-guide/app/search-register"
+  },
+  {
+    "source": "/apps/onchain-subnames-app/wizard",
+    "destination": "/user-guide/app/wizard"
+  },
+  {
+    "source": "/apps/onchain-subnames-app/wizard/activate-an-ens-name",
+    "destination": "/user-guide/app/activate-ens-name"
+  },
+  {
+    "source": "/apps/onchain-subnames-app/wizard/features-list",
+    "destination": "/user-guide/app/features-list"
+  },
+  {
+    "source": "/apps/offchain-subnames-devapp",
+    "destination": "/user-guide/dev-app"
+  },
+  {
+    "source": "/apps/offchain-subnames-devapp/subnames",
+    "destination": "/user-guide/dev-app/subnames"
+  },
+  {
+    "source": "/apps/offchain-subnames-devapp/resolver-set",
+    "destination": "/user-guide/dev-app/resolver-set"
+  },
+  {
+    "source": "/apps/offchain-subnames-devapp/api-keys",
+    "destination": "/user-guide/dev-app/api-keys"
+  },
+  {
+    "source": "/how-to-guides-and-demos",
+    "destination": "/tutorials/guide"
+  },
+  {
+    "source": "/dev-docs/sdk",
+    "destination": "/developer-guide/sdks/introduction"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager",
+    "destination": "/developer-guide/sdks/offchain-manager"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager/installation",
+    "destination": "/developer-guide/sdks/offchain-sdk/installation"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager/generate-api-key",
+    "destination": "/developer-guide/sdks/offchain-sdk/generate-api-key"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager/create-or-update-subname",
+    "destination": "/developer-guide/sdks/offchain-sdk/create-update-subname"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager/delete-subname",
+    "destination": "/developer-guide/sdks/offchain-sdk/delete-subname"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager/issubnameavailable",
+    "destination": "/developer-guide/sdks/offchain-sdk/is-subname-available"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager/getfilteredsubnames",
+    "destination": "/developer-guide/sdks/offchain-sdk/get-filtered-subnames"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager/addressrecords",
+    "destination": "/developer-guide/sdks/offchain-sdk/address-records"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager/addressrecords",
+    "destination": "/developer-guide/sdks/offchain-sdk/address-records"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager/addressrecords/chainname",
+    "destination": "/developer-guide/sdks/offchain-sdk/chainname"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager/textrecords",
+    "destination": "/developer-guide/sdks/offchain-sdk/text-records"
+  },
+  {
+    "source": "/dev-docs/sdk/offchain-manager/textrecords/datarecords",
+    "destination": "/developer-guide/sdks/offchain-sdk/data-records"
+  },
+  {
+    "source": "/dev-docs/sdk/indexer-manager",
+    "destination": "/developer-guide/sdks/indexer-manager"
+  },
+  {
+    "source": "/dev-docs/sdk/indexer-manager/installation",
+    "destination": "/developer-guide/sdks/indexer-sdk/installation"
+  },
+  {
+    "source": "/dev-docs/sdk/indexer-manager/fetch-l2-subnames",
+    "destination": "/developer-guide/sdks/indexer-sdk/fetch-l2-subnames"
+  },
+  {
+    "source": "/dev-docs/sdk/indexer-manager/fetch-l2-registries",
+    "destination": "/developer-guide/sdks/indexer-sdk/fetch-l2-registries"
+  },
+  {
+    "source": "/dev-docs/sdk/mint-manager",
+    "destination": "/developer-guide/sdks/mint-manager"
+  },
+  {
+    "source": "/dev-docs/sdk/mint-manager/installation",
+    "destination": "/developer-guide/sdks/mint-sdk/installation"
+  },
+  {
+    "source": "/dev-docs/sdk/mint-manager/getmintdetails",
+    "destination": "/developer-guide/sdks/mint-sdk/get-mint-details"
+  },
+  {
+    "source": "/dev-docs/sdk/mint-manager/getminttransactionparameters",
+    "destination": "/developer-guide/sdks/mint-sdk/get-mint-transaction-parameters"
+  },
+  {
+    "source": "/dev-docs/sdk/mint-manager/issubnameavailable",
+    "destination": "/developer-guide/sdks/mint-sdk/is-subname-available"
+  },
+  {
+    "source": "/dev-docs/sdk/mint-manager/how-to-mint-l1-and-l2-subname-via-mint-manager",
+    "destination": "/developer-guide/guide/mint-l1-l2-subnames"
+  },
+  {
+    "source": "/dev-docs/apis/offchain-manager",
+    "destination": "/api-reference/subnames/create-or-update-a-subname"
+  },
+  {
+    "source": "/dev-docs/apis/mint-manager",
+    "destination": "/api-reference/mint-manager/estimate-mint-params"
+  },
+  {
+    "source": "/dev-docs/infrastructure/namespace-l2-subnames",
+    "destination": "/overview/namespace-onchain-subnames"
+  },
+  {
+    "source": "/dev-docs/subpages",
+    "destination": "/user-guide/app/subpages"
+  },
+  {
+    "source": "/ecosystem/use-cases",
+    "destination": "/overview/use-cases"
   }
+]
 }
