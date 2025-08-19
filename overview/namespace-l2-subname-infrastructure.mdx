@@ -1,42 +1,96 @@
 ---
-title: Namespace L2 Subnames Infrastructure
-description: Overview of Namespace L2 Subnames activation, minting, and resolution processes
+title: "Namespace Onchain Subnames"
+description: "Overview of Namespace L2 Subnames activation, minting, and resolution processes"
 ---
 
-### 1. Activating an ENS Name
+The **Namespace platform** enables ENS name owners to **activate** their names, allowing others to mint subnames under the activated parent. Owners have full flexibility to define custom activation parameters, including:
 
-- Store activation configuration on an offchain backend server.
-- Deploy ERC721 Registry contract on the selected L2 chain.
-- Update the activated ENS name on L1 with a special offchain resolver contract.
+- Base and custom pricing
+- Reserved subnames
+- Whitelists
+- Token-gated access
+- Deadline
 
-The backend server verifies wallet ownership before allowing activation and contract deployment.
+Namespace supports issuing subnames on both **L1 (Ethereum mainnet)** and **L2 networks ( Currently Base and Optimism )**.
 
-**High-level overview:**
+## **1. ENS Name Activation**
+
+The activation process differs depending on whether the ENS name owner chooses to issue subnames on L1 or L2.
+
+### 1. L1 Activation Process
+
+Activating subnames on L1 involves **four main steps**:
+
+1. **Create Activation Configuration** – The List Manager backend generates the activation configuration for the subname.
+2. **Approve Mint Controller** – The owner grants approval to the Mint Controller smart contract. This is a **one-time approval** and does not need to be repeated for future names.
+3. **Wrap the Name** – If the parent name is not yet wrapped, it must be wrapped before activation can proceed.
+4. **Verify Activation** – The backend validates that all on-chain steps (approval and wrapping) have been executed correctly.
 
 <img
-  src="/assets/l2-activation-flow.png"
-  alt="Diagram showing the L2 activation flow for Namespace subnames, including backend and contract interactions."
+  src="/images/l1_activate_process.svg"
+  alt="L1 Activate Process Sv"
+  title="L1 Activate Process Sv"
+  style={{ width:"63%" }}
 />
 
-### 2. Minting L2 Subnames
+### 2. L2 Activation Process
 
-- Request signed minting parameters from the offchain server (handles rules, whitelisting, token-gating, reservations, etc.).
-- Call the smart contract with the provided parameters and signature to mint a subname.
+Activating subnames on an L2 network follows **four key steps**:
+
+1. **Create Activation Configuration** – The List Manager backend generates the activation configuration that defines how subnames minting process functions.
+2. **Deploy ERC-721 Registry** – An ERC-721 registry contract is deployed on the chosen L2 chain to manage ownership of subnames.
+3. **Configure Resolver** – A resolver supporting **ENSIP-10 wildcard resolution** is set and configured to enable flexible, scalable name resolution.
+4. **Verify Activation** – The backend performs validation to ensure all on-chain steps (registry deployment and resolver setup) have been completed correctly.
 
 <img
-  src="/assets/l2-minting.png"
-  alt="Diagram showing the L2 activation flow for Namespace subnames, including backend and contract interactions."
+  src="/images/l2_activate_process.svg"
+  alt="L2 Activate Process Sv"
+  title="L2 Activate Process Sv"
+  style={{ width:"66%" }}
 />
 
-### 3. Subname Resolution
+## 2. Minting process
 
-All minted subnames are resolvable by clients supporting Wildcard resolution (wallets, dApps, etc.) using [ENSIP-10 Wildcard Resolution](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution) and the CCIP-Read protocol.
+When a name is activated, the minting process runs **off-chain**. To mint an ENS subname, the minter requests parameters and a signature from the Mint Manager server, then uses those to call the smart contract.\
+This off-chain design unlocks key advantages:
 
-Resolution process:
+- **Richer Activation Features** – Complex logic that would be impractical or impossible to run entirely on-chain can be handled seamlessly off-chain.
+- **Dynamic Updates Without Transactions** – Activated name configurations can be changed instantly without requiring new blockchain transactions.
+- **Lower Costs** – Both activation and minting fees are significantly reduced, making the entire flow cheaper for users.
 
-1. Client queries the ENS registry for a resolver address.
-2. If `address(0)`, strips the leftmost label and retries.
-3. Once found, calls the resolver's "resolve" function.
-4. OffchainResolver uses CCIP-Read, reverting with OffchainLookup and pointing to a gateway for the correct data.
+<img
+  src="/images/minting_process.svg"
+  alt="Minting Process Sv"
+  title="Minting Process Sv"
+  style={{ width:"76%" }}
+/>
 
-For more on CCIP-Read: [EIP-3668](https://eips.ethereum.org/EIPS/eip-3668)
+## 3. Resolution
+
+#### L1 Subnames
+
+Since L1 subnames are part of the existing ENS contracts on Ethereum mainnet, they resolve just like any other ENS name:
+
+1. **Fetch Resolver** – Call `getResolver` on the ENS Registry to retrieve the resolver contract for `namehash(name.eth)`.
+2. **Resolve Records** – Call the required resolver function (`addr`, `text`, `contenthash`, etc.) on the resolver contract.
+
+#### L2 Subnames
+
+Resolution on L2 relies on **CCIP-Read** in combination with **ENSIP-10 wildcard resolution**.\
+ENSIP-10 defines a workflow that allows resolving subnames of a parent name, even if those subnames don’t technically exist on L1.
+
+The process works as follows:
+
+1. **Query ENS Registry** – The client queries the ENS Registry contract for the resolver address of the subname.
+2. **Fallback to Parent** – If the resolver address is the zero address, the client strips the leftmost label and queries the Registry again for the parent name’s resolver.
+3. **Call Resolve** – Once a resolver is found, the client calls `resolve(name, data)`, where:
+   - `name` is the DNS-encoded subname.
+   - `data` is the encoded resolver function call.
+4. **Offchain Lookup Trigger** – The resolver reverts with an `OffchainLookup` error (per [EIP-3668, CCIP-Read]), providing:
+   - One or more URLs to query off-chain.
+   - The call data required for resolution.
+   - The address of the resolver contract to callback.
+5. **Offchain Data Fetch** – The client performs an HTTP(s) request to the specified resolution gateway server.
+6. **Response Returned** – The server processes the request off-chain and returns signed resolution data with a callback function.
+7. **Callback On-Chain** – The client submits the signed response back to the resolver contract via the designated callback function.
+8. **Final Resolution** – The resolver verifies the signature and returns the final resolved record (e.g., `addr`, `text`, or `contenthash`).
