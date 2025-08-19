@@ -12,15 +12,27 @@ The `getL2Subname` method retrieves a single subname registered on an L2 chain.
 
 ### Usage
 
-```typescript
-const response = await client.getL2Subname({
-  chainId: 8453,
-  namehashOrName: "namespace.eth",
-});
-```
+<CodeGroup>
+  
+  ```typescript ENS Name
+  const response = await client.getL2Subname({
+    chainId: 10,
+    nameOrNamehash: "lucas.oppunk.eth",
+  });
+  ```
+
+  
+  ```typescript Namehash
+  const response = await client.getL2Subname({
+    chainId: 10,
+    nameOrNamehash: "0x15219d7dc9f1a66f9281d1436a646ed2b4d5e96dcf62db66bffeedd2155c74c0", // namehash for lucas.oppunk.eth
+  });
+  ```
+  
+</CodeGroup>
 
 - `chainId`: The id of the target L2 network (e.g., `base(8453)`, `optimism(10)`, `baseSepolia(84532)`)
-- `namehashOrName`: Name or namehash representation of an ENS name
+- `nameOrNamehash`: Name or namehash representation of an ENS name
 
 ### Return Type
 
@@ -49,17 +61,17 @@ export interface L2SubnameResponse {
 | -------------------- | ------------------------------------------------------------------------------------- |
 | `name`               | Full subname (e.g., `alice.oppunk.eth`)                                               |
 | `namehash`           | ENS-compatible namehash of the subname                                                |
-| `label`              | The label (left-most part) of the subname                                             |
+| `label`              | The label (left-most part) of the subname (e.g., `alice`)                              |
 | `parentNamehash`     | Namehash of the parent domain (e.g., `oppunk.eth`)                                    |
 | `owner`              | Ethereum address of the current owner                                                 |
 | `texts`              | Map of text records associated with the subname                                       |
 | `addresses`          | Map of address records (coin type → address)                                          |
-| `contenthash`        | Optional content hash (e.g., IPFS, Arweave link)                                      |
-| `chainId`            | Chain ID where the subname is registered (e.g., `8453` for Base)                      |
+| `contenthash`        | Content hash (e.g., IPFS, Arweave link)                                      |
+| `chainId`            | Chain ID where the subname is registered (e.g., `8453` for Base, `10` for Optimism)                      |
 | `expiry`             | Unix timestamp indicating when the subname will expire (0 for non-expirable subnames) |
-| `mintTransaction`    | Optional object describing the minting transaction                                    |
-| ├─ `price`           | Minting price in ETH                                                                  |
-| └─ `paymentReceiver` | Ethereum address that received the mint payment                                       |
+| `mintTransaction`    | Object describing the minting transaction                                            |
+|  `price`           | Minting price in ETH                                                                  |
+|  `paymentReceiver` | Ethereum address that received the mint payment (e.g., `0x1234...abcd`)              |
 
 ## 2. **getL2Subnames**
 
@@ -67,13 +79,37 @@ The `getL2Subnames` method allows you to retrieve a paginated list of Layer 2 (L
 
 ### Usage
 
-```typescript
-client.getL2Subnames({
-  chainId: 8453, // base
-  parentName: "example.eth",
-  pageSize: 200,
+<CodeGroup>
+```typescript Fetch subnames by owner
+// Fetch first page of subnames by owner
+const byOwner = await client.getL2Subnames({
+  owner: "0x123400000000000000000000000000000000abcd",
+  chainId: 10,
+  page: 0,
+  size: 10,
 });
 ```
+
+```typescript Search by name substring
+// Search by name substring
+const search = await client.getL2Subnames({
+  stringSearch: "hello",
+  chainId: 8453,
+  page: 0,
+  size: 5,
+});
+```
+
+```typescript Filter by parent domain
+// Filter by parent domain
+const underParent = await client.getL2Subnames({
+  parent: "artii.eth",
+  chainId: 8453,
+  page: 0,
+  size: 5,
+});
+```
+</CodeGroup>
 
 ### Query Parameters
 
@@ -90,12 +126,32 @@ export interface GetL2SubnamesQuery {
 ```
 
 ### Return Type
-
-```typescript
+<CodeGroup>
+```typescript L2SubnamePagedResponse
 export interface L2SubnamePagedResponse {
   items: L2SubnameResponse[];
-  totalItems: number;
+  total: number;
   page: number;
-  pageSize: number;
+  size: number;
 }
 ```
+
+```typescript L2SubnameResponse
+export interface L2SubnameResponse {
+  name: string;
+  namehash: string;
+  label: string;
+  parentNamehash: string;
+  owner: string;
+  texts: Record<string, string>;
+  addresses: Record<string, string>;
+  contenthash?: string;
+  chainId: number;
+  expiry: number;
+  mintTransaction?: {
+    price: number;
+    paymentReceiver: string;
+  };
+}
+```
+</CodeGroup>

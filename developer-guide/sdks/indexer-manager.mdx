@@ -4,14 +4,18 @@ description: "Indexer Manager is a library for interacting with indexed data fro
 sidebarTitle: "Indexer Manager"
 ---
 
-## Indexer Client
+## Overview
 
-IndexerClient is a library for interacting with indexed data from Namespace smart contracts. It is built on top of Axios and provides a convenient API for gathering subnames data from Namespace.
+The Indexer Manager SDK is a lightweight TypeScript client for reading indexed data produced by Namespace smart contracts on Layer 2 networks. It provides simple, typed methods to read individual subnames, search and paginate subnames, and retrieve registry metadata.
 
-The `createIndexerClient` function sets up an Indexer Client.
+## Supported chains
 
-```typescript
-import { createIndexerClient } from "@namespacesdk/indexer-manager";
+- Optimism — `10`
+- Base — `8453`
+- Base Sepolia — `84532`
 
-const client = createIndexerClient({});
-```
+## Next steps
+
+- Install and configure the SDK: [Installation](/developer-guide/sdks/indexer-sdk/installation)
+- Read subnames: [Fetch L2 Subnames](/developer-guide/sdks/indexer-sdk/fetch-l2-subnames)
+- Read registry info: [Fetch L2 Registries](/developer-guide/sdks/indexer-sdk/fetch-l2-registries)

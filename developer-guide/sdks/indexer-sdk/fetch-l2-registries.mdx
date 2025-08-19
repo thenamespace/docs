@@ -12,8 +12,8 @@ Fetches the information about the deployed NFT registry for an ENS name on a spe
 
 ```typescript
 client.getL2Registry({
-  chainId: 8453,
-  nameOrNamehash: "example.eth",
+  chainId: 10,
+  nameOrNamehash: "oppunk.eth",
 });
 ```
 
@@ -21,8 +21,8 @@ client.getL2Registry({
 
 ```typescript
 export interface L2RegistryResponse {
-  name: string; // ENS subname (e.g., "alice.example.eth")
-  owner: string; // Address of the subname owner
+  name: string; // ENS name (e.g., "example.eth")
+  owner: string; // Address of the registry owner
   tokenSymbol: string; // Symbol of the ERC-721 token (e.g., "OPN")
   tokenName: string; // Name of the ERC-721 token (e.g., "Oppunk Names")
   tokenAddress: string; // Address of the subname contract on L2
@@ -30,4 +30,14 @@ export interface L2RegistryResponse {
   is_burnable: boolean; // Whether the subnames can be burned
   chain_id: number; // ID of the L2 network
 }
+```
+
+### Example
+
+```typescript
+const registry = await client.getL2Registry({
+  chainId: 10,
+  nameOrNamehash: "oppunk.eth",
+});
+console.log(registry.tokenSymbol, registry.is_burnable);
 ```

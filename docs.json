@@ -146,7 +146,8 @@
         "tab": "Changelog",
         "pages": [
           "changelog/offchain-sdk",
-          "changelog/address-sdk"
+          "changelog/address-sdk",
+          "changelog/indexer-sdk"
         ]
       }
     ],

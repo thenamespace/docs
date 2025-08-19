@@ -1,36 +1,51 @@
 ---
 description: >-
-  indexer-manager is a lightweight wrapper library around the Namespace Indexer,
-  designed to simplify searching and filtering of minted subnames across
-  multiple chains
+  Indexer SDK is a lightweight SDK for interacting with the Namespace Indexer.
 ---
 
-You can install the library using either **npm** or **yarn**:
+You can install the library:
 
 <Tabs>
-<Tab title="Npm">
+<Tab title="npm">
 ```bash
-npm install @namespacesdk/indexer-manager
+npm install @thenamespace/indexer-manager
 ```
 </Tab>
-<Tab title="Yarn">
-
+<Tab title="yarn">
 ```bash
-yarn add @namespacesdk/indexer-manager
+yarn add @thenamespace/indexer-manager
 ```
-
+</Tab>
+<Tab title="pnpm">
+```bash
+pnpm add @thenamespace/indexer-manager
+```
 </Tab>
 </Tabs>
 
 ### Usage
 
-To create an instance of the `IndexerClient`, import the factory method from the package:
-
-```typescript
-import {
-  createIndexerClient,
-  IndexerClient,
-} from "@namespacesdk/indexer-manager";
+<CodeGroup>
+```typescript Default
+import { createIndexerClient } from "@thenamespace/indexer-manager";
 
 const indexer = createIndexerClient();
 ```
+
+```typescript Custom Endpoint
+import { createIndexerClient } from "@thenamespace/indexer-manager";
+
+// Custom endpoint and timeout
+const indexer = createIndexerClient({
+  indexerUri: "https://indexer.namespace.ninja",
+  timeout: 15000,
+});
+```
+
+</CodeGroup>
+
+### Configuration
+
+- indexerUri (optional, string): Base URL of the Indexer service to query. If omitted, the SDK uses its internal default service URL.
+- timeout (optional, number): HTTP request timeout in milliseconds. Default is 30000ms.
+
