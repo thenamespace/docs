@@ -340,10 +340,6 @@
     "destination": "/developer-guide/sdks/offchain-sdk/address-records"
   },
   {
-    "source": "/dev-docs/sdk/offchain-manager/addressrecords",
-    "destination": "/developer-guide/sdks/offchain-sdk/address-records"
-  },
-  {
     "source": "/dev-docs/sdk/offchain-manager/addressrecords/chainname",
     "destination": "/developer-guide/sdks/offchain-sdk/chainname"
   },
