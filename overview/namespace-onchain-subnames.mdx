@@ -1,6 +1,6 @@
 ---
 title: "Namespace Onchain Subnames"
-description: "Overview of Namespace L2 Subnames activation, minting, and resolution processes"
+description: "Overview of Namespace Onchain Subnames activation, minting, and resolution processes"
 ---
 
 The **Namespace platform** enables ENS name owners to **activate** their names, allowing others to mint subnames under the activated parent. Owners have full flexibility to define custom activation parameters, including:
@@ -13,11 +13,11 @@ The **Namespace platform** enables ENS name owners to **activate** their names, 
 
 Namespace supports issuing subnames on both **L1 (Ethereum mainnet)** and **L2 networks ( Currently Base and Optimism )**.
 
-## **1. ENS Name Activation**
+## **ENS Name Activation**
 
 The activation process differs depending on whether the ENS name owner chooses to issue subnames on L1 or L2.
 
-### 1. L1 Activation Process
+### L1 Activation Process
 
 Activating subnames on L1 involves **four main steps**:
 
@@ -33,7 +33,7 @@ Activating subnames on L1 involves **four main steps**:
   style={{ width:"63%" }}
 />
 
-### 2. L2 Activation Process
+### L2 Activation Process
 
 Activating subnames on an L2 network follows **four key steps**:
 
@@ -49,7 +49,7 @@ Activating subnames on an L2 network follows **four key steps**:
   style={{ width:"66%" }}
 />
 
-## 2. Minting process
+## Minting Process
 
 When a name is activated, the minting process runs **off-chain**. To mint an ENS subname, the minter requests parameters and a signature from the Mint Manager server, then uses those to call the smart contract.\
 This off-chain design unlocks key advantages:
@@ -65,16 +65,16 @@ This off-chain design unlocks key advantages:
   style={{ width:"76%" }}
 />
 
-## 3. Resolution
+## Resolution process
 
-#### L1 Subnames
+#### L1 Subnames resolution
 
 Since L1 subnames are part of the existing ENS contracts on Ethereum mainnet, they resolve just like any other ENS name:
 
 1. **Fetch Resolver** – Call `getResolver` on the ENS Registry to retrieve the resolver contract for `namehash(name.eth)`.
 2. **Resolve Records** – Call the required resolver function (`addr`, `text`, `contenthash`, etc.) on the resolver contract.
 
-#### L2 Subnames
+#### L2 Subnames resolution
 
 Resolution on L2 relies on **CCIP-Read** in combination with **ENSIP-10 wildcard resolution**.\
 ENSIP-10 defines a workflow that allows resolving subnames of a parent name, even if those subnames don’t technically exist on L1.
