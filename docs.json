@@ -140,8 +140,9 @@
           {
             "group": "How-To Guides",
             "pages": [
-              "how-to/guide",
+              "tutorials/guide",
               "developer-guide/guide/mint-l1-l2-subnames",
+              "developer-guide/guide/create-offchain-subnames",
               "user-guide/app/activate-ens-name"
             ]
           }
