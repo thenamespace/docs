@@ -7,7 +7,7 @@ icon: "diagram-subtask"
 
 ## Overview
 
-This guide walks you through creating and using offchain ENS subnames with the `@namespacesdk/offchain-manager` SDK. You'll be able to create a subname, and then read records.
+This guide walks you through creating and using offchain ENS subnames with the `@thenamespace/offchain-manager` SDK. You'll be able to create a subname, and then read records.
 
 ## Prerequisites
 
@@ -33,14 +33,14 @@ Install the Offchain SDK and dotenv to load your API key from an environment var
   <Tab title="npm">
 
 ```bash
-npm install @namespacesdk/offchain-manager dotenv
+npm install @thenamespace/offchain-manager dotenv
 ```
 
   </Tab>
   <Tab title="yarn">
 
 ```bash
-yarn add @namespacesdk/offchain-manager dotenv
+yarn add @thenamespace/offchain-manager dotenv
 ```
 
   </Tab>
@@ -51,7 +51,7 @@ Initialise the client with the network you want to use and your API key. We reco
 <CodeGroup>
   ```ts index.ts
   import 'dotenv/config';
-  import { createOffchainClient } from '@namespacesdk/offchain-manager';
+  import { createOffchainClient } from '@thenamespace/offchain-manager';
 
   // Required: set NAMESPACE_API_KEY in your environment
   const API_KEY = process.env.NAMESPACE_API_KEY as string;
@@ -106,7 +106,7 @@ Create a subname under your parent name. You can include text records, address r
 <CodeGroup>
   ```ts create-subname.ts
   import { client } from './index';
-  import { ChainName } from '@namespacesdk/offchain-manager';
+  import { ChainName } from '@thenamespace/offchain-manager';
 
   async function main() {
     const PARENT_NAME = 'myensname.eth';
@@ -139,7 +139,7 @@ Create a subname under your parent name. You can include text records, address r
   ```
    ```ts index.ts
   import 'dotenv/config';
-  import { createOffchainClient } from '@namespacesdk/offchain-manager';
+  import { createOffchainClient } from '@thenamespace/offchain-manager';
 
   // Required: set NAMESPACE_API_KEY in your environment
   const API_KEY = process.env.NAMESPACE_API_KEY as string;

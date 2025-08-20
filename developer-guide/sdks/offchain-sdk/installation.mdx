@@ -11,14 +11,14 @@ Install the Offchain SDK using your preferred package manager:
 <Tab title="Npm">
 
 ```bash
-npm install @namespacesdk/offchain-manager
+npm install @thenamespace/offchain-manager
 ```
 
 </Tab>
 <Tab title="Yarn">
 
 ```bash
-yarn add @namespacesdk/offchain-manager
+yarn add @thenamespace/offchain-manager
 ```
 
 </Tab>
@@ -32,7 +32,7 @@ To interact with the Offchain SDK, create a client instance. You can select betw
 <Tab title="Mainnet">
 
 ```typescript
-import { createOffchainClient } from "@namespacesdk/offchain-manager";
+import { createOffchainClient } from "@thenamespace/offchain-manager";
 
 const client = createOffchainClient({
   timeout: 5000, // Optional: request timeout in milliseconds
@@ -46,7 +46,7 @@ client.setApiKey("example.eth", "your-api-key");
 <Tab title="Sepolia">
 
 ```typescript
-import { createOffchainClient } from "@namespacesdk/offchain-manager";
+import { createOffchainClient } from "@thenamespace/offchain-manager";
 
 const client = createOffchainClient({
   timeout: 5000, // Optional: request timeout in milliseconds
