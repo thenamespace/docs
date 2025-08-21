@@ -1,20 +1,36 @@
 ---
-title: "Offchain Manager"
-description: "TypeScript library for managing offchain subnames, text records, and data records in an ENS-like system with gasless operations."
-sidebarTitle: "Offchain Manager"
-icon: "diagram-project"
+title: "Overview"
+description: "TypeScript library for managing offchain subnames, text records, and data records in an ENS system with gasless operations."
+icon: "eye"
 ---
 
-Offchain Manager is a library for interacting with subnames, text records, data records in an ENS-like system. It is built on top of Axios and provides a convenient API for managing off-chain data.
+The Offchain Manager SDK is a TypeScript library for managing offchain subnames, text records, and data records in an ENS system with gasless operations.
 
-## Offchain Client
+## Key Features
 
-The `createOffchainClient` function sets up an Offchain Client.
+- **Gasless Operations**: Create and manage subnames without blockchain transactions
+- **Text Records**: Set and retrieve text-based records (email, website, etc.)
+- **Data Records**: Store and retrieve structured data records
+- **Address Records**: Manage cryptocurrency addresses and multi-chain support
+- **Chain Name Support**: Handle cross-chain naming conventions
+- **Batch Operations**: Efficiently manage multiple subnames and records
+- **TypeScript Support**: Full type safety and IntelliSense support
 
-```typescript
-import { createOffchainClient } from "@thenamespace/offchain-manager";
 
-const client = createOffchainClient({
-  timeout: 5000,
-});
-```
+### Record Types
+
+<AccordionGroup>
+  <Accordion title="Text Records">
+    Store human-readable information like email addresses, websites, social media profiles, and custom metadata.
+    
+  </Accordion>
+  
+  <Accordion title="Address Records">
+    Store cryptocurrency addresses for different chains and coins.
+    
+  </Accordion>
+  
+  <Accordion title="Data Records">
+    Store structured data in various formats including JSON, IPFS hashes, and custom schemas for filtering.
+  </Accordion>
+</AccordionGroup>
