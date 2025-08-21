@@ -4,6 +4,27 @@ description: "Changelog for the Offchain SDK with version updates and changes."
 sidebarTitle: "Offchain SDK"
 icon: "cloud"
 ---
+<Update label="August 21, 2025" description="v1.0.5">
+  - Added:
+    - **Optional API Key Configuration**: Added support for `defaultApiKey` and `domainApiKeys` during client initialization
+    - **No-Parameter Client Creation**: Support for creating clients without parameters (defaults to mainnet)
+  - Enhanced:
+    - **Improved Developer Experience**: Better inline API key setup workflow
+    - **Documentation Updates**: Updated documentation and examples to reflect new features
+</Update>
+
+<Update label="August 20, 2025" description="v1.0.4">
+  - Fixed:
+    - **Coin Type Corrections**:
+      - Fixed Sui coin type from `101` to `784` (correct SLIP-44 identifier)
+      - Fixed Starknet coin type from `234567891` to `9004` (correct SLIP-44 identifier)
+      - Updated test script to include Sui address validation testing
+  - Testing:
+    - **Enhanced Test Coverage**:
+      - Added Sui address record testing in manual test suite
+      - Improved validation for blockchain-specific coin types
+</Update>
+
 <Update label="August 19, 2025" description="v1.0.3">
   - Added:
     - **New Blockchain Support**: Added support for 7 new blockchain networks:

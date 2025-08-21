@@ -167,7 +167,7 @@
         "pages": [
           "changelog/offchain-sdk",
           "changelog/address-sdk",
-          "changelog/indexer-manager"
+          "changelog/indexer-sdk"
         ]
       }
     ],
