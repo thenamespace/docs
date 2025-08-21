@@ -21,33 +21,52 @@ To interact with the offchain system, you'll need an API key. You can configure 
 ## Configuring Your API Key
 
 <Tabs>
-  <Tab title="Address-Based (Default)">
-    Set a default API key that works for all ENS domains associated with your address. This is the recommended approach for most users.
+  <Tab title="Address-based API Key (Default)">
+    Works with all ENS domains registered to your address:
 
     ```typescript
-    // Set default API key for all your domains
-    client.setDefaultApiKey('your-api-key');
+    import { createOffchainClient } from "@thenamespace/offchain-manager";
 
-    // Using an environment variable (recommended)
-    client.setDefaultApiKey(process.env.NAMESPACE_API_KEY);
+    // During initialization
+    const client = createOffchainClient({
+      mode: "mainnet",
+      defaultApiKey: "your-address-based-api-key"
+    });
+
+    // Or after initialization
+    const client = createOffchainClient();
+    client.setDefaultApiKey("your-address-based-api-key");
     ```
-
-    The default API key will be used for all domains unless overridden by a domain-specific key.
   </Tab>
 
-  <Tab title="Domain-Specific">
-    For cases where you need different API keys for specific domains, you can set them individually:
+  <Tab title="Domain-based API Keys">
+    Works with specific ENS domains only:
 
     ```typescript
-    // Set API key for a specific domain
-    client.setApiKey("example.eth", "domain-specific-api-key");
-    ```
+    import { createOffchainClient } from "@thenamespace/offchain-manager";
 
-    Domain-specific keys take precedence over the default API key for that particular domain.
+    // During initialization
+    const client = createOffchainClient({
+      mode: "mainnet",
+      domainApiKeys: {
+        "example.eth": "your-domain-api-key",
+        "test.eth": "another-domain-key"
+      }
+    });
+
+    // Or after initialization
+    const client = createOffchainClient();
+    client.setApiKey("example.eth", "your-domain-api-key");
+    ```
   </Tab>
 </Tabs>
 
-## API Key Priority
+## API Key Types
+
+- **Address-based API key**: Works with all ENS domains registered to your address
+- **Domain-based API key**: Works with a specific ENS domain only
+
+## Priority Order
 
 1. Domain-specific API key (if set)
 2. Default address-based API key

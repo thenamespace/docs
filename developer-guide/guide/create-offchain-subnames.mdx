@@ -58,8 +58,11 @@ Initialise the client with the network you want to use and your API key. We reco
   if (!API_KEY) throw new Error('Missing NAMESPACE_API_KEY');
 
   // Use 'sepolia' for testing, 'mainnet' for production
-  export const client = createOffchainClient({ mode: 'mainnet', timeout: 5000 });
-  client.setDefaultApiKey(API_KEY);
+  export const client = createOffchainClient({ 
+    mode: 'mainnet', 
+    timeout: 5000,
+    defaultApiKey: API_KEY,
+  });
 
   console.log('Offchain client initialized');
   ```
@@ -146,8 +149,11 @@ Create a subname under your parent name. You can include text records, address r
   if (!API_KEY) throw new Error('Missing NAMESPACE_API_KEY');
 
   // Use 'sepolia' for testing, 'mainnet' for production
-  export const client = createOffchainClient({ mode: 'mainnet', timeout: 5000 });
-  client.setDefaultApiKey(API_KEY);
+  export const client = createOffchainClient({ 
+    mode: 'mainnet', 
+    timeout: 5000,
+    defaultApiKey: API_KEY,
+  });
 
   console.log('Offchain client initialized');
   ```

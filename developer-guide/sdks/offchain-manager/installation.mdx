@@ -26,40 +26,65 @@ yarn add @thenamespace/offchain-manager
 
 ## Creating a Client
 
-To interact with the Offchain SDK, create a client instance. You can select between mainnet and sepolia modes:
+To interact with the Offchain SDK, create a client instance. You can obtain your API key from [https://dev.namespace.ninja](https://dev.namespace.ninja).
 
 <Tabs>
-<Tab title="Mainnet">
+<Tab title="Default">
 
 ```typescript
 import { createOffchainClient } from "@thenamespace/offchain-manager";
 
-const client = createOffchainClient({
-  timeout: 5000, // Optional: request timeout in milliseconds
-  mode: "mainnet", // Use Ethereum mainnet
-});
-
-client.setApiKey("example.eth", "your-api-key");
+// Defaults to mainnet
+const client = createOffchainClient();
+client.setDefaultApiKey("your-address-based-api-key");
 ```
 
 </Tab>
-<Tab title="Sepolia">
+
+<Tab title="Network Configuration">
+
+```typescript
+import { createOffchainClient } from "@thenamespace/offchain-manager";
+
+const client = createOffchainClient({ 
+  mode: "sepolia" 
+});
+```
+
+</Tab>
+
+<Tab title="Address-based API Key">
 
 ```typescript
 import { createOffchainClient } from "@thenamespace/offchain-manager";
 
 const client = createOffchainClient({
-  timeout: 5000, // Optional: request timeout in milliseconds
-  mode: "sepolia", // Use Sepolia testnet
+  mode: "sepolia",
+  defaultApiKey: "your-address-based-api-key"
 });
-
-client.setApiKey("example.eth", "your-api-key");
 ```
 
+</Tab>
+
+<Tab title="Domain-based API Keys">
+
+```typescript
+import { createOffchainClient } from "@thenamespace/offchain-manager";
+
+const client = createOffchainClient({
+  mode: "sepolia",
+  domainApiKeys: {
+    "example.eth": "your-domain-based-api-key",
+    "test.eth": "another-domain-key"
+  }
+});
+```
 </Tab>
 </Tabs>
 
 ### Configuration Options
 
-- `timeout`: Request timeout in milliseconds (optional)
 - `mode`: Network mode - choose between "mainnet" for production or "sepolia" for testing
+- `timeout`: Request timeout in milliseconds (optional)
+- `defaultApiKey`: Address-based API key for all domains registered to your address
+- `domainApiKeys`: Object mapping specific ENS domains to their API keys
