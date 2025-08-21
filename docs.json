@@ -75,15 +75,26 @@
         "groups": [
           {
             "group": "API Reference",
-            "pages": ["api-reference/introduction"]
-          },
-          {
-            "group": "Offchain API Reference",
-            "openapi": "/openapi/offchain-openapi.json"
-          },
-          {
-            "group": "Mint API Reference",
-            "openapi": "/openapi/mint-openapi.json"
+            "pages": ["api-reference/introduction",
+            {
+              "group": "Offchain API Reference",
+              "icon": "cloud",
+              "pages": [
+                "api-reference/offchain-manager/create-or-update-a-subname",
+                "api-reference/offchain-manager/delete-a-subname",
+                "api-reference/offchain-manager/get-subname-by-full-name",
+                "api-reference/offchain-manager/query-subnames"
+              ]
+            },
+            {
+              "group": "Mint API Reference",
+              "icon": "gauge",
+              "pages": [
+                "api-reference/mint-manager/estimate-mint-params",
+                "api-reference/mint-manager/generate-mint-params"
+              ]
+            }
+          ]
           },
           {
             "group": "SDKs",
@@ -393,7 +404,7 @@
   },
   {
     "source": "/dev-docs/apis/offchain-manager",
-    "destination": "/api-reference/subnames/create-or-update-a-subname"
+    "destination": "/api-reference/offchain-manager/create-or-update-a-subname"
   },
   {
     "source": "/dev-docs/apis/mint-manager",
