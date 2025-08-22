@@ -1,0 +1,64 @@
+---
+title: "Get Single Subname"
+description: "Retrieve details for a specific ENS subname by its full name. Returns a single result or null if not found."
+sidebarTitle: "Single Subname"
+icon: "id-card"
+---
+
+Use `getSingleSubname` to fetch a single subname by its fully-qualified name.
+
+## Usage
+
+```typescript
+const subname = await client.getSingleSubname("alice.example.eth");
+```
+
+<Note>
+Returns <code>null</code> if the subname doesn't exist.
+</Note>
+
+### Response Fields
+
+<ResponseField name="SubnameDTO" type="object">
+  <Expandable title="properties">
+    <ResponseField name="id" type="string">Unique identifier for the subname record.</ResponseField>
+    <ResponseField name="fullName" type="string">Fully-qualified ENS name (e.g., <code>alice.example.eth</code>).</ResponseField>
+    <ResponseField name="parentName" type="string">Parent ENS name.</ResponseField>
+    <ResponseField name="label" type="string">Label portion of the subname (e.g., <code>alice</code>).</ResponseField>
+    <ResponseField name="texts" type="Record&lt;string, string&gt;">Text records associated with the subname.</ResponseField>
+    <ResponseField name="addresses" type="Record&lt;string, string&gt;">Address records keyed by coin type (SLIP-44) or chain identifier.</ResponseField>
+    <ResponseField name="metadata" type="Record&lt;string, string&gt;">Custom metadata key-value pairs.</ResponseField>
+    <ResponseField name="contenthash" type="string">Content hash if set.</ResponseField>
+    <ResponseField name="namehash" type="string">ENS namehash of the subname.</ResponseField>
+    <ResponseField name="owner" type="string">Owner address, if present.</ResponseField>
+    <ResponseField name="ttl" type="number">Optional TTL in seconds.</ResponseField>
+    <ResponseField name="createdAt" type="string">Creation timestamp (ISO 8601).</ResponseField>
+    <ResponseField name="updatedAt" type="string">Last update timestamp (ISO 8601).</ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example Response
+
+```json
+{
+  "id": "01J9Q4YF7V3M8K2P9N6D1R4T7C",
+  "fullName": "alice.example.eth",
+  "parentName": "example.eth",
+  "label": "alice",
+  "texts": { "name": "Alice", "url": "https://example.com" },
+  "addresses": { "60": "0x1234567890abcdef1234567890abcdef12345678" },
+  "metadata": { "sender": "0x1234567890abcdef1234567890abcdef12345678" },
+  "contenthash": null,
+  "namehash": "0xa9f0e1d2c3b4a5f6e8d9c0a1e2f6b7c2c3b9f5f7e8a1c3d7e1b2b3e6f2f6155f",
+  "owner": "0x1234567890abcdef1234567890abcdef12345678",
+  "ttl": 3600,
+  "createdAt": "2025-08-21T12:34:56.000Z",
+  "updatedAt": "2025-08-21T13:45:12.000Z"
+}
+```
+
+## Notes
+
+- Returns `null` when the subname cannot be found.
+- For bulk queries or filtering by `owner`, `label`, or `metadata`, see `getFilteredSubnames`.
+

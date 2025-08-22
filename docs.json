@@ -81,9 +81,9 @@
               "icon": "cloud",
               "pages": [
                 "api-reference/offchain-manager/create-or-update-a-subname",
-                "api-reference/offchain-manager/delete-a-subname",
                 "api-reference/offchain-manager/get-subname-by-full-name",
-                "api-reference/offchain-manager/query-subnames"
+                "api-reference/offchain-manager/query-subnames",
+                "api-reference/offchain-manager/delete-a-subname"
               ]
             },
             {
@@ -107,10 +107,11 @@
                   "developer-guide/sdks/offchain-manager",
                   "developer-guide/sdks/offchain-manager/installation",
                   "developer-guide/sdks/offchain-manager/generate-api-key",
-                  "developer-guide/sdks/offchain-manager/create-update-subname",
-                  "developer-guide/sdks/offchain-manager/delete-subname",
                   "developer-guide/sdks/offchain-manager/is-subname-available",
+                  "developer-guide/sdks/offchain-manager/create-update-subname",
+                  "developer-guide/sdks/offchain-manager/get-single-subname",
                   "developer-guide/sdks/offchain-manager/get-filtered-subnames",
+                  "developer-guide/sdks/offchain-manager/delete-subname",
                   "developer-guide/sdks/offchain-manager/address-records",
                   "developer-guide/sdks/offchain-manager/chainname",
                   "developer-guide/sdks/offchain-manager/text-records",
