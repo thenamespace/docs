@@ -1,0 +1,45 @@
+---
+title: "Subnames"
+description: "Learn about Subnames."
+sidebarTitle: "Subnames"
+---
+
+ENS is on a mission to replace random 42 byte addresses with human readable names imporving the user experience of interacting with the Ethereum. Replacing all the smart contracts, hot wallets, ledgers, and more with names. 
+So, there are a variety of ways you can give out subdomains to your apps users, set them up for yourself, or more and We are helping this vision come to life.
+
+
+## Different Types of Subnames
+
+ENS subnames come in a variety of forms: L1, L2, and offchain. From a technical perspective, L2 and offchain subnames are quite similar, but there are some tradeoffs to consider when choosing which one to use.
+
+### L1 Subnames
+If you own a .eth name like nick.eth and go to create a subname in the manager app, you will be creating a subname on Ethereum Mainnet (L1) by default. This is the simplest way to create a subname with the least amount of moving pieces, but ultimately you are limited by the gas fees of Ethereum Mainnet.
+
+If you'd like to issue L1 subnames to your users, read our guide on creating an onchain subname registrar.
+
+### L2 Subnames
+Developers can connect an ENS name on L1 with their own smart contracts on any L2 network, and depending on the implementation, this could be fully trustless while significantly reducing the cost of issuing subnames.
+
+<Card
+    title="Namespace App"
+    icon="desktop"
+    href="/user-guide/app"
+    aria-label="Namespace App"
+  >
+    Mint, manage, and sell L1 and L2 subnames from your ENS name using a user-friendly web app.
+</Card>
+
+### Offchain Subnames
+Offchain subnames are exactly what they sound like - subnames that live in a centralized database on private servers, also powered by CCIP Read. If your goal is to name a large amount of EVM addresses quickly and cheaply, with a low barrier to entry, offchain subnames might be for you. Often times, managing offchain names is as simple as interacting with a REST API.
+From a user perspective, offchain subnames are hardly different than onchain subnames. They will not appear in wallet applications as NFTs like the previous two approaches, but they can resolve all the same data (addresses, text records, etc).
+With our Custom implementation of the ENS Resolver, you can ssue these subnames for your community and use them in your wallet applications.
+
+
+<Card
+    title="Namespace Dev App"
+    icon="terminal"
+    href="/user-guide/dev-app"
+    aria-label="Namespace Dev App"
+  >
+    Mint, manage, and sell offchain subnames from your ENS name using a user-friendly web app.
+</Card>

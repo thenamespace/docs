@@ -32,7 +32,9 @@
             "group": "Concepts",
             "pages": [
               "overview/what-is-ens",
-              "overview/namespace-onchain-subnames"
+              "overview/subnames",
+              "overview/namespace-onchain-subnames",
+              "overview/offchain-subnames"
             ]
           },
           {
@@ -60,7 +62,7 @@
             ]
           },
           {
-            "group": "Dev App",
+            "group": "Dev Portal",
             "pages": [
               "user-guide/dev-app",
               "user-guide/dev-app/subnames",
@@ -70,9 +72,24 @@
           }
         ]
       },
+
       {
         "tab": "Developer Guide",
         "groups": [
+          {
+            "group": "Quick Start",
+            "pages": [
+              "tutorials/guide",
+              "developer-guide/guide/create-offchain-subnames",
+              "developer-guide/guide/mint-l1-l2-subnames"
+            ]
+          },
+          {
+            "group": "Advanced Guides",
+            "pages": [
+              "developer-guide/ai-development"
+            ]
+          },
           {
             "group": "API Reference",
             "pages": ["api-reference/introduction",
@@ -97,7 +114,7 @@
           ]
           },
           {
-            "group": "SDKs",
+            "group": "SDK Reference",
             "pages": [
               "developer-guide/sdks/introduction",
               {
@@ -139,26 +156,6 @@
                   "developer-guide/sdks/indexer-manager/fetch-l2-registries"
                 ]
               }
-            ]
-          },
-          {
-            "group": "AI Development",
-            "pages": [
-              "developer-guide/ai-development"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "How-To & Tutorials",
-        "groups": [
-          {
-            "group": "How-To Guides",
-            "pages": [
-              "tutorials/guide",
-              "developer-guide/guide/mint-l1-l2-subnames",
-              "developer-guide/guide/create-offchain-subnames",
-              "user-guide/app/activate-ens-name"
             ]
           }
         ]
