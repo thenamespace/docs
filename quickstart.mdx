@@ -5,98 +5,58 @@ sidebarTitle: "Quickstart"
 icon: "rocket"
 ---
 
-Namespace lets you create and manage ENS subnames. The two main ways to create subnames are offchain and onchain.
+Namespace lets you create and manage ENS subnames offchain or onchain.
+
 {/* 
 Offchain subnames are gasless and instant and are managed via an API or JS SDK.
 
 Onchain subnames are decentralized on either Ethereum Mainnet or any L2 network, but they are not gasless and instant.
- */}
+*/}
 
 ## Start building
 
 Choose your integration path based on your needs.
 
-<CardGroup>
-  <Card
-    title="Offchain Subnames"
-    icon="cloud"
-    href="/developer-guide/guide/create-offchain-subnames"
-    aria-label="Create Offchain Subnames Guide"
-  >
-    Gasless, instant, and easy to manage via API or JS SDK.
+<CardGroup cols={2}>
+  <Card title="Offchain Subnames" icon="cloud" iconType="regular" href="/developer-guide/guide/create-offchain-subnames">
+    Gasless, instant, flexible. Parent name owner retains control and ownership over subnames. Easy to implement and manage via API or SDK.
   </Card>
-  <Card
-    title="Onchain Subnames"
-    icon="square-code"
-    href="/developer-guide/guide/mint-l1-l2-subnames"
-    aria-label="Mint L2 Subnames Guide"
-  >
-   Onchain issuance on mainnet and supported L2s.
+  <Card title="Onchain Subnames" icon="square-code" href="/developer-guide/guide/mint-l1-l2-subnames">
+    Minted onchain as NFTs, on Ethereum or supported L2s (Base and Optimism). Offer more decentralization and ownership rights.
   </Card>
 </CardGroup>
 
 ## Build with AI
+
 Use AI to build with Namespace quickly.
 
-<CardGroup>
-  <Card
-    title="Use AI to setup your environment"
-    icon="sparkles"
-    href="/developer-guide/ai-development"
-    aria-label="AI Development Guide"
-  >
-    Leverage AI to setup your environment and build your integration.
-  </Card>
-</CardGroup>
+<Card title="Use AI to build on ENS" icon="sparkles" href="/developer-guide/ai-development">
+  Leverage AI to set up your environment and build your ENS integration.
+</Card>
 
 ## Use Namespace without writing code
 
-Manage subnames through our web interface.
+Easily mint and manage ENS subnames Onchain or Offchain through web interfaces.
 
-<CardGroup>
-  <Card
-    title="Namespace App"
-    icon="desktop"
-    href="/user-guide/app"
-    aria-label="Namespace App Guide"
-  >
-    Use our web app to activate ENS names, manage subnames, and configure settings.
+<CardGroup cols={2}>
+  <Card title="Namespace App" icon="desktop" href="/user-guide/app">
+    Mint and manage ENS subnames on L1 or L2 (Base and Optimism) through our app. Set up custom pricing rules for subnames, add whitelists, reservations, or token-gating without writing code.
   </Card>
-  <Card
-    title="Dev Portal"
-    icon="terminal"
-    href="/user-guide/dev-app"
-    aria-label="Dev Portal Guide"
-  >
-    Access developer tools, API keys, and advanced configuration options.
+  <Card title="Dev Portal" icon="terminal" href="/user-guide/dev-app">
+    Create and manage ENS Subnames offchain through our Dev Portal. Add custom records, update the resolver contract, create API keys, and easily implement Subname registrations in your app.
   </Card>
 </CardGroup>
 
 ## More resources
 
-<CardGroup>
-  <Card
-    title="Browse sample projects"
-    icon="folder-open"
-    href="/tutorials/guide"
-    aria-label="Tutorials Guide"
-  >
+<CardGroup cols={3}>
+  <Card title="See sample projects" icon="folder-open" iconType="regular" href="/tutorials/guide">
     Use our tutorials and guides to get started integrating Namespace.
   </Card>
-  <Card
-    title="API Reference"
-    icon="book"
-    href="/api-reference/introduction"
-    aria-label="API Reference"
-  >
+  <Card title="API Reference" icon="book" iconType="regular" href="/api-reference/introduction">
     Explore our complete API documentation for all endpoints and parameters.
   </Card>
-  <Card
-    title="SDK Documentation"
-    icon="code"
-    href="/developer-guide/sdks/introduction"
-    aria-label="SDK Documentation"
-  >
+  <Card title="SDK Documentation" icon="code" iconType="regular" href="/developer-guide/sdks/introduction">
     Detailed documentation for our JavaScript SDKs and integration examples.
   </Card>
 </CardGroup>
