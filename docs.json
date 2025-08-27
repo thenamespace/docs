@@ -25,12 +25,13 @@
         "tab": "Overview",
         "groups": [
           {
-            "group": "Getting Started",
-            "pages": ["index", "quickstart"]
+            "group": "Introduction",
+            "pages": ["introduction", "quickstart"]
           },
           {
             "group": "Concepts",
             "pages": [
+              "overview/what-is-namespace",
               "overview/what-is-ens",
               "overview/subnames",
               "overview/namespace-onchain-subnames",
