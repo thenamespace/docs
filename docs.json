@@ -31,8 +31,8 @@
           {
             "group": "Concepts",
             "pages": [
-              "overview/what-is-namespace",
               "overview/what-is-ens",
+              "overview/what-is-namespace",
               "overview/subnames",
               "overview/namespace-onchain-subnames",
               "overview/offchain-subnames"
