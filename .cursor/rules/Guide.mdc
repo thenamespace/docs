@@ -1,0 +1,274 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Content Types
+
+> Focus writing based on content type
+
+<Tip>
+  In this article, you’ll learn the different content types, when to use each one, and how to approach writing each type.
+</Tip>
+
+Documentation needs to be organized around the specific goal you're trying to help the user achieve.
+
+## Categorize using the Diataxis framework
+
+The [Diataxis framework](https://diataxis.fr) is a helpful guide for categorizing content based on your audience’s needs. Documentation can generally be mapped into one of these types:
+
+1. Tutorials: Learning-oriented content for new users
+2. How-to guides: Task-oriented guidance for specific problems
+3. Explanations: Understanding-oriented conceptual discussions
+4. Reference: Information-oriented technical descriptions
+
+Defining content types helps you plan documentation with a clear purpose and makes it easier for users to find what they need.
+
+<Frame>
+  <img src="https://mintlify.s3.us-west-1.amazonaws.com/mintlify-guides/images/diataxis.webp" />
+</Frame>
+
+## Picking a type
+
+| Question                               | Tutorial               | How-To                   | Reference                | Explanation             |
+| :------------------------------------- | :--------------------- | :----------------------- | :----------------------- | :---------------------- |
+| What is the user's goal?               | Learn through practice | Solve a specific problem | Find precise information | Understand concepts     |
+| What is the user's knowledge?          | Beginner               | Intermediate             | Experienced              | Any level               |
+| What is the primary focus?             | Learning by doing      | Achieving a goal         | Providing information    | Deepening understanding |
+| How is the content structured?         | Step-by-step           | Problem-solution         | Organized facts          | Conceptual discussions  |
+| Is it task-oriented?                   | Yes, guided tasks      | Yes, specific tasks      | No, informational        | No, conceptual          |
+| Is it designed for linear progression? | Yes                    | No                       | No                       | No                      |
+
+## Writing for each type
+
+### Tutorials (Learning-oriented)
+
+* **Audience Goal**: Learn something new through step-by-step instructions.
+* **Characteristics**: Sequential and assumes no prior knowledge.
+* **Writing Approach**:
+  * Set expectations of what the user will achieve after reading.
+  * Use clear, incremental steps. Minimize choices that need to be made by the user.
+  * Point out milestones throughout, e.g. “you will notice that” or “If this doesn’t show, you probably forgot to”
+  * Minimize theory and focus on concrete actions.
+
+### How-To Guides (Problem-oriented)
+
+* **Audience Goal**: Perform a specific task correctly.
+* **Characteristics**: Goal-driven and assumes some prior knowledge.
+* **Writing Approach**:
+  * Write from the perspective of the user, not the product.
+  * Describe a logical sequence, but avoid “duh” statements (e.g. press enter to submit)
+  * Minimize context beyond what’s necessary.
+
+### Reference (Information-oriented)
+
+* **Audience Goal**: Find details about a product’s functionality.
+* **Characteristics**: Unambiguous, product-focused, scannable.
+* **Writing Approach**:
+  * Be scannable and concise
+  * Prioritize consistency (e.g. tables, naming, API specs).
+  * Avoid explanatory content. Focus on examples that are easy to copy and modify.
+
+> Reference documentation should be super scannable. As a developer, you want to find 'how do I do this specific task.' When I get there, I want to be able to clearly understand the parameters.
+>
+> \- **Sarah Edwards, Documentation Engineer at Datastax**
+
+### Explanation (Understanding-Oriented)
+
+* **Audience Goal**: Expand general understanding of a concept or highly complex feature.
+* **Characteristics**: Theoretical, potentially opinionated, broad in scope.
+* **Writing Approach**:
+  * Provide background context, such as design decisions or technical constraints
+  * Acknowledge opinions and alternatives
+  * Draw connections to other areas in the product or industry
+
+> For complex or multi-threaded releases that touch many parts of your product, you need to provide both practical guidance and conceptual understanding in your documentation. Users need to grasp when and why to use something, not just how.
+>
+> \- **CT Smith, Head of Docs at Payabli**
+
+## Tips and tricks
+
+1. **Maintain Purpose**: Before writing, assign each page a specific content type and make it top of mind in the doc throughout your writing.
+2. **Consider Content Freshness**: Regardless of content type, try to optimize for evergreen documentation. As Ethan from GitHub says, "If something represents a moment in time of what a feature looks like on a specific date, it's probably better suited for a blog post than in the docs.” Or if something changes very frequently, such as pricing information, avoid putting it in your docs.
+3. **Think Like Your Users**: Consider different user personas when organizing content. Check out [Know Your Audience] for more information.
+
+While the Diataxis framework provides a starting point, successful documentation requires contextual adaptation to your product. Start by understanding the framework's principles, then adjust them to serve your users' needs.
+
+> The trap is to think one framework can rule them all. Don’t be so inflexible in enforcing content types that you forget the reader.
+>
+> \- **CT Smith, Head of Docs at Payabli**
+
+
+# Content Types
+
+> Focus writing based on content type
+
+<Tip>
+  In this article, you’ll learn the different content types, when to use each one, and how to approach writing each type.
+</Tip>
+
+Documentation needs to be organized around the specific goal you're trying to help the user achieve.
+
+## Categorize using the Diataxis framework
+
+The [Diataxis framework](https://diataxis.fr) is a helpful guide for categorizing content based on your audience’s needs. Documentation can generally be mapped into one of these types:
+
+1. Tutorials: Learning-oriented content for new users
+2. How-to guides: Task-oriented guidance for specific problems
+3. Explanations: Understanding-oriented conceptual discussions
+4. Reference: Information-oriented technical descriptions
+
+Defining content types helps you plan documentation with a clear purpose and makes it easier for users to find what they need.
+
+<Frame>
+  <img src="https://mintlify.s3.us-west-1.amazonaws.com/mintlify-guides/images/diataxis.webp" />
+</Frame>
+
+## Picking a type
+
+| Question                               | Tutorial               | How-To                   | Reference                | Explanation             |
+| :------------------------------------- | :--------------------- | :----------------------- | :----------------------- | :---------------------- |
+| What is the user's goal?               | Learn through practice | Solve a specific problem | Find precise information | Understand concepts     |
+| What is the user's knowledge?          | Beginner               | Intermediate             | Experienced              | Any level               |
+| What is the primary focus?             | Learning by doing      | Achieving a goal         | Providing information    | Deepening understanding |
+| How is the content structured?         | Step-by-step           | Problem-solution         | Organized facts          | Conceptual discussions  |
+| Is it task-oriented?                   | Yes, guided tasks      | Yes, specific tasks      | No, informational        | No, conceptual          |
+| Is it designed for linear progression? | Yes                    | No                       | No                       | No                      |
+
+## Writing for each type
+
+### Tutorials (Learning-oriented)
+
+* **Audience Goal**: Learn something new through step-by-step instructions.
+* **Characteristics**: Sequential and assumes no prior knowledge.
+* **Writing Approach**:
+  * Set expectations of what the user will achieve after reading.
+  * Use clear, incremental steps. Minimize choices that need to be made by the user.
+  * Point out milestones throughout, e.g. “you will notice that” or “If this doesn’t show, you probably forgot to”
+  * Minimize theory and focus on concrete actions.
+
+### How-To Guides (Problem-oriented)
+
+* **Audience Goal**: Perform a specific task correctly.
+* **Characteristics**: Goal-driven and assumes some prior knowledge.
+* **Writing Approach**:
+  * Write from the perspective of the user, not the product.
+  * Describe a logical sequence, but avoid “duh” statements (e.g. press enter to submit)
+  * Minimize context beyond what’s necessary.
+
+### Reference (Information-oriented)
+
+* **Audience Goal**: Find details about a product’s functionality.
+* **Characteristics**: Unambiguous, product-focused, scannable.
+* **Writing Approach**:
+  * Be scannable and concise
+  * Prioritize consistency (e.g. tables, naming, API specs).
+  * Avoid explanatory content. Focus on examples that are easy to copy and modify.
+
+> Reference documentation should be super scannable. As a developer, you want to find 'how do I do this specific task.' When I get there, I want to be able to clearly understand the parameters.
+>
+> \- **Sarah Edwards, Documentation Engineer at Datastax**
+
+### Explanation (Understanding-Oriented)
+
+* **Audience Goal**: Expand general understanding of a concept or highly complex feature.
+* **Characteristics**: Theoretical, potentially opinionated, broad in scope.
+* **Writing Approach**:
+  * Provide background context, such as design decisions or technical constraints
+  * Acknowledge opinions and alternatives
+  * Draw connections to other areas in the product or industry
+
+> For complex or multi-threaded releases that touch many parts of your product, you need to provide both practical guidance and conceptual understanding in your documentation. Users need to grasp when and why to use something, not just how.
+>
+> \- **CT Smith, Head of Docs at Payabli**
+
+## Tips and tricks
+
+1. **Maintain Purpose**: Before writing, assign each page a specific content type and make it top of mind in the doc throughout your writing.
+2. **Consider Content Freshness**: Regardless of content type, try to optimize for evergreen documentation. As Ethan from GitHub says, "If something represents a moment in time of what a feature looks like on a specific date, it's probably better suited for a blog post than in the docs.” Or if something changes very frequently, such as pricing information, avoid putting it in your docs.
+3. **Think Like Your Users**: Consider different user personas when organizing content. Check out [Know Your Audience] for more information.
+
+While the Diataxis framework provides a starting point, successful documentation requires contextual adaptation to your product. Start by understanding the framework's principles, then adjust them to serve your users' needs.
+
+> The trap is to think one framework can rule them all. Don’t be so inflexible in enforcing content types that you forget the reader.
+>
+> \- **CT Smith, Head of Docs at Payabli**
+
+# Organizing Navigation
+
+> Guidelines for information hierarchy
+
+This article covers why and how to organize your information hierarchy in a way that makes sense for your users.
+
+## Why is navigation important?
+
+Navigation might seem unimportant because experienced users looking for specific answers will typically use your docs search bar.
+
+But for newer users and prospects, your documentation information hierarchy serves as a mental model for how to think about your product. Navigation thus serves as a critical selling point by helping people quickly grasp what you offer.
+
+> Your navigation is like a subway map. It tells you how the whole system hangs together, which is crucial for users evaluating your product.
+>
+> \- **CT Smith, Head of Docs at Payabli**
+
+## Map the foundation with stakeholders
+
+Align with key stakeholders like your founders, product managers, or engineering leads on how your product works, what’s most important, and how users should interact with it.
+
+Example questions to ask:
+
+* What’s the simplest way to explain how the product works?
+* What are the product’s core building blocks?
+* How do users typically adopt the product? Where do people most often get stuck?
+* How does the product’s architecture influence how people use it?
+* What are the most important integrations or dependencies?
+* What is changing or evolving in the product?
+* If the product was broken into different “layers,” what would they be? e.g. beginner vs advanced, or feature set, or product line
+
+After mapping the structure, if you have uncertainty about whether this hierarchy makes logical sense, describe your reasoning and ask an LLM to find gaps. Use the prompt “How would you organize this for maximum understanding?”
+
+## Validate your assumptions
+
+Once you’ve established a structure, you need to validate whether it actually works for real users. The way people navigate your documentation often reveals gaps in your information architecture that internal teams might overlook.
+
+### **Track real user journeys**
+
+Use tools like session replays (e.g. [FullStory](https://www.fullstory.com), [Hotjar](https://www.hotjar.com)) or analytics (e.g. [Mixpanel](https://mixpanel.com)) to study how users move through your docs. Pay attention to:
+
+* **Entry points:** Where do users start their journey? Are they coming from search, a support ticket, or directly from your product?
+* **Navigation patterns:** Do they follow the expected hierarchy, or do they take unexpected detours?
+* **Friction points:** Where do users pause, loop back, or abandon their session? These could indicate unclear organization or missing content.
+* **Search behavior:** Are users searching for terms that don’t exist in your documentation? This might highlight gaps in your content or misalignment in terminology.
+
+> If you're able to hop on a call and ask users, 'Show me how you find answers,' you might be surprised. They're often using documentation in ways you don't understand.
+>
+> \- **Sarah Edwards, Documentation Engineer at Datastax**
+
+### **Test with real users—including your own team**
+
+Analytics help surface trends, but direct conversations provide deeper insights.
+
+Get on research calls where customers attempt to find answers to specific questions. Ask them to narrate their thought process as they navigate.
+
+New hires are also a great proxy for fresh users. Before they get too familiar with your product, ask them to complete a task using only the documentation.
+
+Have them outline in detail how they approached it—where they clicked first, how they interpreted section names, and where they got stuck. Since they lack prior context, their instincts can reveal whether your docs are intuitive or if they assume too much knowledge.
+
+## **Identify common pitfalls**
+
+Based on your observations, look for these common navigation issues:
+
+* **Overloaded categories:** Too many top-level sections can overwhelm users. Consider grouping related topics together.
+* **Hidden essential content:** Don’t bury critical information. Prioritize frequently accessed content.
+* **Unclear section names:** If users hesitate before clicking, your labels might not be intuitive. Align terminology with how your audience naturally thinks.
+
+Try to avoid egregious issues but remember, it’s hard to make documentation organization work for everyone.
+
+“Creating a nav structure that makes sense to everyone can be difficult, but try to find something that works for a majority of customers.” —Brody Klapko, Technical Writer at Stash
+
+## Iterate over time
+
+Above all, stay flexible. Your navigation should evolve with your product and user needs.
+
+> You don't have to be right on the first try. Use all available tools and perspectives to inform your decisions, but be ready to adjust based on how users actually interact with your documentation.
+>
+> \- **Ethan Palm, Senior Manager of Docs at Github**

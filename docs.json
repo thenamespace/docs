@@ -39,36 +39,36 @@
             ]
           },
           {
+            "group": "Product ",
+            "pages": [
+              {
+                "group": "Namespace App",
+                "pages": [
+                  "user-guide/app",
+                  "user-guide/app/search-register",
+                  "user-guide/app/activate-ens-name",
+                  "user-guide/app/wizard",
+                  "user-guide/app/features-list",
+                  "user-guide/app/widget",
+                  "user-guide/app/subpages"
+                ]
+              },
+              {
+                "group": "Dev Portal",
+                "pages": [
+                  "user-guide/dev-portal",
+                  "user-guide/dev-portal/subnames",
+                  "user-guide/dev-portal/resolver-set",
+                  "user-guide/dev-portal/api-keys"
+                ]
+              }
+            ]
+          },
+          {
             "group": "Others",
             "pages": [
               "overview/ecosystem",
               "overview/use-cases"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "User Guide",
-        "groups": [
-          {
-            "group": "Namespace App",
-            "pages": [
-              "user-guide/app",
-              "user-guide/app/search-register",
-              "user-guide/app/activate-ens-name",
-              "user-guide/app/wizard",
-              "user-guide/app/features-list",
-              "user-guide/app/widget",
-              "user-guide/app/subpages"
-            ]
-          },
-          {
-            "group": "Dev Portal",
-            "pages": [
-              "user-guide/dev-app",
-              "user-guide/dev-app/subnames",
-              "user-guide/dev-app/resolver-set",
-              "user-guide/dev-app/api-keys"
             ]
           }
         ]
@@ -298,19 +298,19 @@
   },
   {
     "source": "/apps/offchain-subnames-devapp",
-    "destination": "/user-guide/dev-app"
+    "destination": "/user-guide/dev-portal"
   },
   {
     "source": "/apps/offchain-subnames-devapp/subnames",
-    "destination": "/user-guide/dev-app/subnames"
+    "destination": "/user-guide/dev-portal/subnames"
   },
   {
     "source": "/apps/offchain-subnames-devapp/resolver-set",
-    "destination": "/user-guide/dev-app/resolver-set"
+    "destination": "/user-guide/dev-portal/resolver-set"
   },
   {
     "source": "/apps/offchain-subnames-devapp/api-keys",
-    "destination": "/user-guide/dev-app/api-keys"
+    "destination": "/user-guide/dev-portal/api-keys"
   },
   {
     "source": "/how-to-guides-and-demos",
