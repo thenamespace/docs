@@ -26,15 +26,7 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["introduction", "quickstart"]
-          },
-          {
-            "group": "Concepts",
-            "pages": [
-              "overview/subnames",
-              "overview/namespace-onchain-subnames",
-              "overview/offchain-subnames"
-            ]
+            "pages": ["getting-started","introduction" ,"overview/subnames"]
           },
           {
             "group": "Product ",
@@ -62,11 +54,15 @@
             ]
           },
           {
-            "group": "Others",
+            "group": "Who it's for",
             "pages": [
-              "overview/ecosystem",
-              "overview/use-cases"
+              "overview/for-product-teams",
+              "overview/for-name-owners"
             ]
+          },
+          {
+            "group": "Others",
+            "pages": ["overview/ecosystem", "overview/use-cases"]
           }
         ]
       },
@@ -77,6 +73,7 @@
           {
             "group": "Quick Start",
             "pages": [
+              "developer-guide/quickstart",
               "tutorials/guide",
               "developer-guide/guide/create-offchain-subnames",
               "developer-guide/guide/mint-l1-l2-subnames",
@@ -87,6 +84,12 @@
             "group": "Advanced Guides",
             "pages": [
               "developer-guide/ai-development"
+            ]
+          },
+          {
+            "group": "Architecture",
+            "pages": [
+              "developer-guide/architecture/onchain-subnames"
             ]
           },
           {
