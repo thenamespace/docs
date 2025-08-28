@@ -31,8 +31,6 @@
           {
             "group": "Concepts",
             "pages": [
-              "overview/what-is-ens",
-              "overview/what-is-namespace",
               "overview/subnames",
               "overview/namespace-onchain-subnames",
               "overview/offchain-subnames"
@@ -43,18 +41,17 @@
             "pages": [
               {
                 "group": "Namespace App",
+                "icon": "desktop",
                 "pages": [
                   "user-guide/app",
-                  "user-guide/app/search-register",
                   "user-guide/app/activate-ens-name",
-                  "user-guide/app/wizard",
-                  "user-guide/app/features-list",
-                  "user-guide/app/widget",
-                  "user-guide/app/subpages"
+                  "user-guide/app/search-register",
+                  "user-guide/app/widget"
                 ]
               },
               {
                 "group": "Dev Portal",
+                "icon": "terminal",
                 "pages": [
                   "user-guide/dev-portal",
                   "user-guide/dev-portal/subnames",
@@ -82,7 +79,8 @@
             "pages": [
               "tutorials/guide",
               "developer-guide/guide/create-offchain-subnames",
-              "developer-guide/guide/mint-l1-l2-subnames"
+              "developer-guide/guide/mint-l1-l2-subnames",
+              "developer-guide/guide/subpages"
             ]
           },
           {
@@ -418,7 +416,7 @@
   },
   {
     "source": "/dev-docs/subpages",
-    "destination": "/user-guide/app/subpages"
+    "destination": "/developer-guide/guide/subpages"
   },
   {
     "source": "/ecosystem/use-cases",
