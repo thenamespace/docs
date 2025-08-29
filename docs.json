@@ -76,14 +76,9 @@
             "pages": [
               "developer-guide/quickstart",
               "tutorials/guide",
+              "developer-guide/ai-development",
               "developer-guide/guide/create-offchain-subnames",
               "developer-guide/guide/mint-l1-l2-subnames"
-            ]
-          },
-          {
-            "group": "Advanced Guides",
-            "pages": [
-              "developer-guide/ai-development"
             ]
           },
           
