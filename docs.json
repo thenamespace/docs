@@ -31,6 +31,8 @@
           {
             "group": "Products and Services",
             "pages": [
+              "user-guide/subpages",
+              "user-guide/sdk-and-api",
              
               {                
                 "group": "Namespace App",
