@@ -26,7 +26,7 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["getting-started","overview/subnames"]
+            "pages": ["getting-started", "overview/subnames", "overview/use-cases"]
           },
           {
             "group": "Products and Services",
@@ -64,10 +64,6 @@
               "overview/for-product-teams",
               "overview/for-name-owners"
             ]
-          },
-          {
-            "group": "Others",
-            "pages": ["overview/ecosystem", "overview/use-cases"]
           }
         ]
       },
