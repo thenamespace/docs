@@ -29,9 +29,12 @@
             "pages": ["getting-started","introduction" ,"overview/subnames"]
           },
           {
-            "group": "Product ",
+            "group": "Products",
             "pages": [
               {
+                "pages": ["user-guide/overview"]
+              },
+              {                
                 "group": "Namespace App",
                 "icon": "desktop",
                 "pages": [
