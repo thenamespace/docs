@@ -77,8 +77,7 @@
               "developer-guide/quickstart",
               "tutorials/guide",
               "developer-guide/guide/create-offchain-subnames",
-              "developer-guide/guide/mint-l1-l2-subnames",
-              "developer-guide/guide/subpages"
+              "developer-guide/guide/mint-l1-l2-subnames"
             ]
           },
           {
