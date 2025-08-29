@@ -8,7 +8,7 @@ icon: "hand-wave"
 
 ENS turns long 0x addresses into memorable names like `alice.eth`. Subnames extend a parent name (e.g., `brand.eth`) to create usernames for people, apps, and agents — like `alice.brand.eth`.
 
-Subnames work across wallets and apps, can serve as identity solution to improve safety and onboarding.
+Subnames function across wallets and apps, serving as an identity solution to enhance safety and streamline onboarding.
 
 ## Who is this for?
 
@@ -29,31 +29,69 @@ Subnames work across wallets and apps, can serve as identity solution to improve
 Use this guide to pick the right approach for your use case.
 
 <Tabs>
-  <Tab title="Offchain" icon="cloud">
-    Gasless and instant. Best for large-scale issuance, flexible ownership controls, and simple API/SDK management. Great default for most apps.
-    
-    <Card title="Create offchain subnames" icon="rocket" href="/developer-guide/guide/create-offchain-subnames">
+  <Tab title="Offchain">
+    Offchain subnames are simple database records and work by leveraging [CCIP-read](https://eips.ethereum.org/EIPS/eip-3668). Best for large-scale issuance, require no gas fees to create, flexible ownership controls, and simple API/SDK management. Great default for most apps.
+
+    <Card title="Create offchain subnames" icon="rocket" horizontal href="/developer-guide/guide/create-offchain-subnames">
       Step-by-step guide
     </Card>
   </Tab>
-  <Tab title="L2" icon="square-code">
-    Minted as NFTs on supported L2s (Base, Optimism). Lower costs than L1 with stronger decentralization and portability.
-    
-    <Card title="Mint L2 subnames" icon="bolt" href="/developer-guide/guide/mint-l1-l2-subnames">
-      How to mint on L2
+  <Tab title="L2 chain">
+    L2 subnames are minted as NFTs on supported L2s (Base, Optimism for now, but could be deployed on any L2). Lower costs than L1 with stronger decentralization and ownership.
+
+    <Card title="Mint L2 subnames" icon="bolt" horizontal href="/developer-guide/guide/mint-l1-l2-subnames">
+      Step-by-step guide
     </Card>
   </Tab>
-  <Tab title="L1" icon="cube">
-    Maximum decentralization on Ethereum mainnet with higher cost. Fits premium, low-volume cases.
+  <Tab title="L1 chain">
+    L1 subnames are fully decentralized, unruggable, and 100% under the users' control once minted. They are minted on the Ethereum mainnet at a higher cost. Fits premium, low-volume cases.
+
+    <Card title="Mint L1 subnames" icon="sparkles" horizontal href="/developer-guide/guide/mint-l1-l2-subnames">
+      Step-by-step guide
+    </Card>
   </Tab>
 </Tabs>
 
 ## Who’s using subnames and why
 
-- Product teams: branded usernames, safer transactions, cross-app identity
-- Chains and platforms: consistent ecosystem naming and discovery
-- Communities and creators: membership identity and monetization
-- Individuals: portable identity and profile you own
+Discover some of the most common Subname uses in Web3.
+
+<Accordion title="See Subname use cases" iconType="regular">
+  - **AI launchpads** → Auto-assign subnames to every new AI agent created.
+  - **L2 chain** → consistent ecosystem naming and discovery with one namespace.
+  - **Wallets** → Branded wallet names (human-readable names instead of addresses).
+  - **Payment apps** → Simple names for sending/receiving payments.
+  - **AI agents** → Each agent gets a sovereign, unique, verifiable ENS identity and profile.
+  - **Launchpads** → Auto-assign subnames to every contract or AI agent created.
+  - **RaaS providers** → Chain-wide naming service for every rollup.
+  - **Blockchain infra/tools** → Adds a universal identity layer for developers.
+  - **Wallet-as-a-Service** → One wallet name that works across all chains.
+  - **Games** → Custom player usernames with cross-chain utility.
+  - **Identity apps/services** → Use ENS as the foundation for digital identity.
+  - **Communities** → Subnames for members, strengthening shared identity.
+  - **Individuals** → Creators give subnames to followers for onboarding.
+  - **All others** → Any user-facing app needs names as identity primitives.
+</Accordion>
+
+## Subname Benefits
+
+Check out some of the benefits Subname implementation brings.
+
+<Accordion title="See Subname Benefits" iconType="regular">
+  - 
+  - **Universal identity** → One name works across apps, wallets, and blockchains.
+  - **Trust & safety** → Reduces errors, scams, and copy-paste risks.
+  - **Scam protection** → No phishing, address mimicking/spoofing, clipboard hijacking, etc.
+  - **Simplified Onboarding** → Users get onboarded simply by registering a username.
+  - **New revenue streams** → Premium names, renewals, subname activations.
+  - **Referrals** → Domains and subdomains used as trackable referral links.
+  - **Portability** → Identity you own, not locked to any app or chain.
+  - **Brand Visibility** → People wear their _name_.base.eth as their social handle.
+  - **Social identity** → Communities distribute branded names
+  - **Cross-app interoperability** → ENS usernames resolve across 1,000\+ web3 apps
+  - **Onchain Profile** → ENS \+ metadata (avatar, social handles, website, addresses, etc.)
+  - **Immutable websites** → Decentralized, censorship-resistant website (contenthash)
+</Accordion>
 
 ## Next steps
 
@@ -61,9 +99,11 @@ Use this guide to pick the right approach for your use case.
   <Card title="Use the Namespace App" icon="desktop" href="/user-guide/app">
     Launch and manage subnames without code.
   </Card>
-  <Card title="Quickstart (developers)" icon="rocket" href="/developer-guide/quickstart">
+  <Card title="Developer Quickstart" icon="rocket" href="/developer-guide/quickstart">
     Build with our SDKs and APIs.
   </Card>
 </CardGroup>
 
-
+<Card title="Need custom solution?" icon="message" href="https://t.me/+5FAwyiKOTeswNTIy">
+  Send us a message and let's build something together.
+</Card>
