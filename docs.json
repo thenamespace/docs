@@ -26,13 +26,11 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["getting-started","introduction" ,"overview/subnames"]
+            "pages": ["getting-started","overview/subnames"]
           },
           {
             "group": "Products and Services",
             "pages": [
-              "user-guide/subpages",
-              "user-guide/sdk-and-api",
              
               {                
                 "group": "Namespace App",
@@ -53,7 +51,11 @@
                   "user-guide/dev-portal/resolver-set",
                   "user-guide/dev-portal/api-keys"
                 ]
-              }
+              },
+              "user-guide/sdk-and-api",
+              "user-guide/subpages",
+              "user-guide/ens-widget",
+              "user-guide/custom-solutions"
             ]
           },
           {
