@@ -31,9 +31,7 @@
           {
             "group": "Products",
             "pages": [
-              {
-                "pages": ["user-guide/overview"]
-              },
+             
               {                
                 "group": "Namespace App",
                 "icon": "desktop",
