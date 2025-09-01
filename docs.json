@@ -72,16 +72,22 @@
         "tab": "Developer Guide",
         "groups": [
           {
-            "group": "Quick Start",
+            "group": "Getting Started",
             "pages": [
               "developer-guide/quickstart",
-              "tutorials/guide",
-              "developer-guide/ai-development",
-              "developer-guide/guide/create-offchain-subnames",
-              "developer-guide/guide/mint-l1-l2-subnames"
+              "developer-guide/ai-development"
             ]
           },
-          
+          {
+            "group": "How to Guides",
+            "pages": [
+              "developer-guide/guide",
+              "developer-guide/guide/create-offchain-subnames",
+              "developer-guide/guide/mint-l1-l2-subnames"   ,    
+              "developer-guide/guide/subpages"
+            ]
+          },
+
           {
             "group": "API Reference",
             "pages": ["api-reference/introduction",
@@ -311,7 +317,7 @@
   },
   {
     "source": "/how-to-guides-and-demos",
-    "destination": "/tutorials/guide"
+    "destination": "developer-guide/guide"
   },
   {
     "source": "/dev-docs/sdk",
