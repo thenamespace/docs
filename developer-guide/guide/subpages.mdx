@@ -1,0 +1,138 @@
+---
+title: "Subname Developer Guide"
+description: "Build and customize your own ENS subname minting website using the white label starter kit."
+sidebarTitle: "Create your own Subpage"
+icon: "folder-open"
+---
+
+The Subname Developer Guide helps you build and customize your own ENS subname minting website using our white label starter kit. This template provides a fully functional subname-minting website that you can deploy in minutes and customize to match your brand.
+
+## Prerequisites
+
+- **ENS Name Activation**: Your ENS name must be activated and listed on the Namespace platform
+- **Node.js**: Version 16 or higher
+- **Git**: For cloning the repository
+
+## Getting Started
+
+<Steps>
+  <Step title="Activate ENS Name">
+    To enable subname registrations through your custom website, you first need to **activate your ENS name(s)**. Once activated, others will be able to mint subnames from them.
+
+    <Card title="How-to Activate ENS Name" icon="hat-wizard" horizontal href="/user-guide/app/activate-ens-name">
+      See the step-by-step guide on how to activate an ENS Name.
+    </Card>
+  </Step>
+  
+  <Step title="Clone the Repository">
+    Clone the white label starter kit repository:
+    
+    ```bash
+    git clone https://github.com/thenamespace/subpages.git
+    cd packages/subname-minting-website-template/
+    ```
+  </Step>
+  
+  <Step title="Install Dependencies">
+    Install the required dependencies:
+    
+    ```bash
+    yarn install
+    ```
+  </Step>
+  
+  <Step title="Configure Environment">
+    Create a `.env` file in the project root with your configuration:
+    
+    ```bash
+    VITE_APP_LISTED_NAME=yourname.eth
+    VITE_APP_LISTING_CHAIN=base
+    VITE_APP_ALCHEMY_TOKEN=your_alchemy_token_here
+    VITE_APP_DEFAULT_AVATAR=https://your-avatar-url.com
+    VITE_APP_IS_TESTNET=false
+    VITE_APP_MINT_SOURCE=your-website
+    ```
+  </Step>
+  
+  <Step title="Start Development">
+    Start the development server:
+    
+    ```bash
+    yarn run dev
+    ```
+    
+    Your website will be available at `http://localhost:5173`
+  </Step>
+</Steps>
+
+## Customization
+
+### Theme Customization
+
+The easiest way to customize your website's appearance is through the `theme.json` file. This file contains design variables that control colors, backgrounds, and visual elements.
+
+```json
+{
+  "main": "#0a2943",
+  "accent": "#309ae0", 
+  "light": "#ffffff",
+  "dark": "#000000",
+  "error": "#d80000",
+  "backgroundImage": "https://your-background-image.com/image.jpg"
+}
+```
+
+### Default ENS Avatar
+
+You can configure a default avatar for newly minted subnames. This can be your company logo or any image that represents your brand. Users can change this after minting.
+
+### Custom Records
+
+Configure custom text records and address records for your subnames:
+
+- **Text Records**: Add custom metadata like website URLs, social media handles, or descriptions
+- **Address Records**: Set default wallet addresses for different chains
+
+Customization for text records and address records can be made in the `MintForm.tsx` component located at `/packages/subname-minting-website-template/src/components/MintForm.tsx`.
+
+The records are configured in the `mintParameters` function call:
+
+```typescript MintForm.tsx lines
+const params = await mintParameters({
+  minterAddress: address,
+  expiryInYears: expiryYears,
+  records: {
+    addresses: addresses,
+    texts: texts,
+  },
+  label: label,
+  parentName: listedName,
+  owner: address!,
+});
+```
+
+Modify the `addresses` and `texts` objects to set your desired default records for newly minted subnames.
+
+## Deployment
+
+Once you're satisfied with your customizations, build and deploy your website:
+
+```bash
+yarn run build
+```
+
+This creates a `dist` folder containing your production-ready website that you can deploy to any static hosting service like Vercel, Netlify, or GitHub Pages.
+
+## Examples
+
+See these live examples of customized Subpages:
+
+- **OP Punks**: [oppunk.namespace.ninja](http://oppunk.namespace.ninja)
+- **PizzaDAO**: [pizzadao.namespace.ninja](http://pizzadao.namespace.ninja)  
+- **SheFi**: [shefi.namespace.ninja](http://shefi.namespace.ninja)
+
+## Get Started
+
+<Card title="Subpages GitHub" icon="code-fork" href="https://github.com/thenamespace/subpages">
+  Launch your subname minting website in 5 minutes
+</Card>
