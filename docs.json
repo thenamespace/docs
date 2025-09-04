@@ -225,7 +225,7 @@
         "items": [
           {
             "label": "Website",
-            "href": "https://www.namespace.ninja"
+            "href": "https://namespace.ninja"
           },
           {
             "label": "Web App",
@@ -234,10 +234,6 @@
           {
             "label": "Dev Portal",
             "href": "https://dev.namespace.ninja/"
-          },
-          {
-            "label": "API Reference",
-            "href": "https://docs.namespace.ninja/"
           }
         ]
       },
