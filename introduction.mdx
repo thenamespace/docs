@@ -20,6 +20,21 @@ Namespace is the leading infrastructure provider for **ENS subnames**. With prod
 
 ENS turns long 0x addresses into memorable names like `alice.eth` and Subnames extend a parent name (e.g., `brand.eth`) to create usernames for people, apps, and agents — like `alice.brand.eth`. Namespace allows builders to easily **implement Subname registrations** in their apps, products, or communities. Subnames function across wallets and apps, serving as an identity solution to enhance safety and streamline onboarding. [Learn more](user-guide/subpages.mdx).
 
+## ENS is multichain
+
+ENS protocol was built to work across chains and ecosystems. Names/domains are minted on Ethereum, but they resolve in 1,000\+ apps, and support 100\+ chains, and the protocol is extensible by design, so it can support a million more chains.
+
+<img
+  src="/images/2025-09-0414.45.35.jpg"
+  alt="2025 09 0414 45 35 Jp"
+  title="2025 09 0414 45 35 Jp"
+  style={{ width:"67%" }}
+/>
+
+ENS names have '_address records_' which store addresses from different chains. If you look at the example above (thecap.eth), it has Solana and BTC addresses next to EVM addresses (Eth, Base, Zksync, etc.). So you can send \$BTC to 'thecap.eth' name if the wallet you're using correctly reads/resolves address records from thecap.eth (which most of them do).
+
+Just **One Universal Username**, storing all blockchain addresses the user needs, used as a central point of Web3 Identity for username-to-username payments.
+
 ## Vision
 
 Replace all hexadecimal blockchain addresses with human-readable (ENS-powered) names or subnames and streamline ENS implementation across the entire Web3 space.
