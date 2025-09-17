@@ -88,6 +88,14 @@
           },
 
           {
+            "group": "Integrations",
+            "pages": [
+              "developer-guide/integrations",
+              "developer-guide/integrations/starters/rainbowkit-nextjs"
+            ]
+          },
+
+          {
             "group": "API Reference",
             "pages": ["api-reference/introduction",
             {
@@ -313,6 +321,10 @@
   {
     "source": "/how-to-guides-and-demos",
     "destination": "developer-guide/guide"
+  },
+  {
+    "source": "/developer-guide/integrations/rainbowkit-nextjs",
+    "destination": "/developer-guide/integrations/starters/rainbowkit-nextjs"
   },
   {
     "source": "/dev-docs/sdk",
