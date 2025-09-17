@@ -9,32 +9,67 @@ sidebarTitle: "Product teams & platforms"
 
 Use subnames to onboard users with a name (not an address), improve payment safety, and provide cross-app identity.
 
-## Common use cases
+## Common use cases \+ benefits
 
-- Wallet UX: branded usernames for every wallet
-- Payments: safer send/receive with human-readable names
-- L2/Platform identity: ecosystem-wide names (e.g., `user.chain.eth`)
-- Communities: names for members or holders
-- AI agents: verifiable identities for agents and services
+- **Wallets**: branded usernames for every wallet
+- **Payments**: safer send/receive with human-readable names
+- **L2/Platform identity**: ecosystem-wide names (e.g., `user.chain.eth`)
+- **Communities**: names for members or holders
+- **AI agents**: unique, verifiable identities for agents and services
+
+<AccordionGroup>
+  <Accordion title="More Use Cases">
+    - **AI launchpads** → Auto-assign subnames to every new AI agent created.
+    - **Website builders** → use .eth subnames to deploy free decentralized websites.
+    - **Websites** → .eth domains resolve to decentralized, censorship-resistant websites.
+    - **RaaS providers** → Chain-wide naming service for every rollup.
+    - **Blockchain infra/tools** → Adds a universal identity layer for developers.
+    - **Wallet-as-a-Service** → One wallet name that works across all chains.
+    - **Games** → Custom player usernames with cross-chain utility.
+    - **Identity apps/services** → Use ENS as the foundation for digital identity.
+    - **L2 chains** → unified chain-wide identity under one .eth name as a root zone.
+    - **Payment apps** → Venmo-like transacting experience in crypto.
+    - **Individuals** → Creators give subnames to followers for onboarding.
+    - **All others** → Any user-facing app needs names as identity primitives.
+  </Accordion>
+  <Accordion title="Subname Benefits">
+    - **Universal identity** → One name works across apps, wallets, and blockchains.
+    - **Trust & safety** → Reduces errors, scams, and copy-paste risks.
+    - **Scam protection** → No phishing, address spoofing, clipboard hijacking, etc.
+    - **Simplified Onboarding** → Users get onboarded simply by registering a username.
+    - **New revenue streams** → Premium names, renewals, subname activations.
+    - **Referrals** → Domains and subdomains used as trackable referral links.
+    - **Portability** → Identity you own, not locked to any app or chain.
+    - **Brand Visibility** → People wear their _name_.base.eth as their social handle.
+    - **Social identity** → Communities distribute branded names
+    - **Cross-app interoperability** → ENS usernames resolve across 1,000\+ web3 apps
+    - **Onchain Profile** → ENS \+ metadata (avatar, social handles, website, addresses...)
+    - **Immutable websites** → Decentralized, censorship-resistant website (contenthash)
+  </Accordion>
+</AccordionGroup>
 
 ## Choose a model
 
-- Offchain: gasless, instant, scalable issuance via API/SDK (default)
-- L2: NFT ownership, lower cost than L1, portable across apps
-- L1: premium, low-volume scenarios; highest decentralization
+- **Offchain**: gasless, instant, scalable issuance via API/SDK (default)
+- **L2**: NFT ownership, lower cost than L1, portable across apps
+- **L1**: premium, low-volume scenarios; highest decentralization
 
 ## Build paths
 
-<CardGroup cols={3}>
-  <Card title="Offchain subnames" icon="cloud" href="/developer-guide/guide/create-offchain-subnames">
-    Ship fast via API/SDK
+<CardGroup cols={2}>
+  <Card title="Offchain Subnames (how-to)" icon="cloud" href="/developer-guide/guide/create-offchain-subnames">
+    Guide to creating offchain subnames with the Namespace SDK
   </Card>
-  <Card title="L2 subnames" icon="square-code" href="/developer-guide/guide/mint-l1-l2-subnames">
-    Mint as NFTs on Base/Optimism
-  </Card>
-  <Card title="SDKs" icon="code" href="/developer-guide/sdks/introduction">
-    TypeScript SDKs and examples
+  <Card title="Onchain Subnames (how-to)" icon="square-code" href="/developer-guide/guide/mint-l1-l2-subnames">
+    Guide to minting onchain subnames (L1 or L2) with the Namespace SDK.
   </Card>
 </CardGroup>
 
-
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="desktop" href="api-reference/introduction.mdx">
+    API Reference
+  </Card>
+  <Card title="SDK Reference " icon="code" href="developer-guide/sdks/overview-sdk.mdx">
+    SDK Reference
+  </Card>
+</CardGroup>
