@@ -12,85 +12,102 @@ icon: "toggle-on"
 
 ## How to Activate an ENS Name
 
-1. Visit [https://app.namespace.ninja/](https://app.namespace.ninja/).
-2. Connect your wallet with the ENS name you want to activate.
-3. Click the "Account" icon in the navigation bar.
-4. Go to the "Wizard" tab and click "+Activate".
-   <img src="/assets/activate-ens-name-1.png" alt="Activate ENS Name step 1" />
-5. Select the ENS name to activate (e.g., `ninjademo.eth`).
-   <img
-     src="/assets/activate-ens-name-2.png"
-     alt="Select ENS Name to activate"
-   />
+<Steps>
+  <Step title="Open the app and start activation">
+    1. Visit <a href="https://app.namespace.ninja/">app.namespace.ninja</a>.
+    2. Connect the wallet that owns the ENS name you want to activate.
+    3. Click the "Account" icon in the navigation bar.
+    4. Open the "Wizard" tab and click "List".
+    <img src="/assets/activate-ens-name-1.png" alt="Open Wizard and start activation" />
+  </Step>
 
-## Choose Activation Option
+  <Step title="Select your ENS name">
+    Choose the ENS name to activate (for example, <code>ninjademo.eth</code>).
+    <img src="/assets/activate-ens-name-2.png" alt="Select the ENS name to activate" />
+  </Step>
 
-- **Ethereum:** Issue subnames on Ethereum.
-- **L2s (Base, Optimism, etc.):** Issue subnames on supported L2s (example: Base).
+  <Step title="Choose activation option">
+    - <strong>Ethereum</strong>: Issue subnames on Ethereum.
+    - <strong>L2s (Base, Optimism, etc.)</strong>: Issue subnames on supported L2s.
 
-We are going to use Base for this example.
+    This guide uses Base as the example.
+    <img src="/assets/activate-ens-name-3.png" alt="Choose L2 for subnames (Base example)" />
+  </Step>
 
-<img src="/assets/activate-ens-name-3.png" alt="Choose L2 for subnames" />
+  <Step title="Configure L2 collection">
+    Select "Issue L2 Subnames", then:
+    - Name your collection and set a symbol.
+    - Decide on burnability and rental options.
+    <img src="/assets/activate-ens-name-4.png" alt="Configure collection name, symbol, and options" />
+  </Step>
 
-## L2 Activation & Minting Steps
+  <Step title="Set mint pricing">
+    Define how subnames are priced:
+    - Base price
+    - Length-based pricing
+    - Special rules (numbers, letters, emoji)
+    <img src="/assets/activate-ens-name-5.png" alt="Configure mint pricing options" />
+  </Step>
 
-1. Select "Issue L2 Subnames".
-   - Name your collection and symbol.
-   - Decide on burnability and rental options.
-     <img src="/assets/activate-ens-name-4.png" alt="Issue L2 Subnames" />
-2. Define minting price for subnames.
-   - Set base price, length-based pricing, and special rules (numbers, letters, emoji).
-     <img src="/assets/activate-ens-name-5.png" alt="Define minting price" />
-3. Reserve or blacklist subnames as needed.
+  <Step title="Reserve or blacklist subnames (optional)">
+    Protect key names or block unwanted ones.
+    <img src="/assets/activate-ens-name-6.png" alt="Reserve or blacklist subnames" />
+  </Step>
 
-   <img
-     src="/assets/activate-ens-name-6.png"
-     alt="Reserve or blacklist subnames"
-   />
+  <Step title="Set a minting deadline (optional)">
+    Make the collection time-bound if desired.
+    <img src="/assets/activate-ens-name-7.png" alt="Set an optional minting deadline" />
+  </Step>
 
-4. Optionally set a minting deadline.
-   <img src="/assets/activate-ens-name-7.png" alt="Set minting deadline" />
-5. Choose whitelisting options. - Restrict
-   minting to specific wallets or allow free mints for whitelisted addresses.
-   <img src="/assets/activate-ens-name-8.png" alt="Whitelisting options" />
-6. Optionally
-   enable token-gated minting (require ERC20/721 ownership).
-   <img src="/assets/activate-ens-name-9.png" alt="Token-gated minting" />
-7. Once setup is complete, click "List Name". 
-8. Set resolver to Namespace Hybrid Resolver.
-   <img src="/assets/activate-ens-name-10.png" alt="Set resolver to Namespace Hybrid Resolver" />
-9. Configure resolver settings as prompted.
-   <img src="/assets/activate-ens-name-11.png" alt="Configure resolver settings" />
-10. Congratulations! You have successfully activated your ENS Name. <img src="/assets/activate-ens-name-12.png" alt="Configure resolver settings" />
+  <Step title="Configure allowlist options">
+    Restrict minting to specific wallets or allow free mints for approved addresses.
+    <img src="/assets/activate-ens-name-8.png" alt="Allowlist and free mint options" />
+  </Step>
+
+  <Step title="Enable token-gated minting (optional)">
+    Require holders of an ERC-20 or ERC-721 token to mint.
+    <img src="/assets/activate-ens-name-9.png" alt="Enable token-gated minting" />
+  </Step>
+
+  <Step title="List your name">
+    When setup is complete, click "List Name".
+  </Step>
+
+  <Step title="Set the Namespace Hybrid Resolver">
+    Set the resolver to Namespace Hybrid Resolver.
+    <img src="/assets/activate-ens-name-10.png" alt="Set resolver to Namespace Hybrid Resolver" />
+  </Step>
+
+  <Step title="Configure resolver settings">
+    Follow the prompts to complete resolver configuration.
+    <img src="/assets/activate-ens-name-11.png" alt="Configure resolver settings" />
+  </Step>
+
+  <Step title="All set!">
+    Congratulations — your ENS name is now activated.
+    <img src="/assets/activate-ens-name-12.png" alt="Activation complete" />
+  </Step>
+</Steps>
 ---
 ## Next Steps
 
 Your ENS Name is now activated and ready for subname minting! Choose the best way to get started:
 
 <CardGroup cols={2}>
-  <Card
-    title="Namespace App"
-    icon="desktop"
-    href="https://app.namespace.ninja/"
-  >
-    Mint your subnames from the Namespace App.
+  <Card title="Namespace App" icon="desktop" href="https://app.namespace.ninja/">
+    Mint subnames directly from the Namespace App.
   </Card>
-  <Card
-    title="Embed ENS Widget"
-    icon="puzzle-piece"
-    href="/user-guide/app/widget"
-  >
-    Create an Widget for your app to mint subnames.
+  <Card title="Embed ENS Widget" icon="puzzle-piece" href="/user-guide/app/widget">
+    Embed a widget in your app to let users mint subnames.
+  </Card>
+  <Card title="Subpages" icon="page" href="/developer-guide/guide/subpages">
+    Launch a branded minting site quickly using our ready-made template.
+  </Card>
+  <Card title="Mint L1/L2 Guide" icon="book" href="/developer-guide/guide/mint-l1-l2-subnames">
+    Learn best practices for minting subnames on L1 and L2.
   </Card>
 </CardGroup>
-  <Card
-    title="Subpages"
-    icon="page"
-    href="/developer-guide/guide/subpages"
-  >
-    Launch your own subname minting website in minutes using our ready-made template.
-  </Card>
 
 <Tip>
-  For advanced automation or custom flows, explore our <a href="/developer-guide/sdks/mint-manager">Mint Manager SDK </a>.
+  For advanced automation or custom flows, explore our <a href="/developer-guide/sdks/mint-manager">Mint Manager SDK</a>.
 </Tip>
