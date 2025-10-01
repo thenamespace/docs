@@ -1,9 +1,10 @@
 ---
 title: "RainbowKit Starter (Next.js)"
 description: "Ready-to-run Next.js starter with RainbowKit, reverse resolution for ENS subnames, and profile flows."
-sidebarTitle: "RainbowKit Starter (Offchain)"
+sidebarTitle: "RainbowKit"
 icon: "rainbow"
 ---
+
 ## ENS Offchain Subnames + RainbowKit Starter Kit
 
 A Next.js starter integrating the [Offchain Manager SDK](/developer-guide/sdks/offchain-manager) with [RainbowKit](https://rainbowkit.com) for creating and managing offchain ENS subnames.
@@ -25,62 +26,45 @@ A Next.js starter integrating the [Offchain Manager SDK](/developer-guide/sdks/o
 
 <Steps>
   <Step title="Clone and install">
-
-```bash
-git clone https://github.com/thenamespace/offchain-next-rainbowkit-template.git
-cd offchain-next-rainbowkit-template
-npm install
-```
-
+    ```bash
+    git clone https://github.com/thenamespace/offchain-next-rainbowkit-template.git
+    cd offchain-next-rainbowkit-template
+    npm install
+    ```
   </Step>
-
   <Step title="Environment variables">
+    Create a `.env.local` file in the root directory:
 
-Create a `.env.local` file in the root directory:
-
-```env
-# Your ENS name (eg. offchainsub.eth)
-NEXT_PUBLIC_ENS_NAME=yourname
-
-# Your Namespace API key (keep this secret!)
-NAMESPACE_API_KEY=ns_live_xxxxxxxxxx
-```
-
+    ```env
+    # Your ENS name (eg. offchainsub.eth)
+    NEXT_PUBLIC_ENS_NAME=yourname
+    
+    # Your Namespace API key (keep this secret!)
+    NAMESPACE_API_KEY=ns_live_xxxxxxxxxx
+    ```
   </Step>
-
   <Step title="Configure your ENS name">
-
-1. Visit the [Namespace Dev Portal](https://dev.namespace.ninja)
-2. Change the resolver for your ENS name to Namespace's resolver
-3. Generate and copy your API key
-4. Add both to your `.env.local` file
-
+    1. Visit the [Namespace Dev Portal](https://dev.namespace.ninja)
+    2. Change the resolver for your ENS name to Namespace's resolver
+    3. Generate and copy your API key
+    4. Add both to your `.env.local` file
   </Step>
-
   <Step title="Run the development server">
+    ```bash
+    npm run dev
+    ```
 
-```bash
-npm run dev
-```
-
-Open `http://localhost:3000` to see the application.
-
+    Open `http://localhost:3000` to see the application.
   </Step>
-
   <Step title="It's ready!">
-
-  <img 
-            src="/assets/developer-guide/integrations/rainbowkit-nextjs/page.png" 
-            alt="Create subname interface with form to create a new offchain subname"
-        />
+    ![Create subname interface with form to create a new offchain subname](/assets/developer-guide/integrations/rainbowkit-nextjs/page.png)
   </Step>
-
 </Steps>
-
 
 ## What’s included
 
 #### 🔗 RainbowKit Integration
+
 - Custom connect button with Namespace subname support
 - Account modal with subname creation functionality
 - Automatic primary name resolution
@@ -105,22 +89,23 @@ src/
     └── namespace-client.ts            # Client-side client (read-only)
 ```
 
-
 #### 🏗️ Architecture
+
 - Server-side Namespace client (`/src/lib/namespace.ts`) - Uses API key securely for write operations
 - Client-side Namespace client (`/src/lib/namespace-client.ts`) - For read-only operations without API key exposure
 - API route (`/src/app/api/subname/create/route.ts`) - Server-side subname creation endpoint
 
 #### 🪝 Custom Hooks
+
 - `useSubnames` - Fetch subnames for an address
-- `useFirstSubname` - Get the primary subname for an address  
+- `useFirstSubname` - Get the primary subname for an address
 - `usePreferredIdentity` - Intelligent name resolution (subname → ENS → truncated address)
 - `useCreateSubname` - Create new subnames with validation
 - `useSubnameAvailability` - Check if a subname is available
 
 #### 📡 API Endpoints
-- `POST /api/subname/create` - Create subnames with custom address and text records
 
+- `POST /api/subname/create` - Create subnames with custom address and text records
 
 ### Security & Limitations
 
@@ -134,7 +119,6 @@ src/
 
 - Up to 2,000 subnames can be created per API key to prevent abuse
 - Need more? Contact us on the [Builders Group](https://t.me/+5FAwyiKOTeswNTIy)
-
 
 ## References
 
