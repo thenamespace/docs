@@ -176,7 +176,8 @@
         "pages": [
           "changelog/offchain-sdk",
           "changelog/address-sdk",
-          "changelog/indexer-sdk"
+          "changelog/indexer-sdk",
+          "changelog/mint-sdk"
         ]
       }
     ],

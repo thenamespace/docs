@@ -1,0 +1,26 @@
+---
+title: "Mint SDK"
+description: "Changelog for the Mint SDK with version updates and changes."
+sidebarTitle: "Mint SDK"
+icon: "gauge"
+---
+
+<Update label="October 6, 2025" description="v1.1.0">
+  - Changed:
+    - **Package Scope Rename**: Renamed package scope in docs from `@namespacesdk/mint-manager` to `@thenamespace/mint-manager`
+    - **Client Creation Update**: `createMintClient()` now derives environment internally. Use `{ isTestnet: true }` to target testnet; no explicit environment needed
+  - Fixed:
+    - **Testnet Behavior**: When `isTestnet: true`, SDK now consistently uses Sepolia listings and staging API endpoints
+  - Misc:
+    - **Documentation**: Minor documentation cleanups and examples clarified
+</Update>
+
+<Update label="September 7, 2025" description="v1.0.1">
+  - Fixed:
+    - **Ownership Method**: Fixed ownership in the method `getMintTransactionParameters`
+</Update>
+
+<Update label="September 7, 2025" description="v1.0.0">
+  - Changed:
+    - **Package Migration**: Package has been moved from `@namespacesdk/mint-manager` to `@thenamespace/mint-manager` for consistency
+</Update>
