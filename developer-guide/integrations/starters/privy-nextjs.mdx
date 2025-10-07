@@ -1,0 +1,171 @@
+---
+title: "Privy Starter (Next.js)"
+description: "Ready-to-run Next.js starter with Privy auth, Offchain Subnames, reverse resolution, and profile flows."
+sidebarTitle: "Privy"
+icon: "ghost"
+---
+
+## ENS Offchain Subnames + Privy Starter Kit
+
+A Next.js starter integrating the [Offchain Manager SDK](/developer-guide/sdks/offchain-manager) with [Privy](https://privy.io) for creating and managing offchain ENS subnames.
+
+### Features
+
+- Privy auth with embedded wallets and Wagmi
+- Offchain subname creation via secure API routes
+- Reverse resolution for addresses, e.g., `0x23...` → `happy.offchainsub.eth`
+- Preferred identity resolution (subname → ENS → truncated address)
+- Account modal with username creation and avatar upload
+
+**Repository:** [`thenamespace/ens-subnames-privy-template`](https://github.com/thenamespace/ens-subnames-privy-template)
+
+## Prerequisites
+
+- Node.js (v18 or later)
+- An ENS name (e.g., `namespace.eth`)
+- Namespace API key from the [Dev Portal](/user-guide/dev-portal/api-keys)
+- Privy App ID and Client ID (create via Privy Dashboard: [`dashboard.privy.io/account`](https://dashboard.privy.io/account))
+
+## Setup
+
+<Steps>
+  <Step title="Use as a template or clone">
+    Use GitHub’s template feature:
+
+    1. Open: `thenamespace/ens-subnames-privy-template`
+    2. Click "Use this template" → "Create a new repository"
+    3. Clone your new repository locally
+
+    Or clone directly:
+
+    ```bash
+    git clone https://github.com/thenamespace/ens-subnames-privy-template.git
+    cd ens-subnames-privy-template
+    pnpm install
+    ```
+  </Step>
+  <Step title="Environment variables">
+    Copy `.env.example` to `.env.local` in the project root and fill in values:
+
+    ```env
+    # Privy (public; required)
+    NEXT_PUBLIC_PRIVY_APP_ID=your_privy_app_id
+    NEXT_PUBLIC_PRIVY_CLIENT_ID=your_privy_client_id
+
+    # ENS name (public; required)
+    NEXT_PUBLIC_ENS_NAME=namespace.eth
+
+    # Namespace API key (server; required)
+    NAMESPACE_API_KEY=your_namespace_api_key
+
+    # Network/env (public; optional if not testnet)
+    NEXT_PUBLIC_NETWORK=mainnet
+
+    # Avatar service + SIWE
+    NEXT_PUBLIC_SIWE_DOMAIN=localhost:3000 # Change to your app domain
+    NEXT_PUBLIC_SIWE_URI=http://localhost:3000 # Change to your app uri
+    NEXT_PUBLIC_AVATAR_SERVICE_URL=https://metadata.namespace.ninja
+    NEXT_PUBLIC_SIWE_CHAIN_ID=1
+    ```
+
+    Notes:
+    - Do not expose server-only secrets in client code. The API key is used only server-side.
+    - If you change domains or networks, update the SIWE values accordingly.
+  </Step>
+  <Step title="Configure Privy">
+    1. Sign up/sign in to the Privy Dashboard: [`dashboard.privy.io/account`](https://dashboard.privy.io/account)
+    2. Create a new app (Web)
+    3. In App settings → Client tab, copy your App ID and Client ID
+    4. Add both to `.env.local` as `NEXT_PUBLIC_PRIVY_APP_ID` and `NEXT_PUBLIC_PRIVY_CLIENT_ID`
+  </Step>
+  <Step title="Configure your ENS name">
+    1. Visit the [Namespace Dev Portal](https://dev.namespace.ninja)
+    2. Change the resolver for your ENS name to Namespace's resolver
+    3. Generate and copy your Namespace API key
+    4. Add it to your `.env.local` as `NAMESPACE_API_KEY`
+  </Step>
+  <Step title="Run the development server">
+    ```bash
+    pnpm dev
+    ```
+
+    Open `http://localhost:3000` to see the application.
+  </Step>
+  <Step title="It's ready!">
+     ![Create subname interface with form to create a new offchain subname](/assets/developer-guide/integrations/privy-nextjs/page.png)
+  </Step>
+</Steps>
+
+## What’s included
+
+#### 🔐 Privy Integration
+
+- Privy authentication with embedded wallets
+- Wagmi setup for EVM interactions
+- Account modal with subname creation and avatar upload
+- Automatic primary name resolution
+
+#### File Structure
+
+```txt
+src/
+├── app/
+│   ├── api/subname/create/route.ts     # Server-side subname creation
+│   ├── api/subname/avatar/route.ts     # Update avatar text record
+│   ├── page.tsx                        # Main demo page
+│   └── providers.tsx                   # Privy, Wagmi & React Query setup
+├── components/
+│   └── ui/
+│       ├── account-modal.tsx           # Account management modal
+│       └── profile-button.tsx          # Connect + open account modal
+├── hooks/
+│   ├── use-subnames.ts                 # Fetch subnames + preferred identity
+│   ├── use-identity.ts                 # Combine ENS + preferred identity
+│   ├── use-upload-avatar.ts            # SIWE + upload avatar + update text record
+│   └── use-update-ens-avatar.ts        # Helper to update avatar via server API
+└── lib/
+    ├── namespace.ts                    # Server-side client (with API key)
+    └── namespace-client.ts             # Client-side client (read-only)
+```
+
+#### 🏗️ Architecture
+
+- Server-side Namespace client (`/src/lib/namespace.ts`) - Uses API key securely for write operations
+- Client-side Namespace client (`/src/lib/namespace-client.ts`) - For read-only operations without API key exposure
+- API routes (`/src/app/api/subname/*/route.ts`) - Server-side write operations (create subname, update avatar)
+- Providers (`/src/app/providers.tsx`) - Privy + Wagmi + React Query providers
+
+#### 🪝 Custom Hooks
+
+- `useSubnames` - Fetch subnames for an address and build preferred identity
+- `useIdentity` - Combine ENS with preferred identity
+- `useUploadAvatar` - SIWE + upload avatar + update text record
+- `useUpdateEnsAvatar` - Helper to update avatar via server API
+
+#### 📡 API Endpoints
+
+- `POST /api/subname/create` - Create subnames with custom address and text records
+- `POST /api/subname/avatar` - Update an ENS avatar text record for a subname
+
+### Security & Limitations
+
+#### ⚠️ Important Security Notes
+
+- Never expose your `NAMESPACE_API_KEY` to the client side
+- API key is only used in server-side code (`/src/lib/namespace.ts` and API routes)
+- Client-side operations use the public client without API key
+- All write operations happen in API routes or server-side code only
+- Validate and sanitize inputs in API routes
+
+#### 📊 Rate Limits
+
+- Up to 2,000 subnames can be created per API key to prevent abuse
+- Need more? Contact us on the [Builders Group](https://t.me/+5FAwyiKOTeswNTIy)
+
+## References
+
+- GitHub Repository: [`thenamespace/ens-subnames-privy-template`](https://github.com/thenamespace/ens-subnames-privy-template)
+- SDK Reference: [Offchain Manager SDK](/developer-guide/sdks/offchain-manager)
+- Privy Dashboard: [`dashboard.privy.io/account`](https://dashboard.privy.io/account)
+- Privy Docs: [`docs.privy.io`](https://docs.privy.io/)
+- Wagmi: [`wagmi.sh`](https://wagmi.sh/)
