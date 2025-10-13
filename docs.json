@@ -92,7 +92,8 @@
             "pages": [
               "developer-guide/integrations",
               "developer-guide/integrations/starters/rainbowkit-nextjs",
-              "developer-guide/integrations/starters/privy-nextjs"
+              "developer-guide/integrations/starters/privy-nextjs",
+              "developer-guide/integrations/starters/openfort-nextjs"
             ]
           },
 

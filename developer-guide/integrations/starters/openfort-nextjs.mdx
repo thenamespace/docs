@@ -1,0 +1,183 @@
+---
+title: "Openfort Starter Kit"
+description: "Next.js starter with Openfort embedded wallets, Offchain Subnames, identity resolution, and avatar uploads."
+sidebarTitle: "Openfort"
+icon: "wallet"
+---
+
+## ENS Offchain Subnames + Openfort Starter Kit
+
+A Next.js starter kit integrating the [Offchain Manager SDK](/developer-guide/sdks/offchain-manager) with [Openfort](https://www.openfort.io) Embedded Wallets for creating and managing offchain ENS subnames.
+
+### Features
+
+- Openfort Embedded Wallets with Wagmi
+- Automatic recovery via Shield session endpoint
+- Offchain subname creation via secure API routes
+- Preferred identity resolution (subname → ENS → truncated address)
+- Account modal with username creation and avatar upload
+
+**Repository:** [`thenamespace/ens-subnames-openfort-template`](https://github.com/thenamespace/ens-subnames-openfort-template)
+
+## Prerequisites
+
+- Node.js v18+
+- An ENS name you control (e.g., `namespace.eth`)
+- Namespace API key from Dev Portal
+- Openfort account with API keys and Shield keys
+- WalletConnect Project ID
+
+<Steps>
+  <Step title="Use as a template or clone">
+    Use GitHub’s template feature:
+
+    1. Open: `thenamespace/ens-subnames-openfort-template`
+    2. Click "Use this template" → "Create a new repository"
+    3. Clone your new repository locally
+
+    Or clone directly:
+
+    ```bash
+    git clone https://github.com/thenamespace/ens-subnames-openfort-template.git
+    cd ens-subnames-openfort-template
+    pnpm install
+    ```
+  </Step>
+  <Step title="Openfort environment variables">
+    1. Open the [Openfort Dashboard](https://dashboard.openfort.io) and create an app
+    2. Copy your publishable key, secret key, and Shield keys
+    3. Create `.env.local` and add:
+
+    ```env
+    # Openfort (public; required)
+    NEXT_PUBLIC_OPENFORT_PUBLISHABLE_KEY=your_openfort_publishable_key
+    NEXT_PUBLIC_SHIELD_PUBLISHABLE_KEY=your_openfort_shield_publishable_key
+
+    # Openfort Recovery (server; required for automatic recovery)
+    OPENFORT_SECRET_KEY=your_openfort_secret_key
+    SHIELD_SECRET_KEY=your_openfort_shield_secret_key
+    SHIELD_ENCRYPTION_SHARE=your_openfort_shield_encryption_share
+
+    # Client recovery endpoint used by the SDK
+    NEXT_PUBLIC_CREATE_ENCRYPTED_SESSION_ENDPOINT=http://localhost:3000/api/shield-session
+    ```
+
+    Notes:
+    - Never expose server-only secrets to the client.
+    - The recovery endpoint returns a Shield encryption session for automatic wallet recovery.
+  </Step>
+  <Step title="WalletConnect environment variables">
+    Add your WalletConnect Project ID (from [`dashboard.reown.com`](https://dashboard.reown.com)):
+
+    ```env
+    NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_walletconnect_project_id
+    ```
+  </Step>
+  <Step title="Namespace environment variables">
+   1. Visit the [Namespace Dev Portal](https://dev.namespace.ninja)
+   2. Set your ENS name and Namespace API key (see [Dev Portal API Keys](/user-guide/dev-portal/api-keys)):
+
+    ```env
+    NEXT_PUBLIC_ENS_NAME=namespace.eth
+    NAMESPACE_API_KEY=your_namespace_api_key
+    ```
+  </Step>
+  <Step title="Optional: Avatar + SIWE variables">
+    For avatar uploads and SIWE, add:
+
+    ```env
+    NEXT_PUBLIC_AVATAR_SERVICE_URL=https://metadata.namespace.ninja
+    NEXT_PUBLIC_SIWE_DOMAIN=localhost:3000
+    NEXT_PUBLIC_SIWE_URI=http://localhost:3000
+    NEXT_PUBLIC_SIWE_CHAIN_ID=1
+    NEXT_PUBLIC_NETWORK=mainnet
+    ```
+  </Step>
+  <Step title="Run the development server">
+    ```bash
+    pnpm dev
+    ```
+
+    Open `http://localhost:3000` to see the application.
+  </Step>
+   <Step title="It's ready!">
+    ![Create subname interface with form to create a new offchain subname](/assets/developer-guide/integrations/openfort-nextjs/page.png)
+  </Step>
+</Steps>
+
+## What’s included
+
+#### 🔐 Openfort Integration
+
+- Openfort Embedded Wallets with automatic recovery via Shield
+- Wagmi setup for EVM interactions
+- Account modal with subname creation and avatar upload
+- Automatic primary name resolution
+
+#### File Structure
+
+```txt
+src/
+├── app/
+│   ├── api/shield-session/route.ts      # Returns Shield encryption session
+│   ├── api/subname/create/route.ts      # Server-side subname creation
+│   ├── api/subname/avatar/route.ts      # Update avatar text record
+│   ├── page.tsx                         # Main demo page
+│   └── providers.tsx                    # Openfort, Wagmi & React Query setup
+├── components/
+│   └── ui/
+│       ├── account-modal.tsx            # Account management modal
+│       └── profile-button.tsx           # Connect + open account modal
+├── hooks/
+│   ├── use-subnames.ts                  # Fetch subnames + preferred identity
+│   ├── use-identity.ts                  # Combine ENS + preferred identity
+│   ├── use-upload-avatar.ts             # SIWE + upload avatar + update text record
+│   └── use-update-ens-avatar.ts         # Helper to update avatar via server API
+└── lib/
+    ├── namespace.ts                     # Server-side client (with API key)
+    └── namespace-client.ts              # Client-side client (read-only)
+```
+
+#### 🏗️ Architecture
+
+- Providers (`/src/app/providers.tsx`) - Openfort + Wagmi + React Query
+- Server-side Namespace client (`/src/lib/namespace.ts`) - Uses API key for writes
+- Client-side Namespace client (`/src/lib/namespace-client.ts`) - Read-only, no API key exposure
+- API routes (`/src/app/api/*/route.ts`) - Server-side write operations and Shield session
+
+#### 🪝 Custom Hooks
+
+- `useSubnames` - Fetch subnames and build preferred identity
+- `useIdentity` - Combine ENS with preferred identity
+- `useUploadAvatar` - SIWE + upload avatar + update text record
+- `useUpdateEnsAvatar` - Helper to update avatar via server API
+
+#### 📡 API Endpoints
+
+- `POST /api/shield-session` - Returns Shield encryption session for automatic recovery
+- `POST /api/subname/create` - Create subnames with custom address and text records
+- `POST /api/subname/avatar` - Update an ENS avatar text record for a subname
+
+### Security & Limitations
+
+#### ⚠️ Important Security Notes
+
+- Never expose your `NAMESPACE_API_KEY`, `OPENFORT_SECRET_KEY`, `SHIELD_SECRET_KEY`, or `SHIELD_ENCRYPTION_SHARE` to the client side
+- Server-only keys are used only in server-side code (`/src/lib/namespace.ts`, Shield session route, and API routes)
+- Client-side operations use the public client without API key
+- Validate and sanitize inputs in API routes
+
+#### 📊 Rate Limits
+
+- Up to 2,000 subnames can be created per API key to prevent abuse
+- Need more? Contact us on the [Builders Group](https://t.me/+5FAwyiKOTeswNTIy)
+
+## References
+
+- Openfort React docs: [`openfort.io/docs/products/embedded-wallet/react`](https://www.openfort.io/docs/products/embedded-wallet/react)
+- GitHub repository: [`thenamespace/ens-subnames-openfort-template`](https://github.com/thenamespace/ens-subnames-openfort-template)
+- Openfort Dashboard: [`dashboard.openfort.io`](https://dashboard.openfort.io)
+- WalletConnect (Reown) Dashboard: [`dashboard.reown.com`](https://dashboard.reown.com)
+- SDK Reference: [`Offchain Manager SDK`](/developer-guide/sdks/offchain-manager)
+
+
