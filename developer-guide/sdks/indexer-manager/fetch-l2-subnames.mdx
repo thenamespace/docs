@@ -16,7 +16,7 @@ The `getL2Subname` method retrieves a single subname registered on an L2 chain.
 <CodeGroup>
   
   ```typescript ENS Name
-  const response = await client.getL2Subname({
+  const response = await indexer.getL2Subname({
     chainId: 10,
     nameOrNamehash: "lucas.oppunk.eth",
   });
@@ -24,7 +24,7 @@ The `getL2Subname` method retrieves a single subname registered on an L2 chain.
 
   
   ```typescript Namehash
-  const response = await client.getL2Subname({
+  const response = await indexer.getL2Subname({
     chainId: 10,
     nameOrNamehash: "0x15219d7dc9f1a66f9281d1436a646ed2b4d5e96dcf62db66bffeedd2155c74c0", // namehash for lucas.oppunk.eth
   });
@@ -83,7 +83,7 @@ The `getL2Subnames` method allows you to retrieve a paginated list of Layer 2 (L
 <CodeGroup>
 ```typescript Fetch subnames by owner
 // Fetch first page of subnames by owner
-const byOwner = await client.getL2Subnames({
+const byOwner = await indexer.getL2Subnames({
   owner: "0x123400000000000000000000000000000000abcd",
   chainId: 10,
   page: 0,
@@ -93,7 +93,7 @@ const byOwner = await client.getL2Subnames({
 
 ```typescript Search by name substring
 // Search by name substring
-const search = await client.getL2Subnames({
+const search = await indexer.getL2Subnames({
   stringSearch: "hello",
   chainId: 8453,
   page: 0,
@@ -103,7 +103,7 @@ const search = await client.getL2Subnames({
 
 ```typescript Filter by parent domain
 // Filter by parent domain
-const underParent = await client.getL2Subnames({
+const underParent = await indexer.getL2Subnames({
   parent: "artii.eth",
   chainId: 8453,
   page: 0,

@@ -12,7 +12,7 @@ Fetches the information about the deployed NFT registry for an ENS name on a spe
 ### Usage
 
 ```typescript
-client.getL2Registry({
+indexer.getL2Registry({
   chainId: 10,
   nameOrNamehash: "oppunk.eth",
 });
@@ -36,7 +36,7 @@ export interface L2RegistryResponse {
 ### Example
 
 ```typescript
-const registry = await client.getL2Registry({
+const registry = await indexer.getL2Registry({
   chainId: 10,
   nameOrNamehash: "oppunk.eth",
 });
