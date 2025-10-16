@@ -10,17 +10,17 @@ You can install the library:
 <Tabs>
 <Tab title="npm">
 ```bash
-npm install @thenamespace/indexer-manager
+npm install @thenamespace/indexer
 ```
 </Tab>
 <Tab title="yarn">
 ```bash
-yarn add @thenamespace/indexer-manager
+yarn add @thenamespace/indexer
 ```
 </Tab>
 <Tab title="pnpm">
 ```bash
-pnpm add @thenamespace/indexer-manager
+pnpm add @thenamespace/indexer
 ```
 </Tab>
 </Tabs>
@@ -29,13 +29,13 @@ pnpm add @thenamespace/indexer-manager
 
 <CodeGroup>
 ```typescript Default
-import { createIndexerClient } from "@thenamespace/indexer-manager";
+import { createIndexerClient } from "@thenamespace/indexer";
 
 const indexer = createIndexerClient();
 ```
 
 ```typescript Custom Endpoint
-import { createIndexerClient } from "@thenamespace/indexer-manager";
+import { createIndexerClient } from "@thenamespace/indexer";
 
 // Custom endpoint and timeout
 const indexer = createIndexerClient({
