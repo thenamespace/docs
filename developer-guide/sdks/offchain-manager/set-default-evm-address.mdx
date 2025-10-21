@@ -1,0 +1,53 @@
+---
+title: "Set Default EVM Address"
+description: "Set the same EVM address for all EVM-compatible chains in a single operation."
+sidebarTitle: "Set Default EVM Address"
+icon: "zap"
+---
+
+Set the same EVM address for all EVM-compatible chains in one call instead of multiple individual calls.
+
+<Note>
+  <strong>Supported Chains:</strong> See supported EVM-compatible [Chains](/developer-guide/sdks/offchain-manager/chainname)
+</Note>
+
+## Method
+
+```typescript
+setDefaultEvmAddress(subname: string, value: string): Promise<void>
+```
+
+**Parameters:**
+- `subname` - Full subname (e.g., 'alice.example.eth')
+- `value` - EVM wallet address
+
+## Usage
+
+```typescript
+import { createOffchainClient } from '@thenamespace/offchain-manager';
+
+const client = createOffchainClient();
+client.setDefaultApiKey('your-api-key');
+
+// Set same address for all EVM chains
+await client.setDefaultEvmAddress('alice.example.eth', '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045');
+```
+
+## Before vs After
+
+<Tabs>
+  <Tab title="Before (Multiple calls)">
+    ```typescript
+    await client.addAddressRecord('alice.example.eth', ChainName.Ethereum, '0x...');
+    await client.addAddressRecord('alice.example.eth', ChainName.Arbitrum, '0x...');
+    await client.addAddressRecord('alice.example.eth', ChainName.Optimism, '0x...');
+    // ... many more calls for each EVM chain
+    ```
+  </Tab>
+  
+  <Tab title="After (Single call)">
+    ```typescript
+    await client.setDefaultEvmAddress('alice.example.eth', '0x...');
+    ```
+  </Tab>
+</Tabs>

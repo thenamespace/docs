@@ -1,6 +1,6 @@
 ---
 title: "Text Records"
-description: "Manage text records for a given ENS subname."
+description: "Manage text records for ENS subnames."
 sidebarTitle: "Text Records"
 icon: "address-card"
 ---
@@ -13,9 +13,7 @@ These methods allow you to manage text records for a given ENS subname. You can 
 
 ### 1. addTextRecord
 
-Adds or updates a text record for the specified subname.
-
-### Usage Example
+Add or update a text record.
 
 ```typescript
 client.addTextRecord({
@@ -25,52 +23,40 @@ client.addTextRecord({
 });
 ```
 
-- `subname`: The full ENS subname.
-- `key`: The key for the text record (e.g., `"description"`).
-- `value`: The value to associate with the key.
+**Parameters:**
+- `subname` - Full ENS subname
+- `key` - Text record key (e.g., "description")
+- `value` - Value to associate with the key
 
 ### 2. deleteTextRecord
 
-Deletes a text record from the specified subname.
-
-### Usage Example
+Delete a text record.
 
 ```typescript
 client.deleteTextRecord({ subname: "ns.myensname.eth", key: "description" });
 ```
 
-- `key`: The key of the text record to delete.
-- `subname`: The full ENS subname.
-
 ### 3. getTextRecords
 
-Retrieves all text records associated with the specified subname.
-
-### Usage Example
+Get all text records for a subname.
 
 ```typescript
-client.getTextRecords("ns.myensname.eth");
+const records = await client.getTextRecords("ns.myensname.eth");
+// Returns: Record<string, string>
 ```
-
-Returns a `Record<string, string>` mapping each text record key to its value.
 
 ### 4. getTextRecord
 
-Retrieves a specific text record from a subname by key.
-
-### Usage Example
+Get a specific text record by key.
 
 ```typescript
 const response = await client.getTextRecord("ns.myensname.eth", "description");
 const description = response.record;
 ```
 
-#### Return Type
-
+**Return Type:**
 ```typescript
-export interface GetRecordResponse {
+interface GetRecordResponse {
   record: string;
 }
 ```
-
-- `record`: The value associated with the requested key.

@@ -137,6 +137,7 @@
                   "developer-guide/sdks/offchain-manager/get-filtered-subnames",
                   "developer-guide/sdks/offchain-manager/delete-subname",
                   "developer-guide/sdks/offchain-manager/address-records",
+                  "developer-guide/sdks/offchain-manager/set-default-evm-address",
                   "developer-guide/sdks/offchain-manager/chainname",
                   "developer-guide/sdks/offchain-manager/text-records",
                   "developer-guide/sdks/offchain-manager/data-records"

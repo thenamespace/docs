@@ -1,18 +1,17 @@
 ---
 title: "Create or Update Subname"
-description: "Create new ENS subnames or update existing ones, including text and address records, metadata, and more."
+description: "Create new ENS subnames or update existing ones with records and metadata."
 sidebarTitle: "Create or Update Subname"
 icon: "pen-to-square"
 ---
 
-### Creating a Subname
+## Creating a Subname
+
+Create a subname under an existing ENS name with text records, address records, and metadata.
 
 <Note>
-  <strong>Label:</strong> The label of the subname follows the ENS naming convention. It follows UTS-51 encoding and can include emojis. See <a href="https://docs.ens.domains/ensip/15/">ENSIP-15</a> for more details.
+  <strong>Label:</strong> Follows ENS naming convention with UTS-51 encoding. Can include emojis. See <a href="https://docs.ens.domains/ensip/15/">ENSIP-15</a>.
 </Note>
-
-Use `createSubname` to add a subname under an existing ENS name.  
-You can include text records, address records, and metadata.
 
 ```typescript
 import { ChainName } from "@thenamespace/offchain-manager";
@@ -33,25 +32,23 @@ client.createSubname({
 });
 ```
 
+**Parameters:**
+- `label` - Subname label (e.g., "subname" for subname.example.eth)
+- `parentName` - Parent ENS name
+- `texts` - Text records (optional)
+- `addresses` - Address records (optional)
+- `metadata` - Key-value metadata for filtering (optional)
+- `contenthash` - Content hash (optional)
+- `owner` - Owner address (optional)
+- `ttl` - Time-to-live (optional)
+
 <Tip>
 Include the <code>owner</code> field when creating a subname. This allows you to later fetch all subnames owned by a specific address using the SDK or API.
 </Tip>
 
-
-### Parameters
-
-- `label`: Subname label (e.g., `"subname"` for `subname.example.eth`)
-- `parentName`: Parent ENS name
-- `texts`: Array of key-value text records. (optional)
-- `addresses`: Array of address records. (optional)
-- `metadata`: Array of key-value metadata. It can be used to filter out the subnames later. (optional)
-- `contenthash`: Content hash (optional)
-- `owner`: Owner address (optional)
-- `ttl`: Time-to-live. (optional)
-
 ## Updating a Subname
 
-Use `updateSubname` to modify text records, address records, content hash, or metadata for an existing subname.
+Modify text records, address records, content hash, or metadata for an existing subname.
 
 ```typescript
 client.updateSubname("superman.namespace.eth", {
@@ -59,14 +56,13 @@ client.updateSubname("superman.namespace.eth", {
 });
 ```
 
-### Parameters
-
-- `texts`: Array of text records to update (optional)
-- `addresses`: Array of address records to update (optional)
-- `metadata`: Array of key-value metadata to update. It can be used to filter out the subnames later. (optional)
-- `contenthash`: New content hash (optional)
-- `ttl`: Time-to-live (optional)
+**Parameters:**
+- `texts` - Text records to update (optional)
+- `addresses` - Address records to update (optional)
+- `metadata` - Metadata to update (optional)
+- `contenthash` - New content hash (optional)
+- `ttl` - Time-to-live (optional)
 
 <Note>
-The <code>ChainName</code> enum maps blockchain networks to their [SLIP-0044](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) coin types for address records. See the [ChainName](/developer-guide/sdks/offchain-manager/chainname) page for more details.
+The `ChainName` enum maps blockchain networks to their [SLIP-0044](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) coin types. See [ChainName](/developer-guide/sdks/offchain-manager/chainname) for details.
 </Note>
