@@ -61,9 +61,10 @@
             "group": "Who it's for",
             "pages": [
               "overview/for-product-teams",
-              "overview/for-name-owners"
+              "overview/for-name-owners",
+              "overview/integration/waas"
             ]
-          }
+          }          
         ]
       },
 
