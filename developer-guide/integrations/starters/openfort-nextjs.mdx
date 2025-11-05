@@ -27,19 +27,21 @@ A Next.js starter kit integrating the [Offchain Manager SDK](/developer-guide/sd
 - Openfort account with API keys and Shield keys
 
 <Steps>
-  <Step title="Use as a template or clone">
-    Use GitHub’s template feature:
+  <Step title="Use the template">
+    Use `create-next-app` with the template:
+
+    ```bash
+    npx create-next-app@latest my-project -e https://github.com/thenamespace/ens-subnames-openfort-template
+    cd my-project
+    npm install
+    ```
+
+    Or use GitHub's template feature:
 
     1. Open: `thenamespace/ens-subnames-openfort-template`
     2. Click "Use this template" → "Create a new repository"
     3. Clone your new repository locally
-
-    Or clone directly:
-
-    ```bash
-    git clone https://github.com/thenamespace/ens-subnames-openfort-template.git
-    cd ens-subnames-openfort-template
-    pnpm install
+    4. Run `npm install` or `pnpm install`
     ```
   </Step>
   <Step title="Openfort environment variables">
@@ -87,6 +89,8 @@ A Next.js starter kit integrating the [Offchain Manager SDK](/developer-guide/sd
   </Step>
   <Step title="Run the development server">
     ```bash
+    npm run dev
+    # or
     pnpm dev
     ```
 
