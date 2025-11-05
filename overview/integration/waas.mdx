@@ -1,141 +1,139 @@
 ---
 title: "WaaS Integration Guide"
-description: "Complete guide for WaaS and wallet infrastructure providers to integrate ENS subnames and improve wallet UX with human-readable names."
+description: "Complete guide for WaaS and wallet infrastructure providers to integrate ENS subname registrations and improve wallet UX with human-readable names."
 sidebarTitle: "Wallet Infra / WaaS"
 icon: "wallet"
 ---
 
 ## Overview
 
-As a Wallet-as-a-Service (WaaS) provider, you can make your product feel simpler and safer by adding ENS subnames. Instead of users dealing with long hexadecimal addresses like `0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb`, they see friendly names like `alice.wallet.eth` that work across wallets, apps, and chains.
+> As a Wallet-as-a-Service (WaaS) provider, you can make your product feel more intuitive and safer by integrating ENS subnames. Instead letting users use hexadecimal addresses like `0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb`, they use friendly usernames like `alice.wallet.eth` that work across wallets, apps, and chains.
 
 **Why this matters:**
-- **Better UX**: Users send money to `alice.wallet.eth` instead of copying/pasting long addresses
-- **Reduced errors**: Human-readable names reduce typos and mistaken transactions
-- **Brand recognition**: Every subname carries your brand (e.g., `.wallet.eth`)
-- **Universal compatibility**: Works across 1,000+ wallets, countless apps and multiple chains
-- **New revenue stream**: Monetize subname creation through tiered developer plans
 
-## Three Integration Paths
+- **Better UX**: Users send money to `alice.wallet.eth` instead of copying/pasting long hexadecimal addresses.
+- **Improved security**: When transacting, using human-readable names eliminates address spoofing, hijacking, and other scams.
+- **Brand recognition**: Every subname carries your brand (e.g., `*.wallet.eth`), generating millions of impressions across social spaces.
+- **Universal compatibility**: Works across 1,000+ wallets, countless apps, and multiple chains.
+- **New revenue stream**: Monetize subname creation through tiered developer plans.
 
-Here are three simple ways to add ENS subnames, depending on your goals:
+## Three Integration Types
+
+There are three simple ways to add ENS subname registrations, depending on your goals:
 
 <CardGroup cols={3}>
-  <Card
-    title="1. Template/Starter Kit"
-    icon="code"
-    description="Quick start with a working example to understand the flow"
-    href="#1-template-or-starter-kit"
-  />
-  <Card
-    title="2. Branded Usernames"
-    icon="user"
-    description="Issue subnames from your ENS name (e.g., wallet.eth)"
-    href="#2-branded-usernames-with-your-ens-name"
-  />
-  <Card
-    title="3. Ecosystem Wallets"
-    icon="users"
-    description="Let developers bring their own ENS name for subnames"
-    href="#3-ecosystem-or-global-wallets"
-  />
+  <Card title="1. Template/Starter Kit" icon="code" href="#1-template-or-starter-kit">
+    
+  </Card>
+  <Card title="2. Branded Usernames" icon="user" href="#2-branded-usernames-with-your-ens-name">
+    
+  </Card>
+  <Card title="3. Ecosystem Wallets" icon="users" href="#3-ecosystem-or-global-wallets">
+    
+  </Card>
 </CardGroup>
 
 ---
 
-## 1. Template or Starter Kit
+# 1. Template or Starter Kit
 
-**Best for**: Understanding the integration flow and testing the user experience
-
-A simple starter kit that demonstrates how ENS subnames replace hexadecimal wallet addresses in your application. This is the fastest way to experience how subnames work in practice.
+**Best for**: Understanding the integration flow and testing the user experience, and quickly seeing how ENS subnames replace wallet addresses in your app.
 
 ### What You Get
 
-A complete, working example showing:
-- How users create their own subname during onboarding
-- How to replace address displays with human-readable names
-- Reverse resolution: show a subname instead of an address (e.g., `alice.wallet.eth` instead of `0x742d...0bEb`)
-- The complete flow from creation to resolution
+A complete, working example showing complete flow (from creation to resolution):
+
+- How users can create their own subname during onboarding
+- How to replace wallet addresses with human-readable ENS names.
+- Implement Reverse resolution: show a subname instead of an address (e.g., `alice.wallet.eth` instead of `0x742d...0bEb`)
 
 ### Technical Approach
 
 We provide ready-to-use starter kits built with popular WaaS providers:
 
-- **[Privy Starter Kit](/developer-guide/integrations/starters/privy-nextjs)** - Next.js app with Privy auth, offchain subnames, and profile flows
-- **[Openfort Starter Kit](/developer-guide/integrations/starters/openfort-nextjs)** - Next.js app with Openfort embedded wallets and identity resolution
-- **[RainbowKit Starter Kit](/developer-guide/integrations/starters/rainbowkit-nextjs)** - Next.js app with RainbowKit wallet connection and subname management
+- [**Privy Starter Kit**](/developer-guide/integrations/starters/privy-nextjs) - Next.js app with Privy auth, offchain subnames, and profile flows
+- [**Openfort Starter Kit**](/developer-guide/integrations/starters/openfort-nextjs) - Next.js app with Openfort embedded wallets and identity resolution
+- [**RainbowKit Starter Kit**](/developer-guide/integrations/starters/rainbowkit-nextjs) - Next.js app with RainbowKit wallet connection and ENS subnames.
 
-
-**This serves as your opening path** to experience the complete subname flow before implementing it in your product.
+<Check>
+  This integration type serves as your opening path to experience the complete subname flow before implementing it in your product.
+</Check>
 
 ---
 
-## 2. Branded Usernames with Your ENS Name
+# 2. Branded Usernames with Your ENS Name
 
-**Best for**: Issuing subnames directly to your users with your brand identity. 
+**Best for**: Issuing subnames to your ecosystem of users and builders with your brand identity.
 
-Give every user a Web3 username that carries your brand. When users onboard, they get a subname like `alice.wallet.eth` that's instantly resolvable across all wallets, dapps, and services where your wallet infrastructure is integrated.
+Turn every user into a brand ambassador with personalized Web3 usernames. Use your ENS names as a base (e.g., _alice_.**wallet**.eth) and issue human-readable names to users. ENS subnames are instantly resolvable across all wallets, dapps, and services where your wallet infrastructure is integrated.
 
-Example: Like Uniswap usernames (e.g., `uni.eth`). You can offer your own brand usernames (e.g., `alice.wallet.eth`).
+One unified namespace becomes the root identity layer for every user, builder, or integration.
 
-### Business Benefits
+### Examples
 
-- **Brand visibility**: Every subname reinforces your brand (`.wallet.eth` appears everywhere)
-- **Improved onboarding**: Users get a memorable name instead of an address during signup
-- **Cross-platform identity**: Same username works wherever your service is integrated
-- **Monetization opportunity**: Create tiered plans limiting subname creation by developers
-- **Future-proof**: Start with offchain (gasless, instant) and migrate to onchain when needed
+- [Uniswap usernames](https://ens.domains/ecosystem/uniswap) (`*.uni.eth`)
+- [Basenames](https://ens.domains/ecosystem/base) (`*.base.eth`)
+- [World ID](https://ens.domains/ecosystem/world) (`*.world.id`)
+
+### Benefits
+
+- **Brand visibility**: Every subname reinforces your brand (`.wallet.eth` appears everywhere).
+- **Improved onboarding**: Users get a memorable name instead of an address during signup.
+- **Cross-platform identity**: Same username works wherever your service is integrated.
+- **Monetization opportunity**: Create tiered plans for controlled subname creation by developers.
+- **Future-proof**: Start with offchain (gasless, instant) and migrate to onchain when needed.
 
 ### User Experience Flow
 
 1. **User signs up** → Gets wallet address `0x742d...0bEb`
 2. **During onboarding** → User chooses username `alice`
 3. **System creates subname** → `alice.wallet.eth` is issued via API
-4. **Username works everywhere** → User can send/receive as `alice.wallet.eth` across all integrated apps
-
+4. **Works everywhere** → User transacts as `alice.wallet.eth` across all integrated apps
 
 #### Monetization Strategy
 
 You can monetize subname creation by:
+
 - **Free tier**: X subnames per developer/month
 - **Pro tier**: Unlimited subnames
 - **Enterprise**: Custom limits + support
 
 Control this through your backend—simply track usage and enforce limits before calling the Namespace API.
 
+<Check>
+  This integration type is ideal for projects that want to connect their entire ecosystem of apps, wallets, or products under one unified naming system.
+</Check>
+
 ---
 
-## 3. Ecosystem or Global Wallets
+# 3. Ecosystem or Global Wallets
 
-**Best for**: Allowing developers to bring their own ENS name and issue subnames to their users
+**Best for**: Allowing developers to bring their own ENS name and issue subnames to their users.
 
-Enable developers using your wallet infrastructure to issue subnames with their own ENS name (e.g., `happy.brand.eth` instead of `happy.wallet.eth`). This turns subnames into a service you offer, letting developers customize the identity layer for their applications.
+Enable developers using your wallet infrastructure to issue subnames with their own ENS name (e.g., `happy.brand.eth` instead of `happy.wallet.eth`). This enables subnames to become a service you offer, allowing developers to customize the identity layer for their applications.
 
 ### Business Benefits
 
-- **New product offering**: Subname-as-a-Service becomes a core feature
-- **Developer retention**: Unique identity solution keeps developers on your platform
-- **Revenue opportunity**: Charge per subname created or through tiered plans
-- **Competitive differentiation**: Not all WaaS providers offer branded identities
-- **Scalable architecture**: Same backend, multiple developer brands
+- **New product offering**: Subname-as-a-Service becomes a core feature.
+- **Developer retention**: Unique identity solution keeps developers on your platform.
+- **Revenue opportunity**: Charge per subname created or through tiered plans.
+- **Competitive differentiation**: Not all WaaS providers offer branded identities.
+- **Scalable architecture**: Same backend, multiple developer brands.
 
 ### Use Case Example
 
 A developer building a payment app:
-1. Registers `payments.eth` as their brand name
-2. Uses your wallet infrastructure for transactions
-3. Issues subnames like `alice.payments.eth` to their users
-4. Users send money as `alice.payments.eth` instead of addresses
-5. Brand is visible everywhere: `.payments.eth` appears across all integrations
 
-<Card title="Dynamic — Global Identity" icon="globe" href="https://www.dynamic.xyz/docs/global-wallets/global-identity">
-  See how Dynamic implements global identities for their ecosystem wallets.
-</Card>
-
+1. Registers `pay.eth` as their brand name.
+2. Uses your wallet infrastructure for transactions.
+3. Issues subnames like `alice.pay.eth` to their users.
+4. Users send money as `alice.pay.eth` instead of addresses.
+5. Brand is visible everywhere: `*.pay.eth` appears across all integrations.
 
 ### Same Benefits, Multiple Brands
 
-This approach provides the same benefits as approach #2, but with developer-owned brand names:
+This type provides the same benefits as approach #2, but with developer-owned brand names:
+
 - ✅ Better UX (names instead of addresses)
 - ✅ Reduced transaction errors
 - ✅ Brand visibility (each developer's `.eth` name)
@@ -144,7 +142,7 @@ This approach provides the same benefits as approach #2, but with developer-owne
 
 ---
 
-## Next Steps
+# Next Steps
 
 - **Ready to start?** Check out the [Offchain Manager SDK documentation](/developer-guide/sdks/offchain-manager)
 - **Need help or want to discuss integration?** Join our [Telegram Builders Group](https://t.me/+5FAwyiKOTeswNTIy)
