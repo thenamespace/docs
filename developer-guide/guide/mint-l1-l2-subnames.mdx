@@ -46,23 +46,19 @@ yarn add @thenamespace/mint-manager viem
     Create and configure an instance of the MintClient with your custom RPC URLs and mint source.
 
     ```typescript title="mint-client.ts"
+    import { base } from "viem/chains";
     import {
-      MintClientConfig,
       createMintClient,
-      MintClient,
     } from "@thenamespace/mint-manager";
 
     export const MY_ENS_NAME = "namespace.eth";
     const TOKEN = process.env.ALCHEMY_TOKEN;
 
-    const clientConfig: MintClientConfig = {
-      customRpcUrls: {
-        [base.id]: `https://base-mainnet.g.alchemy.com/v2/${TOKEN}`,
-      },
-      mintSource: "my-ens-dapp",
-    };
+   
 
-    export const mintClient: MintClient = createMintClient(clientConfig);
+    export const mintClient = createMintClient({
+      customRpcUrls: { [base.id]: `https://base-mainnet.g.alchemy.com/v2/${TOKEN}` },
+    });
     ```
 
     **Configuration Options:**
@@ -76,16 +72,16 @@ yarn add @thenamespace/mint-manager viem
     ```typescript title="web3-client.ts"
     import { createPublicClient, createWalletClient, http } from "viem";
     import { base } from "viem/chains";
-    import { privateKeyToAccount } from "viem/account";
+    import { privateKeyToAccount } from "viem/accounts";
 
     const TOKEN = process.env.ALCHEMY_TOKEN;
     const WALLET_KEY = process.env.WALLET_PRIVATE_KEY;
     const ALCHEMY_RPC = `https://base-mainnet.g.alchemy.com/v2/${TOKEN}`;
 
-    const wallet = privateKeyToAccount(WALLET_KEY);
+    export const account = privateKeyToAccount(WALLET_KEY);
 
     export const BASE_ID = base.id;
-    export const WALLET_ADDRESS = wallet.address;
+    export const WALLET_ADDRESS = account.address;
 
     export const publicClient = createPublicClient({
       transport: http(ALCHEMY_RPC),
@@ -95,6 +91,7 @@ yarn add @thenamespace/mint-manager viem
     export const walletClient = createWalletClient({
       transport: http(ALCHEMY_RPC),
       chain: base,
+      account,
     });
     ```
 
@@ -162,9 +159,9 @@ yarn add @thenamespace/mint-manager viem
     Create the transaction parameters needed to mint the subname, including any custom records you want to set.
 
     ```typescript title="generate-transaction.ts"
-    import { mintClient, WALLET_ADDRESS, MY_ENS_NAME } from "./mint-client";
-
-    const ETH_COIN = 60; // Ethereum mainnet coin type
+    import { mintClient, MY_ENS_NAME } from "./mint-client";
+    import { WALLET_ADDRESS } from "./web3-client";
+    import { ChainName } from "@thenamespace/mint-manager";
 
     const generateTransaction = async (subnameLabel: string) => {
       const txParameters = await mintClient.getMintTransactionParameters({
@@ -172,13 +169,13 @@ yarn add @thenamespace/mint-manager viem
         label: subnameLabel,
         minterAddress: WALLET_ADDRESS,
         records: {
-          addresses: {
-            [ETH_COIN]: WALLET_ADDRESS, // Set ETH address record
-          },
-          texts: {
-            description: "My awesome subname", // Custom text record
-            website: "https://example.com",   // Website record
-          },
+          texts: [
+            { key: "description", value: "My awesome subname" },
+            { key: "url", value: "https://example.com" },
+          ],
+          addresses: [
+            { value: WALLET_ADDRESS, chain: ChainName.Base },
+          ],
         },
       });
 
@@ -195,8 +192,10 @@ yarn add @thenamespace/mint-manager viem
     Simulate the transaction first to ensure it will succeed, then execute it on the blockchain.
 
     ```typescript title="execute-mint.ts"
-    import { publicClient, walletClient, WALLET_ADDRESS } from "./web3-client";
+    import { publicClient, walletClient, account } from "./web3-client";
+    import { base } from "viem/chains";
     import { generateTransaction } from "./generate-transaction";
+    import { MY_ENS_NAME } from "./mint-client";
 
     const executeMint = async (subnameLabel: string) => {
       try {
@@ -208,9 +207,10 @@ yarn add @thenamespace/mint-manager viem
           address: txParameters.contractAddress,
           args: txParameters.args,
           value: txParameters.value,
-          account: WALLET_ADDRESS,
+          account,
           functionName: txParameters.functionName,
           abi: txParameters.abi,
+          chain: base,
         });
 
         // Execute the transaction
@@ -239,81 +239,103 @@ yarn add @thenamespace/mint-manager viem
 Here's a complete implementation that combines all the steps:
 
 ```typescript title="complete-mint-example.ts"
-import { mintClient, MY_ENS_NAME } from "./mint-client";
-import { publicClient, walletClient, BASE_ID, WALLET_ADDRESS } from "./web3-client";
+import "dotenv/config";
+import { createPublicClient, createWalletClient, http } from "viem";
+import { base } from "viem/chains";
+import { privateKeyToAccount } from "viem/accounts";
+import { createMintClient, ChainName } from "@thenamespace/mint-manager";
 
-const ETH_COIN = 60;
+// Parent ENS name to mint subnames under
+const MY_ENS_NAME = "namespace.eth";
 
-const mintSubname = async (subnameLabel: string) => {
-  try {
-    const fullName = `${subnameLabel}.${MY_ENS_NAME}`;
-    
-    // Step 1: Check availability
-    const isAvailable = await mintClient.isL2SubnameAvailable(fullName, BASE_ID);
-    if (!isAvailable) {
-      throw new Error(`${fullName} is already taken!`);
-    }
+// Env vars (set these before running)
+const ALCHEMY_TOKEN = process.env.ALCHEMY_TOKEN;
+const WALLET_PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY as `0x${string}`;
 
-    // Step 2: Get mint details and pricing
-    const mintDetails = await mintClient.getMintDetails({
-      minterAddress: WALLET_ADDRESS,
-      parentName: MY_ENS_NAME,
-      label: subnameLabel,
-    });
+if (!ALCHEMY_TOKEN) {
+  throw new Error("Missing ALCHEMY_TOKEN env var");
+}
+if (!WALLET_PRIVATE_KEY) {
+  throw new Error("Missing WALLET_PRIVATE_KEY env var");
+}
 
-    if (!mintDetails.canMint) {
-      const errorMessage = mintDetails.validationErrors[0] || "Unknown reason";
-      throw new Error(`Subname cannot be minted: ${errorMessage}`);
-    }
+const ALCHEMY_RPC = `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_TOKEN}`;
 
-    const totalPrice = mintDetails.estimatedPriceEth + mintDetails.estimatedFeeEth;
-    console.log(`Total minting cost: ${totalPrice} ETH`);
+const mintClient = createMintClient({
+  customRpcUrls: { [base.id]: ALCHEMY_RPC },
+});
 
-    // Step 3: Generate transaction parameters
-    const txParameters = await mintClient.getMintTransactionParameters({
-      parentName: MY_ENS_NAME,
-      label: subnameLabel,
-      minterAddress: WALLET_ADDRESS,
-      records: {
-        addresses: {
-          [ETH_COIN]: WALLET_ADDRESS,
-        },
-        texts: {
-          description: "Minted with Namespace SDK",
-          mintedAt: new Date().toISOString(),
-        },
-      },
-    });
+// Configure viem clients
+const account = privateKeyToAccount(WALLET_PRIVATE_KEY);
+const publicClient = createPublicClient({ transport: http(ALCHEMY_RPC), chain: base });
+const walletClient = createWalletClient({ transport: http(ALCHEMY_RPC), chain: base, account });
 
-    // Step 4: Simulate transaction
-    const { request } = await publicClient.simulateContract({
-      address: txParameters.contractAddress,
-      args: txParameters.args,
-      value: txParameters.value,
-      account: WALLET_ADDRESS,
-      functionName: txParameters.functionName,
-      abi: txParameters.abi,
-    });
+async function mintSubnameOnBaseMainnet(subnameLabel: string) {
+  const fullName = `${subnameLabel}.${MY_ENS_NAME}`;
 
-    // Step 5: Execute transaction
-    const transactionHash = await walletClient.writeContract(request);
-    
-    console.log(`✅ Subname ${fullName} minted successfully!`);
-    console.log(`🔗 Transaction hash: ${transactionHash}`);
-    
-    return { fullName, transactionHash };
-  } catch (error) {
-    console.error("❌ Minting failed:", error);
-    throw error;
+  // 1) Availability check (L2 on Base)
+  const isAvailable = await mintClient.isL2SubnameAvailable(fullName, base.id);
+  if (!isAvailable) {
+    throw new Error(`${fullName} is already taken!`);
   }
-};
 
-// Usage
-mintSubname("superman")
-  .then(({ fullName, transactionHash }) => {
-    console.log(`Minted: ${fullName}`);
-  })
-  .catch(console.error);
+  // 2) Get mint details & pricing
+  const mintDetails = await mintClient.getMintDetails({
+    minterAddress: account.address,
+    parentName: MY_ENS_NAME,
+    label: subnameLabel,
+  });
+  if (!mintDetails.canMint) {
+    const errorMessage = mintDetails.validationErrors?.[0] || "Unknown reason";
+    throw new Error(`Subname cannot be minted: ${errorMessage}`);
+  }
+
+  const totalPriceEth = mintDetails.estimatedPriceEth + mintDetails.estimatedFeeEth;
+  console.log(`Total minting cost: ${totalPriceEth} ETH (price=${mintDetails.estimatedPriceEth}, fee=${mintDetails.estimatedFeeEth})`);
+
+  // 3) Build transaction parameters (add example records)
+  const txParameters = await mintClient.getMintTransactionParameters({
+    parentName: MY_ENS_NAME,
+    label: subnameLabel,
+    minterAddress: account.address,
+    records: {
+      texts: [
+        { key: "description", value: "Minted with Namespace SDK" },
+        { key: "url", value: "https://namespace.ninja" },
+      ],
+      addresses: [
+        { value: account.address, chain: ChainName.Base },
+      ],
+    },
+  });
+
+  // 4) Simulate
+  const { request } = await publicClient.simulateContract({
+    address: txParameters.contractAddress,
+    args: txParameters.args,
+    value: txParameters.value,
+    account,
+    functionName: txParameters.functionName,
+    abi: txParameters.abi,
+    chain: base,
+  });
+
+  // 5) Execute
+  const txHash = await walletClient.writeContract(request);
+  console.log(`✅ Subname ${fullName} minted on Base mainnet`);
+  console.log(`🔗 Tx hash: ${txHash}`);
+  return { fullName, txHash };
+}
+
+async function main() {
+  const labelArg = "happy"
+  await mintSubnameOnBaseMainnet(labelArg);
+}
+
+main().catch((err) => {
+  console.error("Minting failed:", err);
+  process.exit(1);
+});
 ```
 
 ## Environment Variables
