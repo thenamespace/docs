@@ -25,7 +25,6 @@ A Next.js starter kit integrating the [Offchain Manager SDK](/developer-guide/sd
 - An ENS name you control (e.g., `namespace.eth`)
 - Namespace API key from Dev Portal
 - Openfort account with API keys and Shield keys
-- WalletConnect Project ID
 
 <Steps>
   <Step title="Use as a template or clone">
@@ -66,13 +65,6 @@ A Next.js starter kit integrating the [Offchain Manager SDK](/developer-guide/sd
     - Never expose server-only secrets to the client.
     - The recovery endpoint returns a Shield encryption session for automatic wallet recovery.
   </Step>
-  <Step title="WalletConnect environment variables">
-    Add your WalletConnect Project ID (from [`dashboard.reown.com`](https://dashboard.reown.com)):
-
-    ```env
-    NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_walletconnect_project_id
-    ```
-  </Step>
   <Step title="Namespace environment variables">
    1. Visit the [Namespace Dev Portal](https://dev.namespace.ninja)
    2. Set your ENS name and Namespace API key (see [Dev Portal API Keys](/user-guide/dev-portal/api-keys)):
@@ -86,11 +78,11 @@ A Next.js starter kit integrating the [Offchain Manager SDK](/developer-guide/sd
     For avatar uploads and SIWE, add:
 
     ```env
-    NEXT_PUBLIC_AVATAR_SERVICE_URL=https://metadata.namespace.ninja
+    NEXT_PUBLIC_AVATAR_SERVICE_URL=https://metadata.namespace.ninja (optional)
     NEXT_PUBLIC_SIWE_DOMAIN=localhost:3000
     NEXT_PUBLIC_SIWE_URI=http://localhost:3000
     NEXT_PUBLIC_SIWE_CHAIN_ID=1
-    NEXT_PUBLIC_NETWORK=mainnet
+    NEXT_PUBLIC_NETWORK=mainnet (optional)
     ```
   </Step>
   <Step title="Run the development server">
@@ -177,7 +169,6 @@ src/
 - Openfort React docs: [`openfort.io/docs/products/embedded-wallet/react`](https://www.openfort.io/docs/products/embedded-wallet/react)
 - GitHub repository: [`thenamespace/ens-subnames-openfort-template`](https://github.com/thenamespace/ens-subnames-openfort-template)
 - Openfort Dashboard: [`dashboard.openfort.io`](https://dashboard.openfort.io)
-- WalletConnect (Reown) Dashboard: [`dashboard.reown.com`](https://dashboard.reown.com)
 - SDK Reference: [`Offchain Manager SDK`](/developer-guide/sdks/offchain-manager)
 
 
