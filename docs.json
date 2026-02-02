@@ -118,6 +118,18 @@
                 "api-reference/mint-manager/estimate-mint-params",
                 "api-reference/mint-manager/generate-mint-params"
               ]
+            },
+            {
+              "group": "Resolvio — ENS Resolution",
+              "icon": "magnifying-glass",
+              "pages": [
+                "api-reference/resolvio/bulk-reverse-resolve",
+                "api-reference/resolvio/reverse-resolve-single",
+                "api-reference/resolvio/get-ens-profile",
+                "api-reference/resolvio/get-ens-addresses",
+                "api-reference/resolvio/get-ens-texts",
+                "api-reference/resolvio/get-ens-contenthash"
+              ]
             }
           ]
           },
