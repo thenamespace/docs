@@ -1,0 +1,29 @@
+---
+title: "Skills"
+description: "Install skills to give your AI agent deep knowledge of a specific SDK."
+sidebarTitle: "Skills"
+icon: "scroll"
+---
+
+# Skills
+
+Agent skills are installable AI context packages that give coding assistants (Cursor, Claude Code, Copilot, etc.) deep knowledge of a specific SDK — including types, methods, patterns, and working examples. Instead of pasting docs into every chat, install a skill once and your AI agent understands the SDK automatically.
+
+### Offchain ENS Subname SDK skill
+
+The `offchain-ens-subname-sdk` skill teaches your AI agent how to work with the Namespace Offchain Manager SDK. It includes full SDK context, usage patterns, and examples for creating, managing, and resolving offchain ENS subnames.
+
+**Install in your project:**
+
+```bash
+npx skills add thenamespace/namespacesdk -s offchain-ens-subname-sdk
+```
+
+Once installed, your AI agent can:
+- Scaffold offchain subname creation from a prompt
+- Autocomplete SDK methods with correct types and parameters
+- Answer questions about the SDK without needing to search the docs
+
+<Note>
+  Skills work with any AI coding tool that supports agent context — Cursor, Claude Code, GitHub Copilot, and others.
+</Note>
