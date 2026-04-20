@@ -16,13 +16,29 @@ The `offchain-ens-subname-sdk` skill teaches your AI agent how to work with the 
 **Install in your project:**
 
 ```bash
-npx skills add thenamespace/namespacesdk -s offchain-ens-subname-sdk
+npx skills add thenamespace/skills -s offchain-ens-subname-sdk
 ```
 
 Once installed, your AI agent can:
 - Scaffold offchain subname creation from a prompt
 - Autocomplete SDK methods with correct types and parameters
 - Answer questions about the SDK without needing to search the docs
+
+### Resolvio ENS resolution skill
+
+The `resolvio` skill teaches your AI agent how to use the Resolvio ENS Resolution API for forward lookups, reverse lookups, profile reads, text records, and contenthash retrieval.
+
+**Install in your project:**
+
+```bash
+npx skills add thenamespace/skills -s resolvio
+```
+
+Once installed, your AI agent can:
+- Resolve ENS names to addresses on supported chains
+- Reverse-resolve wallet addresses to ENS names
+- Fetch full ENS profiles (texts, addresses, contenthash) in one request
+- Use bulk endpoints for tables, leaderboards, and multi-row UI data
 
 <Note>
   Skills work with any AI coding tool that supports agent context — Cursor, Claude Code, GitHub Copilot, and others.
