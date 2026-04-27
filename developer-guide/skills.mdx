@@ -1,17 +1,17 @@
 ---
 title: "Skills"
-description: "Install skills to give your AI agent deep knowledge of a specific SDK."
+description: "Install skills so your AI coding tool understands Namespace SDKs and UI components."
 sidebarTitle: "Skills"
 icon: "scroll"
 ---
 
 # Skills
 
-Agent skills are installable AI context packages that give coding assistants (Cursor, Claude Code, Copilot, etc.) deep knowledge of a specific SDK — including types, methods, patterns, and working examples. Instead of pasting docs into every chat, install a skill once and your AI agent understands the SDK automatically.
+Skills are installable context packages for AI coding tools. They give tools like Cursor, Claude Code, and GitHub Copilot the details they need about a specific Namespace SDK or UI library, including APIs, common patterns, and examples. Once a skill is installed, you do not need to keep re-explaining the same integration in every chat.
 
 ### Offchain ENS Subname SDK skill
 
-The `offchain-ens-subname-sdk` skill teaches your AI agent how to work with the Namespace Offchain Manager SDK. It includes full SDK context, usage patterns, and examples for creating, managing, and resolving offchain ENS subnames.
+The `offchain-ens-subname-sdk` skill gives your agent the context it needs to work with the Namespace Offchain Manager SDK. It includes examples and common workflows for creating, managing, and resolving offchain ENS subnames.
 
 **Install in your project:**
 
@@ -20,13 +20,27 @@ npx skills add thenamespace/skills -s offchain-ens-subname-sdk
 ```
 
 Once installed, your AI agent can:
-- Scaffold offchain subname creation from a prompt
-- Autocomplete SDK methods with correct types and parameters
-- Answer questions about the SDK without needing to search the docs
+- Generate code for creating offchain subnames from a prompt
+- Suggest the right SDK methods, types, and parameters
+- Answer SDK questions without digging through the docs
+
+### ENS components skill
+
+The `ens-components` skill helps your agent build ENS flows in React with `@thenamespace/ens-components`. It covers name registration, record management, subname minting, avatar uploads, and theming.
+
+**Install in your project:**
+
+```bash
+npx skills add thenamespace/skills -s ens-components
+```
+
+Once installed, your AI agent can:
+- Scaffold React flows for name registration, record management, and subname minting
+- Choose the right component for the job, including `EnsNameRegistrationForm`, `EnsRecordsForm`, `SelectRecordsForm`, `SubnameMintForm`, and `OffchainSubnameForm`
 
 ### Resolvio ENS resolution skill
 
-The `resolvio` skill teaches your AI agent how to use the Resolvio ENS Resolution API for forward lookups, reverse lookups, profile reads, text records, and contenthash retrieval.
+The `resolvio` skill gives your agent the context it needs to use the Resolvio ENS Resolution API for forward lookups, reverse lookups, profile reads, text records, and contenthash retrieval.
 
 **Install in your project:**
 
@@ -36,10 +50,10 @@ npx skills add thenamespace/skills -s resolvio
 
 Once installed, your AI agent can:
 - Resolve ENS names to addresses on supported chains
-- Reverse-resolve wallet addresses to ENS names
-- Fetch full ENS profiles (texts, addresses, contenthash) in one request
+- Reverse resolve wallet addresses to ENS names
+- Fetch full ENS profiles, including texts, addresses, and contenthash, in one request
 - Use bulk endpoints for tables, leaderboards, and multi-row UI data
 
 <Note>
-  Skills work with any AI coding tool that supports agent context — Cursor, Claude Code, GitHub Copilot, and others.
+  Skills work with any AI coding tool that supports agent context, including Cursor, Claude Code, and GitHub Copilot.
 </Note>
