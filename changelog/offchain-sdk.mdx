@@ -6,6 +6,29 @@ icon: "cloud"
 ---
 
 
+<Update label="May 1, 2026" description="v1.0.13">
+  - Added:
+    - **New Blockchain Support**: Added support for two Substrate L1 chains:
+      - Polkadot (`ChainName.Polkadot = "dot"`, coin type 354, SS58 prefix 0)
+      - Vara Network (`ChainName.Vara = "vara"`, coin type 913, SS58 prefix 137)
+  - Enhanced:
+    - **SS58 Address Validation**: Introduced a shared `isValidSs58(value, leadingChars, minLen, maxLen?)` helper in `validation.ts` that validates leading characters, length range, and base58 charset. Powers both Polkadot and Vara address checks.
+  - Testing:
+    - Added positive and negative validation tests for both chains using real addresses computed via `@polkadot/util-crypto`. Cross-rejection tests confirm each chain's validator rejects the other's address format.
+</Update>
+
+<Update label="March 4, 2026" description="v1.0.12">
+  - Fixed:
+    - **Custom Auth Token Support**: When `x-auth-token` is supplied through `setCustomHeaders` / `customHeaders`, the client no longer requires `setApiKey` / `setDefaultApiKey` to be configured. Previously the SDK still threw `Api key is not present for name: ...` even when token-based auth was already provided through custom headers. Strict ENS-name validation is also relaxed for single-label names when token auth is in effect.
+</Update>
+
+<Update label="January 20, 2026" description="v1.0.11">
+  - Added:
+    - **Custom HTTP Headers**: New `setCustomHeaders(headers)` method on `OffchainClient` and matching `customHeaders` field on `OffchainClientConfig`. Headers set this way are applied to every outgoing request — useful for tracing IDs, multi-tenant routing, or additional auth metadata.
+  - Testing:
+    - Added integration tests covering custom-header propagation through the client.
+</Update>
+
 <Update label="December 2, 2025" description="v1.0.10">
   - Changed:
     - **Monad Mainnet Support**: Updated Monad coin type from `10143` (testnet) to `143` (mainnet) for production network compatibility
