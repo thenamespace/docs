@@ -215,7 +215,7 @@
         },
         {
           "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
+          "href": "https://www.namespace.ninja/blog",
           "icon": "newspaper"
         }
       ]
@@ -275,7 +275,7 @@
           },
           {
             "label": "Blog",
-            "href": "https://thenamespace.substack.com/"
+            "href": "https://www.namespace.ninja/blog"
           },
           {
             "label": "Newsletter",
