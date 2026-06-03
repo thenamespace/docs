@@ -1,102 +1,133 @@
 ---
 title: "Activate an ENS Name"
-description: "Activating your ENS name on Namespace allows you and your community to mint subnames on Ethereum, Base, Optimism, and more chains."
+description: "Activate your ENS name in the Namespace App to issue onchain subnames on Ethereum L1 or L2 chains like Base and Optimism."
 sidebarTitle: "Activate ENS Name"
 icon: "toggle-on"
 ---
 
 <Note>
-  To mint subnames from the Namespace platform, ENS Widget, or using our SDK,
-  you must first activate your ENS Name using the Wizard.
+  To mint subnames from the Namespace App, ENS Widget, or via the SDK, you must first activate your ENS name from the Onchain section of the Namespace App.
 </Note>
 
 <Danger>
-  Names listed or activated on Ethereum mainnet cannot be migrated to Namechain (ENS v2).
-  If you plan to use Namechain, activate on a supported L2 instead.
+  Names activated on Ethereum L1 cannot be migrated to Namechain (ENS v2). If you plan to use Namechain, activate on a supported L2 (Base or Optimism) instead.
 </Danger>
 
 ## How to Activate an ENS Name
 
 <Steps>
-  <Step title="Open the app and start activation">
-    1. Visit <a href="https://app.namespace.ninja/">app.namespace.ninja</a>.
+  <Step title="Open the Onchain section">
+    1. Visit [app.namespace.ninja/onchain](https://app.namespace.ninja/onchain).
     2. Connect the wallet that owns the ENS name you want to activate.
-    3. Click the "Account" icon in the navigation bar.
-    4. Open the "Wizard" tab and click "List".
-    <img src="/assets/activate-ens-name-1.png" alt="Open Wizard and start activation" />
+    3. Select your ENS name from the dropdown at the top, then click **Activate Name**.
+
+    <img src="/assets/activate-ens-name-1.png" alt="Onchain Subnames page with ENS name selected and Activate Name button" />
   </Step>
 
-  <Step title="Select your ENS name">
-    Choose the ENS name to activate (for example, <code>ninjademo.eth</code>).
-    <img src="/assets/activate-ens-name-2.png" alt="Select the ENS name to activate" />
+  <Step title="Choose the listing type">
+    Pick where subnames will be issued:
+    - **L1 ENS Subnames** — issue original ENS subnames on Ethereum mainnet.
+    - **L2 ENS Subnames** — issue subnames on a supported L2 chain (Base or Optimism). Pick the network from the "Select Subname Network" dropdown.
+
+    Click **Next**.
+
+    <img src="/assets/activate-ens-name-2.png" alt="Choose between L1 and L2 ENS Subnames" />
   </Step>
 
-  <Step title="Choose activation option">
-    - <strong>Ethereum</strong>: Issue subnames on Ethereum.
-    - <strong>L2s (Base, Optimism, etc.)</strong>: Issue subnames on supported L2s.
+  <Step title="Setup — base activation properties">
+    Configure the collection:
+    - **Currency** — the token mint fees are collected in (e.g. ETH or USD).
+    - **Treasury Address** — wallet that receives mint revenue.
+    - **Name** and **Symbol** — collection metadata.
+    - **Burnable** — allow subname holders to burn their subname.
+    - **Renting** — allow time-bound subname rentals.
 
-    This guide uses Base as the example.
-    <img src="/assets/activate-ens-name-3.png" alt="Choose L2 for subnames (Base example)" />
+    <img src="/assets/activate-ens-name-3.png" alt="Setup tab — currency, treasury, name, symbol, burnable, renting" />
   </Step>
 
-  <Step title="Configure L2 collection">
-    Select "Issue L2 Subnames", then:
-    - Name your collection and set a symbol.
-    - Decide on burnability and rental options.
-    <img src="/assets/activate-ens-name-4.png" alt="Configure collection name, symbol, and options" />
+  <Step title="Prices — mint pricing rules">
+    Set how subnames are priced:
+    - **Base Price** — default price for every subname. Set to `0` to make subnames free.
+    - **Prices by length** — override price for specific subname lengths (e.g. 3-char names cost more).
+    - **Special Name Pricing** — custom rules for emoji-only, numbers-only, or other patterns.
+
+    <img src="/assets/activate-ens-name-4.png" alt="Prices tab — base price, length-based pricing, special name pricing" />
   </Step>
 
-  <Step title="Set mint pricing">
-    Define how subnames are priced:
-    - Base price
-    - Length-based pricing
-    - Special rules (numbers, letters, emoji)
-    <img src="/assets/activate-ens-name-5.png" alt="Configure mint pricing options" />
+  <Step title="Reservations — block or specially price specific subnames (optional)">
+    Reserve subnames so they either cannot be minted at all (set **Mintable** off → "No Mint") or are minted at a specific price different from your base rules.
+
+    Add reservations one-by-one or bulk-import via CSV.
+
+    <img src="/assets/activate-ens-name-5.png" alt="Reservations tab — reserve subnames with no-mint or special pricing" />
   </Step>
 
-  <Step title="Reserve or blacklist subnames (optional)">
-    Protect key names or block unwanted ones.
-    <img src="/assets/activate-ens-name-6.png" alt="Reserve or blacklist subnames" />
+  <Step title="Deadline — set a minting cutoff (optional)">
+    Toggle **Use Deadline** to make the collection time-bound. After the chosen date, no new subnames can be minted.
+
+    <img src="/assets/activate-ens-name-6.png" alt="Deadline tab — set a minting expiry date" />
   </Step>
 
-  <Step title="Set a minting deadline (optional)">
-    Make the collection time-bound if desired.
-    <img src="/assets/activate-ens-name-7.png" alt="Set an optional minting deadline" />
+  <Step title="Whitelist — restrict who can mint (optional)">
+    Toggle **Use Whitelisting** to gate minting by wallet address. Two modes:
+    - **Can mint only if whitelisted** — restrict minting to listed wallets.
+    - **If whitelisted, can mint for free** — allowlisted wallets bypass the mint fee.
+
+    Add addresses or ENS names one-by-one.
+
+    <img src="/assets/activate-ens-name-7.png" alt="Whitelist tab — restrict minting or grant free mints to specific addresses" />
   </Step>
 
-  <Step title="Configure allowlist options">
-    Restrict minting to specific wallets or allow free mints for approved addresses.
-    <img src="/assets/activate-ens-name-8.png" alt="Allowlist and free mint options" />
+  <Step title="Token Gated — require token holdings (optional)">
+    Toggle **Use Token Gated Listing** to require that minters hold a specific token:
+    - **Standard** — ERC-20 or ERC-721.
+    - **Token Address** — contract address of the gating token.
+    - **Subname Network** — the chain the token lives on.
+    - **Minimum Amount Required** — minimum balance the wallet must hold to be eligible.
+
+    <img src="/assets/activate-ens-name-8.png" alt="Token Gated tab — gate minting behind ERC-20 or ERC-721 holdings" />
   </Step>
 
-  <Step title="Enable token-gated minting (optional)">
-    Require holders of an ERC-20 or ERC-721 token to mint.
-    <img src="/assets/activate-ens-name-9.png" alt="Enable token-gated minting" />
+  <Step title="Activate the listing">
+    Once all tabs are configured, click **Activate**. Sign the transaction in your wallet.
+
+    <Tip>
+      **L1 activation** also requires wrapping your ENS name into a NameWrapper-compatible name. The app prompts for this wrap transaction automatically. This step is skipped for L2 activations.
+    </Tip>
   </Step>
 
-  <Step title="List your name">
-    When setup is complete, click "List Name".
+  <Step title="Deploy Registry">
+    After activation, the app shows a "Few more steps before you can list your name" screen with two actions.
+
+    Click **Deploy Registry** to deploy the Registry Contract on the selected L2 chain. This contract holds all subnames issued under your name.
+
+    <img src="/assets/activate-ens-name-9.png" alt="Few more steps — Deploy Registry and Configure Resolver" />
   </Step>
 
-  <Step title="Set the Namespace Hybrid Resolver">
-    Set the resolver to Namespace Hybrid Resolver.
-    <img src="/assets/activate-ens-name-10.png" alt="Set resolver to Namespace Hybrid Resolver" />
+  <Step title="Configure Resolver">
+    Click **Configure Resolver** to point your ENS name's resolver at the Namespace Hybrid Resolver. This is what makes subnames resolvable across the entire Web3 ecosystem.
+
+    Confirm the transaction in your wallet.
+
+    <img src="/assets/activate-ens-name-10.png" alt="Configure Resolver — confirm transaction in wallet" />
   </Step>
 
-  <Step title="Configure resolver settings">
-    Follow the prompts to complete resolver configuration.
-    <img src="/assets/activate-ens-name-11.png" alt="Configure resolver settings" />
-  </Step>
+  <Step title="Finish Activation">
+    Click **Finish Activation**. Your ENS name now shows an **Activated** badge, and you can start minting subnames from the same page or via the SDK / widget.
 
-  <Step title="All set!">
-    Congratulations — your ENS name is now activated.
-    <img src="/assets/activate-ens-name-12.png" alt="Activation complete" />
+    <img src="/assets/activate-ens-name-11.png" alt="Activated ENS name with minted subnames listed" />
   </Step>
 </Steps>
+
+<Tip>
+  You can revisit any tab later via **Edit Activation** — pricing, reservations, deadline, whitelist, and token gating can all be updated after activation.
+</Tip>
+
 ---
+
 ## Next Steps
 
-Your ENS Name is now activated and ready for subname minting! Choose the best way to get started:
+Your ENS name is now activated and ready for subname minting. Choose how to get started:
 
 <CardGroup cols={2}>
   <Card title="Namespace App" icon="desktop" href="https://app.namespace.ninja/">
@@ -114,5 +145,5 @@ Your ENS Name is now activated and ready for subname minting! Choose the best wa
 </CardGroup>
 
 <Tip>
-  For advanced automation or custom flows, explore our <a href="/developer-guide/sdks/mint-manager">Mint Manager SDK</a>.
+  For advanced automation or custom flows, explore the [Mint Manager SDK](/developer-guide/sdks/mint-manager).
 </Tip>

@@ -42,8 +42,8 @@
                 ]
               },
               {
-                "group": "Dev Portal",
-                "icon": "terminal",
+                "group": "Offchain",
+                "icon": "cloud",
                 "pages": [
                   "user-guide/dev-portal",
                   "user-guide/dev-portal/subnames",
@@ -52,6 +52,8 @@
                 ]
               },
               "user-guide/sdk-and-api",
+              "user-guide/resolvio",
+              "user-guide/ens-components",
               "user-guide/subpages",
               "user-guide/ens-widget",
               "user-guide/custom-solutions"
@@ -204,14 +206,9 @@
     "global": {
       "anchors": [
         {
-          "anchor": "App",
+          "anchor": "Namespace App",
           "href": "https://app.namespace.ninja",
           "icon": "desktop"
-        },
-        {
-          "anchor": "Dev Portal",
-          "href": "https://dev.namespace.ninja/",
-          "icon": "terminal"
         },
         {
           "anchor": "Blog",
@@ -234,8 +231,8 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Dev Dashboard",
-      "href": "https://dev.namespace.ninja/"
+      "label": "Namespace App",
+      "href": "https://app.namespace.ninja"
     }
   },
   "contextual": {
@@ -257,12 +254,12 @@
             "href": "https://namespace.ninja"
           },
           {
-            "label": "Web App",
+            "label": "Namespace App",
             "href": "https://app.namespace.ninja"
           },
           {
-            "label": "Dev Portal",
-            "href": "https://dev.namespace.ninja/"
+            "label": "Offchain Dashboard",
+            "href": "https://app.namespace.ninja/offchain"
           }
         ]
       },

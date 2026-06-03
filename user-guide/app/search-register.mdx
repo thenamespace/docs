@@ -1,55 +1,67 @@
 ---
 title: "Search & Register ENS Subname"
-description: "Search and registration page allows anyone to buy both ENS names and subnames with expanded search functionality."
+description: "Search and register both ENS names and subnames in a single flow on the Namespace App."
 sidebarTitle: "Search & Register"
 icon: "user-magnifying-glass"
 ---
 
-The search extends beyond the simple word search. If the searched word (e.g. `alice.eth`) is unavailable, users are presented with additional options.
+The search at [app.namespace.ninja/search](https://app.namespace.ninja/search) goes beyond a single-word lookup. When the searched name is unavailable, you're shown matching subnames from ENS names that have been activated on Namespace — each with their own price (or **Free Mint**).
 
-Imagine you want to register `alice.eth`. Since it's a fairly common name, it's likely already taken. The ENS app doesn't offer additional options to find a similar name or a subname.
+## Search
 
-With Namespace, however, if the searched word (e.g. `alice.eth`) is unavailable, users are presented with additional options\!
+Type a word (e.g. `happy`). The dropdown returns:
 
-If you entered "alice" in the Namespace app, it would give you this:
+- The exact ENS name (e.g. `happy.eth`) with an availability badge.
+- Matching subnames from activated parent names (e.g. `happy.ninjabase.eth`, `happy.collections.eth`) with their mint prices.
 
 <img
-  src="/assets/search-results-for-alice.png"
-  alt="Search results for alice"
+  src="/assets/search-results.png"
+  alt="Search results for 'happy' — exact ENS name plus matching subnames with prices"
   width="563"
 />
 
-These options are available Subnames of the search word (`alice.eth`) from the parent Names that had been activated on the Namespace platform to issue Subnames, and have that word - `alice` - available.
+This expands the registrar functionality and opens up integration paths for projects that need broader search and registration — website builders, social apps, and anywhere users need an identity quickly.
 
-This expands the registrar's functionality and opens up a lot of potential integrations. Specifically, projects and dapps that need to expand search and registration functionality, such as Website Builders. This allows their users to immediately find and register a domain name/subname for their newly created website.
-
-On top of that, each subname comes with certain perks and benefits that the ENS Name owner of the parent Name has decided to provide to incentivize minting.
-
-This provides an additional reason for ENS name owners to come up with creative and appropriate incentives for their Names, and start issuing subnames\!
+Each subname also carries whatever perks or incentives the parent-name owner configured during activation.
 
 ## Registration
 
-Currently, Namespace is the only Dapp that offers **search and registration** of available Subnames from the activated ENS names\! This means that it acts as an aggregate of all ENS names and displays the ones that have available subnames that the user wants to register.
+Namespace is currently the only dApp that surfaces **search and registration of available subnames** across all activated ENS names in one place. The registration flow depends on whether you're registering a subname or a fresh ENS name.
 
-The registration process is familiar and easy to use.
+### Registering an ENS Subname
 
-<CardGroup cols={2}>
-  <Card>
-    ![Registration step 1](/assets/register-alice-1.png)
-  </Card>
-  <Card>
-    ![Registration step 2](/assets/register-alice-2.png)
-  </Card>
-</CardGroup>
+Click any subname result. The **Get Your Web3 Username** modal opens with:
 
-### Registering ENS Name
+- The full subname (e.g. `happy.ninjabase.eth`)
+- **Price** — set by the parent-name owner (can be Free)
+- **Est. network fees** — gas estimate
+- **Total** — price + gas, with USD conversion
+- Optional **Complete your profile** flow to make your ENS more discoverable
 
-When registering your ENS Name, you'll be asked:
+Click **Mint** to sign the transaction.
 
-- Period: The amount of time you wish to register your Name for.
-- Price: Amount to be paid for the registration, based on the (sub)name length.
-- [Optional] Set the newly registered name as the primary name.
+<img
+  src="/assets/register-subname.png"
+  alt="Get Your Web3 Username modal — subname registration"
+  width="500"
+/>
 
-### Registering ENS Subname
+L1 (Ethereum) subnames are unruggable by default and inherit the registration length from the parent name. L2 subnames may have a registration period if the parent-name owner chose to rent rather than sell outright.
 
-When registering your ENS Subname, you'll see the price for the registration. Since the L1 (Ethereum) subnames are, by default, unruggable, the registration length will be inherited from the parent name. L2 Subnames, however, could optionally have a registration period if the parent-name owner wants to rent subnames instead of selling them for a one-time fee.
+### Registering an ENS Name
+
+Search for a name that isn't taken (e.g. `youreallywantaname.eth`) and start registration. The **ENS Name Registration** modal asks for:
+
+- **Period** — registration duration (default 1 year; adjustable, or pick by date)
+- **Registration Fee** — based on name length
+- **Est. network fees** — gas estimate
+- **Total** — fee + gas, with USD conversion
+- Optional **Complete your profile** flow
+
+Click **Next** to continue, then confirm in your wallet.
+
+<img
+  src="/assets/register-name.png"
+  alt="ENS Name Registration modal — period, fee, total"
+  width="500"
+/>
