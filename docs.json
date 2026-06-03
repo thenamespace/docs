@@ -52,6 +52,8 @@
                 ]
               },
               "user-guide/sdk-and-api",
+              "user-guide/resolvio",
+              "user-guide/ens-components",
               "user-guide/subpages",
               "user-guide/ens-widget",
               "user-guide/custom-solutions"

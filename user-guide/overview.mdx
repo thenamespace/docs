@@ -38,7 +38,30 @@ description: "Quick overview of what we built, what we offer, and what we can do
     - [**Indexer Manager**](/developer-guide/sdks/indexer-manager): used for interacting with indexed data from Namespace smart contracts.
   </Accordion>
   <Accordion title="API">
-    Need to add.
+    Hosted Namespace API for subname creation, resolution, and management. See the [API reference](/api-reference/introduction) for endpoints.
+  </Accordion>
+  <Accordion title="Resolvio">
+    [**Resolvio**](https://www.resolvio.xyz/) is a universal ENS resolution API — one endpoint for forward, reverse, profile, bulk, and multichain ENS resolution. No auth, no API keys, open-source, AI-ready.
+
+    **Features:**
+
+    - Forward and reverse resolution
+    - CCIP-Read support (offchain subnames)
+    - Bulk lookups for tables and leaderboards
+    - Built-in caching with controls
+    - Chain directory — no `coin_type` needed
+    - UI playground, self-hostable, MIT-licensed
+  </Accordion>
+  <Accordion title="ENS Components">
+    [**ENS Components**](https://enscomponents.com/) is a plug-and-play React UI library for ENS name registration, record editing, and subname issuance — including Namespace subnames.
+
+    **Core components:**
+
+    - `EnsNameRegistrationForm` — full commit/register flow
+    - `EnsRecordsForm` — edit text records, addresses, avatar, contenthash
+    - `SelectRecordsForm` — standalone record composer, no wallet required
+    - `OffchainSubnameForm` — gasless subnames via the Namespace API
+    - `SubnameMintForm` — onchain subname minting with L2 resolver support
   </Accordion>
   <Accordion title="ENS Widget">
     A simple plugin that can be added to any website and allow visitors to register ENS names or subnames based on your preference.
