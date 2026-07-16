@@ -1,7 +1,7 @@
 ---
-title: "Create or Update Subname"
-description: "Create new ENS subnames or update existing ones with records and metadata."
-sidebarTitle: "Create or Update Subname"
+title: "Create or update a subname"
+description: "Subname issuance and record updates in one method."
+sidebarTitle: "Create or update"
 icon: "pen-to-square"
 ---
 
@@ -14,21 +14,22 @@ Create a subname under an existing ENS name with text records, address records, 
 </Note>
 
 ```typescript
-import { ChainName } from "@thenamespace/offchain-manager";
+import { ChainName } from '@thenamespace/offchain-manager';
 
-client.createSubname({
-  label: "subname",
-  parentName: "example.eth",
+await client.createSubname({
+  label: 'alice',
+  parentName: 'example.eth',
   texts: [
-    { key: "avatar", value: "avatar url..." },
-    { key: "name", value: "superman" },
+    { key: 'name', value: 'Alice' },
   ],
   addresses: [
-    { chain: ChainName.Ethereum, value: "0x123..." },
-    { chain: ChainName.Bitcoin, value: "qgds..." },
+    {
+      chain: ChainName.Ethereum,
+      value: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
+    },
   ],
-  owner: "0x123...",
-  metadata: [{ key: "sender", value: "0x123..." }],
+  owner: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
+  metadata: [{ key: 'source', value: 'onboarding' }],
 });
 ```
 
@@ -51,8 +52,8 @@ Include the <code>owner</code> field when creating a subname. This allows you to
 Modify text records, address records, content hash, or metadata for an existing subname.
 
 ```typescript
-client.updateSubname("superman.namespace.eth", {
-  texts: [{ key: "avatar", value: "updated-avatar" }],
+await client.updateSubname('alice.example.eth', {
+  texts: [{ key: 'description', value: 'Updated profile' }],
 });
 ```
 

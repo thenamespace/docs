@@ -1,7 +1,7 @@
 ---
-title: "Get Filtered Subnames"
-description: "Retrieve a list of subnames using flexible filters such as label, owner, metadata, and pagination."
-sidebarTitle: "Filtered Subnames"
+title: "Get filtered subnames"
+description: "Filter and paginate offchain subnames."
+sidebarTitle: "Filtered subnames"
 icon: "filter"
 ---
 
@@ -10,7 +10,14 @@ Retrieve subnames using filters like label search, owner, metadata, and paginati
 ## Usage
 
 ```typescript
-client.getFilteredSubnames({ parentName: "myensname.eth",  metadata: { "sender": "0x123..." }, });
+const page = await client.getFilteredSubnames({
+  parentName: 'example.eth',
+  metadata: { source: 'onboarding' },
+  page: 1,
+  size: 25,
+});
+
+console.log(page.items);
 ```
 
 ## Request Parameters
@@ -18,7 +25,7 @@ client.getFilteredSubnames({ parentName: "myensname.eth",  metadata: { "sender":
 ```typescript
 export interface QuerySubnamesRequest {
   parentName?: string;
-  parentNames?: string;
+  parentNames?: string[];
   labelSearch?: string;
   page?: number;
   size?: number;
@@ -27,17 +34,14 @@ export interface QuerySubnamesRequest {
 }
 ```
 
-- `parentName` or `parentNames`: ENS name(s) to search under (**required**)
+- `parentName` or `parentNames`: ENS name or names to search under
 - `labelSearch`: Substring to match subname labels (optional)
 - `page`: Page number for pagination (default: 1)
 - `size`: Number of items per page (optional)
 - `metadata`: Metadata key-value filters (optional)
 - `owner`: Filter by Ethereum address (optional)
 
-<Note>
- You must provide either `parentName` or `parentNames`.
-
-</Note>
+<Note>Use `parentName` for one parent or `parentNames` for several parents.</Note>
 
 ## Response
 

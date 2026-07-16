@@ -1,6 +1,6 @@
 ---
 title: "WaaS Integration Guide"
-description: "Complete guide for WaaS and wallet infrastructure providers to integrate ENS subnames and improve wallet UX with human-readable names."
+description: "Compare three ENS subname integration paths for Wallet-as-a-Service providers."
 sidebarTitle: "Wallet Infra / WaaS"
 icon: "wallet"
 ---
@@ -13,7 +13,7 @@ As a Wallet-as-a-Service (WaaS) provider, you can make your product feel simpler
 - **Better UX**: Users send money to `alice.wallet.eth` instead of copying/pasting long addresses
 - **Reduced errors**: Human-readable names reduce typos and mistaken transactions
 - **Brand recognition**: Every subname carries your brand (e.g., `.wallet.eth`)
-- **Universal compatibility**: Works across 1,000+ wallets, countless apps and multiple chains
+- **ENS compatibility**: Compatible wallets and apps can resolve the resulting ENS records
 - **New revenue stream**: Monetize subname creation through tiered developer plans
 
 ## Three Integration Paths
@@ -45,7 +45,7 @@ Here are three simple ways to add ENS subnames, depending on your goals:
 
 ## 1. Template or Starter Kit
 
-**Best for**: Understanding the integration flow and testing the user experience
+**Use this path for**: Understanding the integration flow and testing the user experience
 
 A simple starter kit that demonstrates how ENS subnames replace hexadecimal wallet addresses in your application. This is the fastest way to experience how subnames work in practice.
 
@@ -70,11 +70,11 @@ We provide ready-to-use starter kits built with popular WaaS providers:
 
 ---
 
-## 2. Branded Usernames with Your ENS Name
+## 2. Branded usernames with your ENS name
 
-**Best for**: Issuing subnames directly to your users with your brand identity. 
+**Use this path for**: Issuing subnames directly to your users under a branded parent name.
 
-Give every user a Web3 username that carries your brand. When users onboard, they get a subname like `alice.wallet.eth` that's instantly resolvable across all wallets, dapps, and services where your wallet infrastructure is integrated.
+Give users a readable name under your brand, such as `alice.wallet.eth`. Compatible ENS clients can resolve the records you attach to that subname.
 
 Example: Like Uniswap usernames (e.g., `uni.eth`). You can offer your own brand usernames (e.g., `alice.wallet.eth`).
 
@@ -101,13 +101,13 @@ You can monetize subname creation by:
 - **Pro tier**: Unlimited subnames
 - **Enterprise**: Custom limits + support
 
-Control this through your backend—simply track usage and enforce limits before calling the Namespace API.
+Control this through your backend. Track usage and enforce limits before calling the Namespace API.
 
 ---
 
 ## 3. Ecosystem or Global Wallets
 
-**Best for**: Allowing developers to bring their own ENS name and issue subnames to their users
+**Use this path for**: Allowing developers to bring their own ENS name and issue subnames to their users
 
 Enable developers using your wallet infrastructure to issue subnames with their own ENS name (e.g., `happy.brand.eth` instead of `happy.wallet.eth`). This turns subnames into a service you offer, letting developers customize the identity layer for their applications.
 
@@ -128,7 +128,7 @@ A developer building a payment app:
 4. Users send money as `alice.payments.eth` instead of addresses
 5. Brand is visible everywhere: `.payments.eth` appears across all integrations
 
-<Card title="Dynamic — Global Identity" icon="globe" href="https://www.dynamic.xyz/docs/global-wallets/global-identity">
+<Card title="Dynamic: Global Identity" icon="globe" href="https://www.dynamic.xyz/docs/global-wallets/global-identity">
   See how Dynamic implements global identities for their ecosystem wallets.
 </Card>
 
@@ -139,7 +139,7 @@ This approach provides the same benefits as approach #2, but with developer-owne
 - ✅ Better UX (names instead of addresses)
 - ✅ Reduced transaction errors
 - ✅ Brand visibility (each developer's `.eth` name)
-- ✅ Universal compatibility (works everywhere)
+- ✅ Resolution in compatible ENS clients
 - ✅ Revenue opportunity (charge developers for usage)
 
 ---

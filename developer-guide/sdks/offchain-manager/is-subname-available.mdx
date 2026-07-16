@@ -1,20 +1,21 @@
 ---
-title: "Check Subname Availability"
+title: "Check subname availability"
 description: "Determine if a specific ENS subname is available for registration."
-sidebarTitle: "Subname Availability"
+sidebarTitle: "Subname availability"
 icon: "magnifying-glass"
 ---
 
 Use `isSubnameAvailable` to check if a subname can be registered.
 
 ```typescript
-const response = client.isSubnameAvailable("ns.myensname.eth");
-const isAvailable = response.isAvailable; // true if the subname is available, false if already taken.
+const { isAvailable } = await client.isSubnameAvailable(
+  'alice.example.eth',
+);
 ```
 
 #### Parameters
 
-- `subname`: Subname to check availability for (e.g., `"ns.myensname.eth"`)
+- `subname`: Fully qualified subname to check, such as `alice.example.eth`
 
 #### Return Type
 
@@ -22,7 +23,5 @@ const isAvailable = response.isAvailable; // true if the subname is available, f
 
 
 <Danger>
-Always check subname availability before attempting to create or update a subname.  
-It may overwrite the existing subname.
+Check availability before calling `createSubname`. To change an existing subname, call `updateSubname` explicitly.
 </Danger>
-

@@ -1,51 +1,62 @@
 ---
 title: "ENS Widget"
-description: "The easiest way to sell ENS Names and Subnames from your website."
+description: "Embed ENS registration without rebuilding the interface."
+sidebarTitle: "ENS Widget"
 icon: "puzzle-piece"
 ---
 
-The ENS Widget is designed to support ENS Name and Subname registration and allow anyone to seamlessly issue and sell both ENS Names and Subnames. 
+Use ENS Widget to add ENS name and onchain subname registration to your website without building the registration interface yourself.
 
-![Group22 Sv](/images/Group22.svg)
+## Before you begin
 
-### **Getting started**
+- Connect the wallet that owns the parent ENS name.
+- [Activate the parent ENS name](/user-guide/app#activate-your-ens-name) before offering its subnames through the widget.
+- Decide which names and subnames visitors should be able to search and mint.
+
+## Choose the widget type
+
+| Type | Names shown in search |
+| --- | --- |
+| All Names | Available subnames from every ENS name listed on Namespace |
+| Owned Names | Available subnames from ENS names owned by your connected wallet |
+| Selected Names | Available subnames from several parent names you select |
+| Single Selected Name | Available subnames from one parent name you select |
+
+## Create and embed the widget
 
 <Steps>
-  <Step title="Getting started with ENS Widget">
-    To get started, go to [app.namespace.ninja](http://app.namespace.ninja) then head to the **Account** icon.
+  <Step title="Open Widgets">
+    Visit [app.namespace.ninja](https://app.namespace.ninja), connect your wallet, open the account menu, and select **Widgets**.
+  </Step>
 
-    <Note>
-      This step assumes that you already have an ENS Name. If you don't, you will need to register one on the [Namespace app](https://app.namespace.ninja/) or [ENS app](https://app.ens.domains/).
-    </Note>
+  <Step title="Create a widget">
+    Create a widget and choose the type that matches the names you want visitors to search. For **Selected Names** or **Single Selected Name**, select the parent ENS names to include.
   </Step>
-  <Step title="Activate ENS Name">
-    To enable Subname registrations through the ENS Widget, you first need to **activate your ENS name(s)**. Once activated, others will be able to mint Subnames from them.
 
-    <Card title="How-to Activate ENS Name" icon="hat-wizard" horizontal href="/user-guide/app/activate-ens-name">
-      See the step-by-step guide on how to activate an ENS Name.
-    </Card>
+  <Step title="Choose whether to include ENS names">
+    Enable **Allow ENS Name Registrations** if visitors should also be able to register second-level ENS names such as `example.eth`.
   </Step>
-  <Step title="Creating the Widget">
-    Once you've listed the name(s), you navigate to: Account-\>Widgets and create the Widget from there.
-  </Step>
-  <Step title="Choose Widget Type">
-    Choosing a widget type comes down to the fact of what specifically you want to sell. Currently, there are 4 different types you can choose from:
 
-    1. **All Names** — all available Subnames, from all listed ENS Names on the Namespace platform from every ENS Name owner, will appear in the search and people will be able to mint them from the Widget.
-    2. **Owned Names** — all available Subnames, from your listed ENS Names only, will appear in the search and people will be able to mint them from the Widget.
-    3. **Selected Names** — all available Subnames, from the ENS Names you listed and selected, will appear in the search and people will be able to mint them from the Widget.
-    4. **Single Selected Name** — all available Subnames, from only one ENS Name that you listed and selected, will appear in the search and people will be able to mint them from the Widget.
+  <Step title="Save the configuration">
+    Review the settings, click **Update**, and sign the gasless update request in your wallet.
   </Step>
-  <Step title="Selecting Names">
-    If you opt for either option 3 or 4 outlined above, you'll be prompted to select the ENS Names you wish to add to the Widget. Only these selected Name(s) will be used for issuing Subnames.
+
+  <Step title="Copy the integration code">
+    Copy the generated integration code and paste it into the page where the registration experience should appear.
   </Step>
-  <Step title="Optional ENS Name registration">
-    You can optionally allow people to register 2nd-level ENS Names from your Widget as well, by turning ON the "_Allow ENS Name Registrations_" toggle button.
-  </Step>
-  <Step title="Launch">
-    Once you're happy with your setup, you can click update. You'll be prompted to sign the update, and the widget will then be updated with the latest changes and with your wallet completely gaslessly.
-  </Step>
-  <Step title="Integrate into your Website">
-    Once you're done customizing and setting up your Widget, you can add it to your website by copying and pasting the Integration Code, and start issuing Subnames directly from there.
+
+  <Step title="Test the registration flow">
+    Open the published page, search for an available subname, and verify the displayed parent name, network, price, and wallet transaction before sharing the widget with users.
   </Step>
 </Steps>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Manage onchain subnames" icon="coins" href="/user-guide/app">
+    Update the parent name's pricing and minting rules in the Namespace App.
+  </Card>
+  <Card title="Build a custom minting site" icon="page" href="/developer-guide/guide/subpages">
+    Use the white-label starter when you need full control over the registration experience.
+  </Card>
+</CardGroup>

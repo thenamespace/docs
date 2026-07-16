@@ -1,31 +1,39 @@
-# Namespace Documentation
+# Namespace documentation
 
 This repository contains the documentation for [Namespace](https://namespace.ninja), a platform for ENS subname management and development tools.
 
-## Development
+## Local development
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview the documentation changes locally:
+The repository uses Node.js 22 and a pinned version of the Mintlify CLI. If you use `nvm`, select the correct Node.js version before installing dependencies:
 
+```bash
+nvm use
+npm ci
+npm run dev
 ```
-npm i -g mint
-mint dev
+
+Open the local URL printed by Mintlify. Changes to MDX files and `docs.json` reload automatically.
+
+## Quality checks
+
+Run the complete documentation test suite:
+
+```bash
+npm run check
 ```
 
-## Publishing Changes
+The suite validates the Mintlify build, checks links and accessibility, enforces repository content conventions, and type-checks the SDK examples.
 
-Install our Github App to auto propagate changes from your repo to your deployment. Changes will be deployed to production automatically after pushing to the default branch.
+## Contributing
 
-## Pre-deployment Checklist
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before adding or moving pages. Writing and terminology conventions live in [STYLE_GUIDE.md](STYLE_GUIDE.md), and new guides should start from [the documentation page template](templates/documentation-page.md).
 
-### ✅ 1. Run Locally
-- [ ] Run `mint dev` and verify the site loads correctly
-- [ ] Test navigation links and assets
+## Publishing
 
-### ✅ 2. Check docs.json Configuration
-- [ ] Confirm navigation paths match file structure
-- [ ] Check new files are referenced in navigation
+The Mintlify GitHub App deploys changes from the default branch. Before merging a documentation change:
 
-### ✅ 3. Review Redirects
-- [ ] Check if existing redirects will be affected
-- [ ] Add redirects for moved/renamed pages
-- [ ] Test redirects locally
+- Preview it locally.
+- Run `npm run check`.
+- Confirm new pages appear in `docs.json` navigation.
+- Add redirects for moved or retired routes.
+- Review screenshots, alternative text, and external links.

@@ -1,104 +1,57 @@
 ---
 title: "Getting started"
-description: "What subnames are, how to use them, and where to begin"
+description: "Understand subnames and choose how to build with Namespace."
 icon: "hand-wave"
 ---
 
-## Introduction
+[**ENS**](https://ens.domains/) turns blockchain addresses into readable names such as **alice.eth**. A subname extends a parent name. For example, **alice.brand.eth** sits under **brand.eth**, allowing a product, community, or any name owner to issue subnames (as identities) within a shared namespace.
 
-[ENS](https://ens.domains/) turns long 0x addresses into memorable names like `alice.eth`. Subnames extend a parent name (e.g., `brand.eth`) to create usernames for people, apps, and agents — like `alice.brand.eth`.
+[Namespace](https://namespace.ninja/) provides no-code apps and products, APIs, and TypeScript SDKs for issuing and managing ENS subnames. It lets developers easily implement Subname (identity) registration for their users, agents, or general-purpose identifier.
 
-[Namespace](https://namespace.ninja/) allows builders to easily **implement Subname registrations** in their apps, wallets, chains, AI agents, or communities. Subnames function across wallets, apps, and chains, serving as an identity layer to enhance user experience, safety, and streamline onboarding.
+**Choose where subnames live:** Subnames can be issued on Ethereum L1, on an L2, or through an offchain service. All 3 work the same, but they differ in cost, control, and ownership.
 
-## Who is this for?
+| Model | Best for | Cost to issue | Ownership model |
+| --- | --- | --- | --- |
+| Offchain | High-volume onboarding and application-managed identities | No blockchain transaction | The parent-name operator manages records |
+| L2 | Lower-cost NFT ownership on a supported L2 | L2 transaction and mint price | The minted subname is held by its owner |
+| L1 | Lower-volume, Ethereum-native ownership | Ethereum transaction and mint price | The minted subname is held by its owner |
+
+<Tip>
+  Start with offchain subnames when you need gasless, high-volume issuance. Choose L1 or L2 when holding the subname as an onchain asset is a product requirement.
+</Tip>
+
+## Choose your path
 
 <CardGroup cols={3}>
-  <Card title="Product teams & platforms" icon="people-group" iconType="regular" href="/overview/for-product-teams">
-    Embed subnames in your wallet, app, or L2 to improve UX and safety.
+  <Card title="Integrate Subnames into your product" icon="code" href="/developer-guide/quickstart">
+    Add subname issuance or resolution to an app, wallet, agent, or chain.
   </Card>
-  <Card title="ENS name owners & creators" icon="wand-magic-sparkles" iconType="regular" href="/overview/for-name-owners">
-    Launch, list, and sell subnames with no code using the Namespace App.
+  <Card title="No-code onchain subnames" icon="desktop" href="/user-guide/app">
+    Activate an ENS name and manage onchain subnames in the Namespace App.
   </Card>
-  <Card title="Developer Quickstart" icon="code" iconType="regular" href="/developer-guide/quickstart">
-    Start building with our SDKs/APIs.
+  <Card title="Issue offchain subnames" icon="cloud" href="/user-guide/dev-portal">
+    Configure a resolver, create API keys, and manage gasless subnames.
   </Card>
 </CardGroup>
 
-## Choosing where subnames live
-
-There are 3 key ways to issue subnames. Use this guide to pick the right approach for you.
-
-<Tabs>
-  <Tab title="Offchain">
-    Offchain subnames are simple database records and work by leveraging [CCIP-read](https://eips.ethereum.org/EIPS/eip-3668). Best for large-scale issuance, require no gas fees to create, flexible ownership controls, and simple API/SDK management. Great default for most apps.
-
-    <Card title="Create offchain subnames" icon="rocket" horizontal href="/developer-guide/guide/create-offchain-subnames">
-      Step-by-step guide
-    </Card>
-  </Tab>
-  <Tab title="L2 chain">
-    L2 subnames are minted as NFTs on supported L2s (Base, Optimism for now, but could be deployed on any L2). Lower costs than L1 with stronger decentralization and ownership.
-
-    <Card title="Mint L2 subnames" icon="bolt" horizontal href="/developer-guide/guide/mint-l1-l2-subnames">
-      Step-by-step guide
-    </Card>
-  </Tab>
-  <Tab title="L1 chain">
-    L1 subnames are fully decentralized, unruggable, and 100% under the users' control once minted. Minted on the Ethereum mainnet at a higher cost. Fits premium, low-volume cases.
-
-    <Card title="Mint L1 subnames" icon="sparkles" horizontal href="/developer-guide/guide/mint-l1-l2-subnames">
-      Step-by-step guide
-    </Card>
-  </Tab>
-</Tabs>
-
-## Subname Use Cases and Benefits
-
-Discover who is using ENS Subname in Web3 and what for.
-
-<AccordionGroup>
-  <Accordion title="See Subname Use Cases">
-    - **L2 chain** → consistent ecosystem naming and discovery with one namespace.
-    - **Wallets** → Branded wallet names (human-readable names instead of addresses).
-    - **Payment apps** → Simple names for sending/receiving payments.
-    - **AI agents** → Each agent gets a sovereign, unique, verifiable ENS ID/profile.
-    - **Launchpads** → Auto-assign subnames to every contract or AI agent created.
-    - **RaaS providers** → Chain-wide naming service for every rollup.
-    - **Blockchain infra/tools** → Adds a universal identity layer for developers.
-    - **Wallet-as-a-Service** → One wallet name that works across all chains.
-    - **Games** → Custom player usernames with cross-chain utility.
-    - **Identity apps/services** → Use ENS as the foundation for digital identity.
-    - **Communities** → Subnames for members, strengthening shared identity.
-    - **Individuals** → Creators give subnames to followers for onboarding.
-    - **All others** → Any user-facing app needs names as identity primitives.
-  </Accordion>
-  <Accordion title="See Subname Benefits">
-    - **Universal identity** → One name works across apps, wallets, and blockchains.
-    - **Trust & safety** → Reduces errors, scams, and copy-paste risks.
-    - **Scam protection** → No phishing, address spoofing, clipboard hijacking, etc.
-    - **Simplified Onboarding** → Users get onboarded simply by registering a username.
-    - **New revenue streams** → Premium names, renewals, subname activations.
-    - **Referrals** → Domains and subdomains used as trackable referral links.
-    - **Portability** → Identity you own, not locked to any app or chain.
-    - **Brand Visibility** → People wear their _name_.base.eth as their social handle.
-    - **Social identity** → Communities distribute branded names
-    - **Cross-app interoperability** → ENS usernames resolve across 1,000\+ web3 apps
-    - **Onchain Profile** → ENS \+ metadata (avatar, social handles, website, addresses...)
-    - **Immutable websites** → Decentralized, censorship-resistant website (contenthash)
-  </Accordion>
-</AccordionGroup>
-
-## Next steps
+## Learn the concepts
 
 <CardGroup cols={2}>
-  <Card title="Use the Namespace App" icon="desktop" href="/user-guide/app">
-    Launch and manage subnames without code.
+  <Card title="Learn about Subnames" icon="question" href="/overview/subnames">
+    Compare L1, L2, and offchain subnames in more detail.
   </Card>
-  <Card title="Developer Quickstart" icon="rocket" href="/developer-guide/quickstart">
-    Build with our SDKs and APIs.
+  <Card title="About Namespace" icon="sparkles" href="/learn-more">
+    Learn how Namespace products fit into the ENS ecosystem.
   </Card>
 </CardGroup>
 
-<Card title="Need custom solution?" icon="message" href="https://t.me/+5FAwyiKOTeswNTIy">
-  Send us a message and let's build something together.
-</Card>
+## Get help
+
+<CardGroup cols={2}>
+  <Card title="Namespace Builders on Telegram" icon="telegram" href="https://t.me/+OsziFgfuZz03NjEy">
+    Ask a technical integration question in the Namespace Builders group.
+  </Card>
+  <Card title="ENS x AI on Telegram" icon="telegram" href="https://t.me/ensxai">
+    Join the community working on ENS and AI apps, tools, and standards.
+  </Card>
+</CardGroup>

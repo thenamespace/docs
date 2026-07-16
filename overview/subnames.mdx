@@ -1,44 +1,72 @@
 ---
-title: "Subnames"
-description: "Learn more about Subnames."
-sidebarTitle: "What are Subnames"
+title: "Learn about Subnames"
+description: "Compare offchain, L1, and L2 subname models."
+sidebarTitle: "Learn about Subnames"
 icon: "question"
 ---
 
-[ENS](https://ens.domains/) maps 20-byte addresses to human‑readable .eth names. Subnames extend a parent name (e.g., `brand.eth`) to create subnames for people, apps, and agents — like `alice.brand.eth`.
+[ENS](https://ens.domains/) maps readable names to addresses and other public records. A subname extends a parent name: the operator of `brand.eth` can create `alice.brand.eth`, `pay.brand.eth`, or deeper names.
 
-For a concise overview of how to leverage subnames, how to choose the type of Subnames (Offchain, L2, or L1 subnames), and who uses them, see the Getting started page.
+## What subnames enable
 
-## Different Types of Subnames
+- **Readable payments:** Replace copied addresses with names, which can help reduce address-entry errors.
+- **Branded identity:** Give users a recognizable name under a product or community namespace.
+- **Portable profiles:** Store public addresses and text records that compatible ENS clients can resolve.
+- **Flexible issuance:** Choose application-managed offchain records or owner-held onchain subnames.
 
-ENS subnames can live on L1 or L2 chains, or offchain. L2 and offchain are similar in UX; the key differences are decentralization, cost, and ownership model.
+See [Use cases](/overview/use-cases) for examples across wallets, payments, AI agents, chains, games, and communities.
 
-### L1 Subnames
+## L1 subnames
 
-L1 subnames are minted as NFTs directly on Ethereum, offering a fully trustless, decentralized, and permissionless implementation. 
+L1 subnames are created through ENS contracts on Ethereum. Their guarantees depend on the parent name's fuse configuration and the minting contract used.
 
-When a subname is created through the [ENS Manager app](https://app.ens.domains/), it is registered on Ethereum without burning protective fuses—meaning the parent name still retains certain controls. By contrast, creating a subname via the [Namespace App](https://app.namespace.ninja/) burns a specific set of fuses during the **“**[Name Activation](https://app.namespace.ninja/)**”,** making every subname minted **100% unruggable** and fully controlled by the minter’s address instead of the parent name.
+When a name is activated through the [Namespace App](/user-guide/app#activate-your-ens-name), the activation flow configures the parent and its minting rules before users register subnames. Review the confirmation transaction carefully because fuse changes may be irreversible.
 
-The main drawback of L1 subnames is cost: Ethereum’s high gas fees create friction for high-volume minting, making them less practical for large-scale distribution.
+L1 issuance usually has the highest transaction cost, so it best fits lower-volume flows where Ethereum-native ownership is a requirement.
 
-### L2 Subnames
+<CardGroup cols={2}>
+  <Card title="Enable L1 subname minting—no code" icon="desktop" href="/user-guide/app#activate-your-ens-name">
+    Activate your ENS name, configure L1 minting rules, and let users register through Namespace.
+  </Card>
+  <Card title="Launch your own L1 minting site" icon="page" href="/developer-guide/guide/subpages">
+    Deploy and customize a branded website where users can mint your L1 subnames.
+  </Card>
+</CardGroup>
 
-L2 subnames are minted as NFTs on a chosen Layer 2 chain, offering a **trust-minimized solution** that sits between Offchain (fully trustful) and L1 (fully trustless) implementations.
+## L2 subnames
 
-Through the Namespace App, users can already mint subnames on **Base** and **Optimism** from their ENS Names with no coding required. For developers, it’s also possible to link an ENS name on L1 with custom smart contracts deployed on any L2 network. Depending on the implementation, this setup can be made fully trustless while keeping costs for issuing subnames dramatically lower than on the Ethereum mainnet.
+L2 subnames are minted through registry contracts on a supported Layer 2. They offer onchain ownership with lower transaction costs than Ethereum mainnet, although the exact cost and trust assumptions depend on the selected L2.
 
-<Card title="Namespace App" icon="desktop" href="/user-guide/app">
-  Mint, manage, and sell **L1 and L2 subnames** from your ENS name using a user-friendly web app.
-</Card>
+The Namespace App supports configured L2 listings, including Base and Optimism. Developers can use the [Mint Manager guide](/developer-guide/guide/mint-l1-l2-subnames) to prepare and submit a transaction for the chain specified by the parent listing.
 
-### Offchain Subnames
+<CardGroup cols={2}>
+  <Card title="Enable L2 subname minting—no code" icon="desktop" href="/user-guide/app#activate-your-ens-name">
+    Activate your ENS name, configure an L2 listing, and let users mint through Namespace.
+  </Card>
+  <Card title="Integrate L2 minting into your app" icon="code" href="/developer-guide/guide/mint-l1-l2-subnames">
+    Use the Mint Manager SDK to add L2 availability checks and mint transactions to your app.
+  </Card>
+</CardGroup>
 
-Offchain subnames are stored in centralized databases on private servers, powered by [**CCIP-read**](https://eips.ethereum.org/EIPS/eip-3668). They are ideal for projects that need to issue a large number of subnames to addresses quickly, with no gas fees and with minimal friction.
+## Offchain subnames
 
-Implementing and managing offchain names is often as simple as interacting with a REST API, making them easy to deploy at scale. From a user’s perspective, offchain subnames behave just like onchain ones—resolving addresses, text records, and other data with no functional differences since they inherit all properties as any other ENS name or a subname. The only distinction is that they are not minted as NFTs.
+Offchain subnames are stored by an operator and resolved through [CCIP Read](https://eips.ethereum.org/EIPS/eip-3668). Creating or updating one does not require a blockchain transaction, which makes this model useful for high-volume onboarding and frequently changing records.
 
-With Namespace’s hybrid resolver, offchain subnames can be issued in massive volumes and seamlessly used across apps and platforms.
+Offchain subnames are not minted as NFTs. The parent-name operator controls issuance and updates through its API-key and application rules. Compatible ENS clients can still read their address, text, and content-hash records through the configured resolver.
 
-<Card title="Namespace App — Offchain" icon="cloud" href="/user-guide/dev-portal">
-  Create and manage offchain subnames from your ENS name using a user-friendly web app.
-</Card>
+<CardGroup cols={2}>
+  <Card title="Create offchain subnames—no code" icon="desktop" href="/user-guide/dev-portal#create-and-manage-subnames">
+    Create and manage offchain subnames and their ENS records in the Namespace App.
+  </Card>
+  <Card title="Integrate offchain subnames into your product" icon="code" href="/developer-guide/guide/create-offchain-subnames">
+    Use the Offchain Manager SDK to issue gasless subnames and manage their records.
+  </Card>
+</CardGroup>
+
+## Choose a model
+
+- Choose **offchain** for gasless issuance, high volume, and application-managed identities.
+- Choose **L2** for lower-cost onchain ownership on a supported L2.
+- Choose **L1** when Ethereum-native ownership outweighs transaction cost.
+
+See [Getting started](/getting-started) for the no-code and developer paths for each model.

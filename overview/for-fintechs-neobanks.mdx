@@ -1,0 +1,57 @@
+---
+title: "For fintechs and neobanks"
+description: "Add readable payment identities to accounts, wallets, and transfers."
+sidebarTitle: "Fintechs / Neobanks"
+icon: "building-columns"
+---
+
+Give each customer a readable ENS name they can recognize and share instead of relying only on wallet addresses. Subnames can support branded onboarding, customer profiles, and username-based payments in compatible wallets and apps.
+
+## Why use ENS
+
+- **Readable payment identities:** Let customers send and receive with a name such as `alice.bank.eth`.
+- **Branded onboarding:** Issue a name when an account or embedded wallet is created.
+- **Multichain records:** Associate one name with supported address records across multiple networks.
+- **Portable profiles:** Publish public profile and contact records that compatible ENS clients can resolve.
+
+## Recommended integration
+
+<Steps>
+  <Step title="Issue a name during onboarding">
+    Create a gasless offchain subname when a customer account or wallet is created. Store the customer identifier in private application data, not in public ENS records.
+  </Step>
+  <Step title="Add supported address records">
+    Attach the wallet addresses and public profile records your product needs. Update them when the customer's account configuration changes.
+  </Step>
+  <Step title="Resolve before a transfer">
+    Resolve the entered name, then show the destination address and network before the customer confirms the transaction.
+  </Step>
+  <Step title="Offer onchain ownership when needed">
+    Add L1 or L2 minting when customers need to hold and transfer the subname as an onchain asset.
+  </Step>
+</Steps>
+
+## Start integrating
+
+<CardGroup cols={2}>
+  <Card title="Issue gasless subnames" icon="cloud" href="/developer-guide/guide/create-offchain-subnames">
+    Create and manage offchain names and records with TypeScript.
+  </Card>
+  <Card title="Resolve ENS names" icon="magnifying-glass" href="/user-guide/resolvio">
+    Add forward, reverse, profile, bulk, and multichain resolution.
+  </Card>
+  <Card title="Mint onchain subnames" icon="coins" href="/developer-guide/guide/mint-l1-l2-subnames">
+    Prepare and submit L1 or L2 mint transactions.
+  </Card>
+  <Card title="Review SDKs and APIs" icon="code" href="/user-guide/sdk-and-api">
+    Choose the integration surface that fits your backend.
+  </Card>
+</CardGroup>
+
+## Production checklist
+
+- Keep API keys and signing credentials on the server.
+- Normalize and validate labels before registration.
+- Confirm the resolved address and network before a transfer.
+- Handle unavailable names, resolution failures, and unsupported records explicitly.
+- Define how customers update, recover, or release their names.

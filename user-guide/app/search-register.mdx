@@ -1,67 +1,62 @@
 ---
-title: "Search & Register ENS Subname"
-description: "Search and register both ENS names and subnames in a single flow on the Namespace App."
-sidebarTitle: "Search & Register"
+title: "Register name or subname"
+description: "Discover names available through Namespace."
+sidebarTitle: "Register name or subname"
 icon: "user-magnifying-glass"
 ---
 
-The search at [app.namespace.ninja/search](https://app.namespace.ninja/search) goes beyond a single-word lookup. When the searched name is unavailable, you're shown matching subnames from ENS names that have been activated on Namespace — each with their own price (or **Free Mint**).
+Use [Namespace search](https://app.namespace.ninja/search) to find and register an ENS name such as `example.eth` or an available onchain subname such as `alice.brand.eth`.
 
-## Search
+## What you can register
 
-Type a word (e.g. `happy`). The dropdown returns:
+| Result | What you receive | Registration terms |
+| --- | --- | --- |
+| ENS name | A second-level `.eth` name | Registration period and price follow ENS rules |
+| Onchain subname | A name beneath an activated parent ENS name | Price, network, ownership, and expiry follow the parent's listing rules |
 
-- The exact ENS name (e.g. `happy.eth`) with an availability badge.
-- Matching subnames from activated parent names (e.g. `happy.ninjabase.eth`, `happy.collections.eth`) with their mint prices.
+## Search for a name
 
-<img
-  src="/assets/search-results.png"
-  alt="Search results for 'happy' — exact ENS name plus matching subnames with prices"
-  width="563"
-/>
+<Steps>
+  <Step title="Open Namespace search">
+    Visit [app.namespace.ninja/search](https://app.namespace.ninja/search), connect your wallet, and enter the name you want.
+  </Step>
 
-This expands the registrar functionality and opens up integration paths for projects that need broader search and registration — website builders, social apps, and anywhere users need an identity quickly.
+  <Step title="Choose a result">
+    Search results can include the exact `.eth` name and matching subnames from parent names activated on Namespace. Each subname shows its price or a **Free Mint** label.
 
-Each subname also carries whatever perks or incentives the parent-name owner configured during activation.
+    <img src="/assets/search-results.png" alt="Namespace search results with an ENS name and matching available subnames" width="563" />
+  </Step>
 
-## Registration
+  <Step title="Review the registration">
+    Select the result you want and check the full name, owner, network, registration or mint price, estimated network fee, and total before continuing.
+  </Step>
 
-Namespace is currently the only dApp that surfaces **search and registration of available subnames** across all activated ENS names in one place. The registration flow depends on whether you're registering a subname or a fresh ENS name.
+  <Step title="Confirm in your wallet">
+    Continue from the registration dialog and approve the required wallet transaction. Wait for the transaction to confirm before using the name.
+  </Step>
+</Steps>
 
-### Registering an ENS Subname
+## Register an onchain subname
 
-Click any subname result. The **Get Your Web3 Username** modal opens with:
+The registration dialog shows the parent name's configured mint price, estimated network fee, and total. Free listings show a **Free Mint** label.
 
-- The full subname (e.g. `happy.ninjabase.eth`)
-- **Price** — set by the parent-name owner (can be Free)
-- **Est. network fees** — gas estimate
-- **Total** — price + gas, with USD conversion
-- Optional **Complete your profile** flow to make your ENS more discoverable
+<img src="/assets/register-subname.png" alt="Onchain subname registration dialog with the owner, price, network fee, and total" width="500" />
 
-Click **Mint** to sign the transaction.
+L1 subname ownership and expiry depend on the parent name's ENS fuse and listing configuration. L2 subnames can also use a registration period when the parent-name owner enables renting.
 
-<img
-  src="/assets/register-subname.png"
-  alt="Get Your Web3 Username modal — subname registration"
-  width="500"
-/>
+## Register an ENS name
 
-L1 (Ethereum) subnames are unruggable by default and inherit the registration length from the parent name. L2 subnames may have a registration period if the parent-name owner chose to rent rather than sell outright.
+For an available `.eth` name, choose the registration period and review the registration fee, estimated network fee, and total. Continue through the wallet prompts shown by the app.
 
-### Registering an ENS Name
+<img src="/assets/register-name.png" alt="ENS name registration dialog with the registration period, fee, and total" width="500" />
 
-Search for a name that isn't taken (e.g. `youreallywantaname.eth`) and start registration. The **ENS Name Registration** modal asks for:
+## Next steps
 
-- **Period** — registration duration (default 1 year; adjustable, or pick by date)
-- **Registration Fee** — based on name length
-- **Est. network fees** — gas estimate
-- **Total** — fee + gas, with USD conversion
-- Optional **Complete your profile** flow
-
-Click **Next** to continue, then confirm in your wallet.
-
-<img
-  src="/assets/register-name.png"
-  alt="ENS Name Registration modal — period, fee, total"
-  width="500"
-/>
+<CardGroup cols={2}>
+  <Card title="Enable subname minting" icon="coins" href="/user-guide/app#activate-your-ens-name">
+    Activate a parent ENS name and configure its L1 or L2 listing rules.
+  </Card>
+  <Card title="Add registration to your website" icon="puzzle-piece" href="/user-guide/ens-widget">
+    Create and embed a no-code ENS Widget.
+  </Card>
+</CardGroup>

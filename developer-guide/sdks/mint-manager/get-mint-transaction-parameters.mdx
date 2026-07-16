@@ -1,35 +1,38 @@
 ---
-title: "Get Mint Transaction Parameters"
-description: "Generate all the required parameters needed to send a successful transaction and mint a subname on a given chain."
-sidebarTitle: "Get Mint Transaction Parameters"
+title: "Get mint transaction parameters"
+description: "Contract parameters for an onchain subname mint."
+sidebarTitle: "Transaction parameters"
 icon: "list-check"
 ---
 
-**GetMintTransactionParameters** is a function which generates all the required parameters needed to send a successful transaction and mint a subname on a given chain.
+Use `getMintTransactionParameters` to generate the contract address, ABI, arguments, and value required to mint a subname.
 
 ### Usage
 
 ```typescript title="index.ts" data-overflow="wrap"
-import {
+import type {
   MintTransactionRequest,
   MintTransactionResponse,
-} from "@thenamespace/mint-manager";
+} from '@thenamespace/mint-manager';
+import { ChainName } from '@thenamespace/mint-manager';
 
 const request: MintTransactionRequest = {
-  parentName: "namespace.eth",
-  label: "superman",
-  owner: "0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8", // optional
-  minterAddress: "0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8",
+  parentName: 'example.eth',
+  label: 'alice',
+  owner: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8', // optional
+  minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
   expiryInYears: 1, // optional
   records: {
-    texts: {
-      name: "Superman",
-      avatar: "https://my-avatar-uri",
-      description: "I am superman",
-    },
-    addresses: {
-      60: "0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8",
-    },
+    texts: [
+      { key: 'name', value: 'Alice' },
+      { key: 'description', value: 'Namespace community member' },
+    ],
+    addresses: [
+      {
+        chain: ChainName.Ethereum,
+        value: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+      },
+    ],
   },
 };
 

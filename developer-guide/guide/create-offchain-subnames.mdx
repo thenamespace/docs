@@ -1,24 +1,22 @@
 ---
-title: "How To Create Offchain Subnames"
-description: "Complete guide to creating and using gasless offchain ENS subnames with the Namespace Offchain Manager SDK."
-sidebarTitle: "Create Offchain Subnames"
+title: "Create offchain subnames"
+description: "Go from API key to a resolved name."
+sidebarTitle: "Create offchain subnames"
 icon: "diagram-subtask"
 ---
 
-## Overview
-
-This guide walks you through creating and using offchain ENS subnames with the `@thenamespace/offchain-manager` SDK. You'll be able to create a subname, and then read records.
+Create a gasless offchain subname, attach ENS records, and query the result with the `@thenamespace/offchain-manager` SDK.
 
 ## Prerequisites
 
-- Node.js 18+ and a package manager (npm or yarn)
-- An ENS name you manage (e.g., `myensname.eth`)
+- Node.js 22 and npm or yarn
+- An ENS name you manage, such as `example.eth`
 - A Namespace API key (from the Namespace App)
 
 <Card
   title="Get an API Key"
   icon="link"
-  href="/user-guide/dev-portal/api-keys"
+  href="/user-guide/dev-portal#create-an-api-key"
   horizontal
 >
   Follow this guide to create and copy your API key from the Namespace App.
@@ -33,20 +31,20 @@ Install the Offchain SDK and dotenv to load your API key from an environment var
   <Tab title="npm">
 
 ```bash
-npm install @thenamespace/offchain-manager dotenv
+npm install @thenamespace/offchain-manager@1.0.13 dotenv
 ```
 
   </Tab>
   <Tab title="yarn">
 
 ```bash
-yarn add @thenamespace/offchain-manager dotenv
+yarn add @thenamespace/offchain-manager@1.0.13 dotenv
 ```
 
   </Tab>
 </Tabs>
 
-Initialise the client with the network you want to use and your API key. We recommend setting your API key via an environment variable and keeping it secret by using server-side code. 
+Initialize the client with the network you want to use and your API key. Store the key in an environment variable and run this code on the server.
 
 <CodeGroup>
   ```ts index.ts
@@ -54,14 +52,14 @@ Initialise the client with the network you want to use and your API key. We reco
   import { createOffchainClient } from '@thenamespace/offchain-manager';
 
   // Required: set NAMESPACE_API_KEY in your environment
-  const API_KEY = process.env.NAMESPACE_API_KEY as string;
-  if (!API_KEY) throw new Error('Missing NAMESPACE_API_KEY');
+  const apiKey = process.env.NAMESPACE_API_KEY;
+  if (!apiKey) throw new Error('Missing NAMESPACE_API_KEY');
 
   // Use 'sepolia' for testing, 'mainnet' for production
   export const client = createOffchainClient({ 
-    mode: 'mainnet', 
+    mode: 'sepolia',
     timeout: 5000,
-    defaultApiKey: API_KEY,
+    defaultApiKey: apiKey,
   });
 
   console.log('Offchain client initialized');
@@ -80,7 +78,7 @@ Use `isSubnameAvailable` before creating a subname to avoid overwriting an exist
   import { client } from './index';
 
   async function main() {
-    const subname = 'alice.myensname.eth';
+    const subname = 'alice.example.eth';
     const { isAvailable } = await client.isSubnameAvailable(subname);
     console.log('isAvailable:', isAvailable);
   }
@@ -112,9 +110,9 @@ Create a subname under your parent name. You can include text records, address r
   import { ChainName } from '@thenamespace/offchain-manager';
 
   async function main() {
-    const PARENT_NAME = 'myensname.eth';
-    const SUB_LABEL = 'alice'; // results in alice.myensname.eth
-    const OWNER_ADDRESS = '0x1234567890abcdef1234567890abcdef12345678';
+    const PARENT_NAME = 'example.eth';
+    const SUB_LABEL = 'alice'; // results in alice.example.eth
+    const OWNER_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045';
 
     // After checking the subname is available, create it with the following parameters:
 
@@ -140,30 +138,13 @@ Create a subname under your parent name. You can include text records, address r
     process.exit(1);
   });
   ```
-   ```ts index.ts
-  import 'dotenv/config';
-  import { createOffchainClient } from '@thenamespace/offchain-manager';
-
-  // Required: set NAMESPACE_API_KEY in your environment
-  const API_KEY = process.env.NAMESPACE_API_KEY as string;
-  if (!API_KEY) throw new Error('Missing NAMESPACE_API_KEY');
-
-  // Use 'sepolia' for testing, 'mainnet' for production
-  export const client = createOffchainClient({ 
-    mode: 'mainnet', 
-    timeout: 5000,
-    defaultApiKey: API_KEY,
-  });
-
-  console.log('Offchain client initialized');
-  ```
 
 </CodeGroup>
 
 Expected output:
 
 ```bash
-Created alice.myensname.eth
+Created alice.example.eth
 ```
 
   </Step>
@@ -179,8 +160,8 @@ Fetch all subnames you own or created by filtering on `owner` (or by `metadata`)
 import { client } from './index';
 
 async function main() {
-  const PARENT_NAME = 'myensname.eth';
-  const OWNER_ADDRESS = '0x1234567890abcdef1234567890abcdef12345678';
+  const PARENT_NAME = 'example.eth';
+  const OWNER_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045';
 
   // Get all subnames owned by the address
   const page = await client.getFilteredSubnames({
@@ -201,8 +182,8 @@ Example output:
 ```json
 [
   {
-    "fullName": "alice.myensname.eth",
-    "parentName": "myensname.eth",
+    "fullName": "alice.example.eth",
+    "parentName": "example.eth",
     "label": "alice",
     "texts": { "name": "Alice", "url": "https://example.com" },
     "addresses": { "60": "0x1234567890abcdef1234567890abcdef12345678" },
@@ -224,7 +205,7 @@ Retrieve a single text record or all text records on a subname.
   import { client } from './index';
 
   async function main() {
-    const subname = 'alice.myensname.eth';
+    const subname = 'alice.example.eth';
 
     // You can retrieve all text records on a subname
     const all = await client.getTextRecords(subname);
@@ -257,8 +238,13 @@ Address records are included in the subname response. A simple way to read them 
 import { client } from './index';
 
 async function main() {
-  const subnamesPage = await client.getFilteredSubnames({ parentName: 'myensname.eth', labelSearch: 'alice' });
-  const item = subnamesPage.items.find((i) => i.fullName === 'alice.myensname.eth');
+  const subnamesPage = await client.getFilteredSubnames({
+    parentName: 'example.eth',
+    labelSearch: 'alice',
+  });
+  const item = subnamesPage.items.find(
+    (subname) => subname.fullName === 'alice.example.eth',
+  );
   console.log('addresses:', item?.addresses);
 }
 
@@ -274,11 +260,16 @@ addresses: { "60": "0x1234567890abcdef1234567890abcdef12345678" }
   </Step>
 </Steps>
 
-### Next steps
+## Verify the example
+
+The repository contains a complete type-checked version at `examples/offchain-subnames.ts`. Documentation contributors can verify it with `npm run check:examples`.
+
+## Next steps
 
 - Update records on an existing subname using [`updateSubname`](/developer-guide/sdks/offchain-manager/create-update-subname)
 - Explore more filters with [`getFilteredSubnames`](/developer-guide/sdks/offchain-manager/get-filtered-subnames)
 - See supported chains in [`ChainName`](/developer-guide/sdks/offchain-manager/chainname)
+- Diagnose common errors in [Troubleshooting](/developer-guide/troubleshooting)
 
 ## ENS Client Compatibility
 

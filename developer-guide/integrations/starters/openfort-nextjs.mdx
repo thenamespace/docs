@@ -1,11 +1,11 @@
 ---
 title: "Openfort Starter Kit"
-description: "Next.js starter with Openfort embedded wallets, Offchain Subnames, identity resolution, and avatar uploads."
+description: "A ready-to-run embedded-wallet identity flow."
 sidebarTitle: "Openfort"
 icon: "wallet"
 ---
 
-## ENS Offchain Subnames + Openfort Starter Kit
+## ENS offchain subnames with Openfort
 
 A Next.js starter kit integrating the [Offchain Manager SDK](/developer-guide/sdks/offchain-manager) with [Openfort](https://www.openfort.io) Embedded Wallets for creating and managing offchain ENS subnames.
 
@@ -23,7 +23,7 @@ A Next.js starter kit integrating the [Offchain Manager SDK](/developer-guide/sd
 
 - Node.js v18+
 - An ENS name you control (e.g., `namespace.eth`)
-- Namespace API key from the [Namespace App](/user-guide/dev-portal/api-keys)
+- Namespace API key from the [Namespace App](/user-guide/dev-portal#create-an-api-key)
 - Openfort account with API keys and Shield keys
 
 <Steps>
@@ -59,7 +59,7 @@ A Next.js starter kit integrating the [Offchain Manager SDK](/developer-guide/sd
   </Step>
   <Step title="Namespace environment variables">
    1. Visit the [Namespace App](https://app.namespace.ninja/offchain)
-   2. Set your ENS name and Namespace API key (see [Namespace App API Keys](/user-guide/dev-portal/api-keys)):
+   2. Set your ENS name and Namespace API key (see [Namespace App API keys](/user-guide/dev-portal#create-an-api-key)):
 
     ```env
     NEXT_PUBLIC_ENS_NAME=namespace.eth
@@ -164,5 +164,3 @@ src/
 - GitHub repository: [`thenamespace/ens-subnames-openfort-template`](https://github.com/thenamespace/ens-subnames-openfort-template)
 - Openfort Dashboard: [`dashboard.openfort.io`](https://dashboard.openfort.io)
 - SDK Reference: [`Offchain Manager SDK`](/developer-guide/sdks/offchain-manager)
-
-

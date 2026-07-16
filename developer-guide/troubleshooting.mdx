@@ -1,0 +1,122 @@
+---
+title: "Troubleshooting"
+description: "Fix common Namespace integration errors."
+sidebarTitle: "Troubleshooting"
+icon: "screwdriver-wrench"
+---
+
+Use this page when a Namespace integration fails during setup, subname creation, minting, or resolution. Start with the error category below, then confirm your environment and request parameters.
+
+## Before you troubleshoot
+
+Check these basics first:
+
+- Use a supported Node.js version. The documentation examples and repository use Node.js 22.
+- Confirm the package version in your project matches the version documented in `package.json`.
+- Use Sepolia or another supported testnet while developing.
+- Keep API keys and wallet private keys in server-side environment variables.
+- Confirm the parent ENS name is configured for the operation you are attempting.
+
+## Authentication errors
+
+### `401` or `403` from the Offchain API
+
+The API key is missing, expired, or does not authorize the parent name.
+
+1. Generate or copy the key in the [Namespace App](/user-guide/dev-portal#create-an-api-key).
+2. Confirm your server loaded `NAMESPACE_API_KEY`.
+3. Use an address-based key as `defaultApiKey`, or map a domain-based key to the exact parent name.
+4. Do not expose the key in browser code or commit it to source control.
+
+```typescript
+import { createOffchainClient } from '@thenamespace/offchain-manager';
+
+const apiKey = process.env.NAMESPACE_API_KEY;
+if (!apiKey) throw new Error('Missing NAMESPACE_API_KEY');
+
+const client = createOffchainClient({
+  mode: 'sepolia',
+  defaultApiKey: apiKey,
+});
+```
+
+## Subname creation errors
+
+### The subname already exists
+
+Call `isSubnameAvailable` and await the result before creating a subname:
+
+```typescript
+const { isAvailable } = await client.isSubnameAvailable(
+  'alice.example.eth',
+);
+
+if (!isAvailable) {
+  throw new Error('alice.example.eth is already registered');
+}
+```
+
+If your product intentionally updates existing subnames, call `updateSubname` explicitly instead of relying on create behavior.
+
+### Records fail validation
+
+- Use a complete, valid address for the selected `ChainName`.
+- Use the label only in `label`; do not pass the full subname.
+- Pass the parent separately in `parentName`.
+- Follow [ENSIP-15](https://docs.ens.domains/ensip/15/) normalization rules for labels.
+
+## Minting errors
+
+### `canMint` is false
+
+Inspect `validationErrors` from `getMintDetails`. Common causes include an unavailable label, a missing whitelist entry, a reserved name, or a wallet that does not meet the listing rules.
+
+```typescript
+const details = await mintClient.getMintDetails({
+  parentName: 'example.eth',
+  label: 'alice',
+  minterAddress: account.address,
+});
+
+if (!details.canMint) {
+  throw new Error(details.validationErrors.join(', '));
+}
+```
+
+### The transaction simulation fails
+
+Confirm all of the following:
+
+- The wallet client and public client use the same chain.
+- The parent name is activated and listed for that chain.
+- The wallet has enough native currency for the mint price and gas.
+- You pass the `value` returned by `getMintTransactionParameters` unchanged.
+- You generated the transaction parameters immediately before simulation so price and signature data are current.
+
+## Resolution errors
+
+### An offchain subname does not resolve
+
+1. Confirm the subname exists in the Namespace App.
+2. Confirm the parent name uses the Namespace Hybrid resolver.
+3. Check that the consuming wallet or app supports CCIP Read.
+4. Test the name through [Resolvio](/user-guide/resolvio) to separate resolver issues from client integration issues.
+
+### An address or text record is missing
+
+Fetch the subname directly and inspect its stored records. Make sure you used the correct chain and text-record key. Record keys are case-sensitive.
+
+## Network and RPC errors
+
+- Confirm the RPC endpoint supports the chain used by the wallet and public clients.
+- Check the provider dashboard for rate limiting or an invalid token.
+- Avoid mixing mainnet parent names with testnet configuration.
+- Retry transient `429` and `5xx` errors with bounded exponential backoff.
+
+## Get more help
+
+When asking for support, include the SDK package and version, network, parent name, method name, and complete error message. Remove API keys, RPC tokens, wallet private keys, and other secrets.
+
+<Card title="Namespace Builders on Telegram" icon="telegram" href="https://t.me/+OsziFgfuZz03NjEy">
+  Ask an integration question and include the non-sensitive diagnostic details listed above.
+</Card>

@@ -1,85 +1,42 @@
 ---
-title: "Quickstart"
-description: "Get started with Namespace subnames."
+title: "Developer quickstart"
+description: "Start here for your first Namespace integration."
 sidebarTitle: "Quickstart"
 icon: "rocket"
 ---
 
-## Introduction
+## Start building with Subnames
 
-Namespace provides Subname infrastructure and developer tools for teams to easily build on top of ENS. Namespace allows you to create and manage ENS subnames both offchain and onchain.
-
-{/* 
-Offchain subnames are gasless and instant and are managed via an API or JS SDK.
-
-Onchain subnames are decentralized on either Ethereum Mainnet or any L2 network, but they are not gasless and instant.
-*/}
-
-## Start building
-
-Choose your integration path based on your needs.
-
-<Tip>
-  Audience: Developers. For a high-level overview and model selection (Offchain vs L2 vs L1), see <a href="/getting-started">
-  Getting started</a>
-</Tip>
-
-<CardGroup cols={2}>
-  <Card title="Offchain Subnames" icon="cloud" iconType="regular" href="/developer-guide/guide/create-offchain-subnames">
-    Gasless, instant, flexible. Parent name owner retains control and ownership over subnames. Easy to implement and manage via API or SDK.
-  </Card>
-  <Card title="Onchain Subnames" icon="square-code" href="/developer-guide/guide/mint-l1-l2-subnames">
-    Minted onchain as NFTs, on Ethereum or supported L2s (Base and Optimism). Offer more decentralization and ownership rights.
-  </Card>
-</CardGroup>
-
-## Build with AI
-
-Use AI to build with Namespace quickly.
-
-<Card title="Use AI to build on ENS" icon="sparkles" href="/developer-guide/ai-development">
-  Leverage AI to set up your environment and build your ENS integration.
-</Card>
-
-## Namespace Products
-
-Easily mint and manage Onchain or Offchain subnames **without having to write code.**
-
-<CardGroup cols={2}>
-  <Card title="Namespace App" icon="desktop" href="/user-guide/app">
-    Mint and manage ENS subnames on L1 or L2 (Base and Optimism) through our app. Set up custom pricing rules for subnames, add whitelists, reservations, or token-gating without writing code.
-  </Card>
-  <Card title="Offchain (Namespace App)" icon="cloud" href="/user-guide/dev-portal">
-    Create and manage ENS Subnames offchain through the Namespace App. Add custom records, update the resolver contract, create API keys, and easily implement Subname registrations in your app.
-  </Card>
-</CardGroup>
-
-## Dev resources
+Pick the outcome you need. Each path leads to one focused, end-to-end guide.
 
 <CardGroup cols={3}>
-  <Card title="See sample projects" icon="folder-open" iconType="regular" href="/developer-guide/guide">
-    Use our tutorials and guides to get started integrating Namespace.
+  <Card title="Issue gasless subnames" icon="cloud" href="/developer-guide/guide/create-offchain-subnames">
+    Create API-managed identities without requiring users to submit transactions.
   </Card>
-  <Card title="API Reference" icon="book" iconType="regular" href="/api-reference/introduction">
-    Explore our complete API documentation for all endpoints and parameters.
+  <Card title="Mint owner-held subnames" icon="coins" href="/developer-guide/guide/mint-l1-l2-subnames">
+    Prepare and submit L1 or L2 mint transactions for onchain ownership.
   </Card>
-  <Card title="SDK Reference" icon="code" iconType="regular" href="developer-guide/sdks/introduction">
-    Detailed documentation for our JavaScript SDKs and integration examples.
+  <Card title="Launch a minting site" icon="page" href="/developer-guide/guide/subpages">
+    Customize and deploy a ready-made subname storefront.
   </Card>
 </CardGroup>
 
-<Card title="Namespace Builder TG" icon="telegram" iconType="regular" horizontal href="https://t.me/+OsziFgfuZz03NjEy">
-  Join the Namespace Builders group on Telegram
+## Prefer a working starter?
+
+<Card title="Browse starter kits" icon="puzzle-piece" href="/developer-guide/integrations">
+  Start with RainbowKit, Privy, or Openfort authentication already connected.
 </Card>
 
-## Community
+## Dev Resources
 
-Join our vibrant community to discuss ideas, get support, and collaborate:
-
-- [Twitter / X](https://x.com/namespace_eth)
-- [GitHub](https://github.com/thenamespace)
-- [Blog](https://www.namespace.ninja/blog)
-- [Discord](https://discord.gg/W5pgT3wsnv)
-- [Telegram (Builders)](https://t.me/+5FAwyiKOTeswNTIy)
-
----
+<CardGroup cols={3}>
+  <Card title="API reference" icon="brackets-curly" href="/api-reference/introduction">
+    Browse hosted API endpoints, parameters, and request schemas.
+  </Card>
+  <Card title="SDK reference" icon="code" href="/developer-guide/sdks/introduction">
+    Review Offchain, Mint, and Indexer Manager methods.
+  </Card>
+  <Card title="Namespace Builders" icon="telegram" href="https://t.me/+OsziFgfuZz03NjEy">
+    Ask any ENS-related technical or integration questions.
+  </Card>
+</CardGroup>

@@ -1,25 +1,25 @@
 ---
-title: "Get Mint Details"
-description: "Get the details about minting a single/specific subname under a listed ENS name."
-sidebarTitle: "Get Mint Details"
+title: "Get mint details"
+description: "Eligibility, price, and fee estimates before minting."
+sidebarTitle: "Get mint details"
 icon: "file-circle-info"
 ---
 
-**GetMintDetails** function returns data with details about minting a single/specific subname under a listed ENS name.
+Use `getMintDetails` to check whether a wallet can mint a subname and to retrieve the estimated price and fee.
 
 ### Usage
 
 ```typescript
-import {
+import type {
   MintDetailsRequest,
   MintDetailsResponse,
-} from "@thenamespace/mint-manager";
+} from '@thenamespace/mint-manager';
 
 const request: MintDetailsRequest = {
-  parentName: "namespace.eth",
-  label: "superman",
-  minterAddress: "0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8",
-  expiryInYears: number,
+  parentName: 'example.eth',
+  label: 'alice',
+  minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+  expiryInYears: 1,
 };
 
 const mintDetails: MintDetailsResponse = await mintClient.getMintDetails(
@@ -44,10 +44,10 @@ export interface MintDetailsResponse {
 }
 ```
 
-1. **canMint** - Specifies whether a minter address has permission to mint a subname. If this is false, see validationErrors for the reason.
+1. **canMint** - Specifies whether a minter address has permission to mint a subname. If this is false, see `validationErrors` for the reason.
 2. **estimatedPriceEth** - The price for minting a subname, set by the listing owner.
 3. **estimatedFeeEth** - The minting fee for minting a subname.
-4. **validationErrors** - If the subname cannot be minted, the validation errors will specify the reason. There could be different reasons, such as: Listing has expired, minter is not whitelisted, minter doesn't have a required token in case listing uses token gated access, etc.
+4. **validationErrors** - Lists the exact reason the mint cannot proceed, such as an unavailable label, expired listing, missing whitelist entry, or unmet token requirement.
 
 ### MintingValidationErrorType
 
@@ -60,3 +60,4 @@ Validation Errors are a standard set of errors that are present when a given sub
 | MINTER_NOT_WHITELISTED | Listing uses Whitelisting feature and minter is not whitelisted         |
 | LISTING_EXPIRED        | Listing uses Deadline feature with expiry set                           |
 | SUBNAME_RESERVED       | A subname label is reserved and not mintable                            |
+| VERIFIED_MINTER_ADDRESS_REQUIRED | The listing requires a verified minter address              |
