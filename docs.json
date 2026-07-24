@@ -129,6 +129,7 @@
                 "api-reference/resolvio/list-supported-chains",
                 "api-reference/resolvio/bulk-reverse-resolve",
                 "api-reference/resolvio/reverse-resolve-single",
+                "api-reference/resolvio/reverse-profile",
                 "api-reference/resolvio/get-ens-profile",
                 "api-reference/resolvio/get-bulk-ens-profiles",
                 "api-reference/resolvio/get-ens-addresses",

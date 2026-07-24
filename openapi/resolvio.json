@@ -283,7 +283,7 @@
       },
       "/ens/v2/profile/{name}": {
         "get": {
-          "description": "Returns texts, addresses, and contenthash. When no query params are provided, uses the default profile (12 text keys, 8 chains). Set contenthash=true to include content hash.",
+          "description": "Returns texts, addresses, and contenthash. When no query params are provided, uses the default profile (12 text keys, 8 chains) and includes contenthash. Set contenthash=false to exclude it.",
           "operationId": "EnsForwardController_getProfile",
           "parameters": [
             {
@@ -312,7 +312,7 @@
               "name": "contenthash",
               "required": false,
               "in": "query",
-              "description": "Include content hash (default: false)",
+              "description": "Include content hash (default: true)",
               "schema": {
                 "type": "boolean"
               }
@@ -442,6 +442,80 @@
             }
           },
           "summary": "Bulk reverse resolve addresses to ENS names",
+          "tags": [
+            "Reverse Resolution"
+          ]
+        }
+      },
+      "/ens/v2/reverse/{address}/profile": {
+        "get": {
+          "description": "Validates the address, performs reverse resolution with forward verification, then returns the full ENS profile plus convenience fields (avatar, displayName, description). Returns 200 with null profile fields when no verified reverse record exists. Upstream RPC/resolver errors are propagated unchanged.",
+          "operationId": "EnsReverseController_getReverseProfile",
+          "parameters": [
+            {
+              "name": "address",
+              "required": true,
+              "in": "path",
+              "description": "Ethereum address",
+              "schema": {
+                "example": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+                "type": "string"
+              }
+            },
+            {
+              "name": "noCache",
+              "required": false,
+              "in": "query",
+              "description": "Skip cache for both reverse and forward lookups",
+              "schema": {
+                "default": false,
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "contenthash",
+              "required": false,
+              "in": "query",
+              "description": "Include contenthash in the profile (default: true)",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "addresses",
+              "required": false,
+              "in": "query",
+              "description": "Comma-separated chain names or coin type numbers; defaults to the standard profile set",
+              "schema": {
+                "example": "eth,base,btc"
+              }
+            },
+            {
+              "name": "texts",
+              "required": false,
+              "in": "query",
+              "description": "Comma-separated profile text keys; defaults to the standard profile set",
+              "schema": {
+                "example": "avatar,com.twitter"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReverseProfileResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid Ethereum address"
+            }
+          },
+          "summary": "Reverse-resolve an address to its verified ENS profile",
           "tags": [
             "Reverse Resolution"
           ]
@@ -684,6 +758,63 @@
           "required": [
             "hasReverseRecord",
             "address"
+          ]
+        },
+        "ReverseProfileResponse": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "type": "string",
+              "description": "Requested Ethereum address",
+              "example": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+            },
+            "hasReverseRecord": {
+              "type": "boolean",
+              "description": "Whether a verified reverse record exists for this address",
+              "example": true
+            },
+            "name": {
+              "type": "string",
+              "description": "Primary ENS name from the verified reverse record (null when none exists)",
+              "example": "artii.eth",
+              "nullable": true
+            },
+            "avatar": {
+              "type": "string",
+              "description": "Value of the avatar text record, if present in the resolved profile",
+              "example": "https://example.com/avatar.jpg",
+              "nullable": true
+            },
+            "displayName": {
+              "type": "string",
+              "description": "Value of the name text record, if present in the resolved profile",
+              "example": "Arti",
+              "nullable": true
+            },
+            "description": {
+              "type": "string",
+              "description": "Value of the description text record, if present in the resolved profile",
+              "example": "ENS enjoyer",
+              "nullable": true
+            },
+            "profile": {
+              "description": "Full ENS profile (texts, addresses, contenthash, optional resolver). Null when there is no verified reverse record.",
+              "nullable": true,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ProfileResponse"
+                }
+              ]
+            }
+          },
+          "required": [
+            "address",
+            "hasReverseRecord",
+            "name",
+            "avatar",
+            "displayName",
+            "description",
+            "profile"
           ]
         },
         "BulkReverseResolveResult": {

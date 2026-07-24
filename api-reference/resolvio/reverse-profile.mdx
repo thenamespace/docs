@@ -1,0 +1,8 @@
+---
+title: "Reverse resolve to profile"
+openapi: "/openapi/resolvio.json GET /ens/v2/reverse/{address}/profile"
+---
+
+Reverse-resolve an Ethereum address to its verified ENS primary name, then return the full ENS profile plus convenience fields (`avatar`, `displayName`, `description`). Always returns HTTP 200 for valid addresses — when no verified reverse record exists, `name`, `avatar`, `displayName`, `description`, and `profile` are `null` and the forward resolver is not called.
+
+Supports the same query parameters as the profile endpoint (`texts`, `addresses`, `contenthash`, `noCache`) to customise the resolved profile fields.
