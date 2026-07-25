@@ -12,7 +12,7 @@ icon: "question"
 - **Readable payments:** Replace copied addresses with names, which can help reduce address-entry errors.
 - **Branded identity:** Give users a recognizable name under a product or community namespace.
 - **Portable profiles:** Store public addresses and text records that compatible ENS clients can resolve.
-- **Flexible issuance:** Choose application-managed offchain records or owner-held onchain subnames.
+- **Decentralised hosting:** Point a subname to content hosted on IPFS or other decentralised storage to serve websites and other static content.
 
 See [Use cases](/overview/use-cases) for examples across wallets, payments, AI agents, chains, games, and communities.
 
@@ -20,8 +20,10 @@ See [Use cases](/overview/use-cases) for examples across wallets, payments, AI a
 
 L1 subnames are created through ENS contracts on Ethereum. Their guarantees depend on the parent name's fuse configuration and the minting contract used.
 
+
 When a name is activated through the [Namespace App](/user-guide/app#activate-your-ens-name), the activation flow configures the parent and its minting rules before users register subnames. Review the confirmation transaction carefully because fuse changes may be irreversible.
 
+<Note>Fuses are permission bits that restrict what can be done with a name. Once burned (enabled), a fuse cannot be reverted until the name expires.</Note>
 L1 issuance usually has the highest transaction cost, so it best fits lower-volume flows where Ethereum-native ownership is a requirement.
 
 <CardGroup cols={2}>
