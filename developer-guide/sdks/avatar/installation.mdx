@@ -1,0 +1,74 @@
+---
+title: "Install the Avatar SDK"
+description: "Install and initialize the Avatar SDK."
+sidebarTitle: "Installation"
+icon: "download"
+---
+
+Install the package, depending on your package manager:
+
+<Tabs>
+<Tab title="npm">
+
+```bash
+npm install @thenamespace/avatar
+```
+
+</Tab>
+<Tab title="Yarn">
+
+```bash
+yarn add @thenamespace/avatar
+```
+
+</Tab>
+<Tab title="pnpm">
+
+```bash
+pnpm add @thenamespace/avatar
+```
+
+</Tab>
+</Tabs>
+
+Initialize the client with your website domain. The domain is required because it is embedded in the SIWE message the user signs:
+
+```typescript
+import { createAvatarClient } from '@thenamespace/avatar';
+
+const client = createAvatarClient({
+  domain: 'myapp.com',
+});
+```
+
+To target testnet, set `network: 'sepolia'`:
+
+```typescript
+const client = createAvatarClient({
+  domain: 'myapp.com',
+  network: 'sepolia',
+});
+```
+
+For automatic signing, pass a wallet provider directly:
+
+```typescript
+const client = createAvatarClient({
+  domain: 'myapp.com',
+  network: 'mainnet',
+  provider: walletClient, // Viem WalletClient, Ethers Wallet/Signer, or WalletProvider
+});
+```
+
+### AvatarSDKConfig
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| `domain` | — | Your website domain. Required for SIWE authentication. |
+| `network` | `mainnet` | `'mainnet'` or `'sepolia'`. |
+| `apiUrl` | Namespace Metadata Service | Advanced override for the API base URL. |
+| `provider` | — | Wallet used for automatic signing. Viem, Ethers, or a `WalletProvider`. |
+
+<Note>
+The SDK uses chain ID `1` for mainnet and `11155111` for sepolia when building SIWE messages. Before every automatic operation it compares the provider's chain ID with the configured network and calls `switchChain` when available, otherwise it throws `PROVIDER_CHAIN_MISMATCH`.
+</Note>

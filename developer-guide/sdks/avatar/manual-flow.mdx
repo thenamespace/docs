@@ -1,0 +1,56 @@
+---
+title: "Manual SIWE flow"
+description: "Build and sign SIWE messages yourself without a provider."
+sidebarTitle: "Manual SIWE flow"
+icon: "pen-line"
+---
+
+If you do not pass a `provider`, the SDK exposes the SIWE message so you can sign it yourself and submit the signed payload. This is useful when you sign in a different context than you upload, or when you use a signer the SDK does not recognize.
+
+### 1. Request the SIWE message
+
+The SDK uses the `domain` from initialization, so you only pass the address:
+
+```typescript
+const siweResult = await client.getSIWEMessageForAvatar({
+  address: '0x...',
+});
+
+// For headers, use getSIWEMessageForHeader instead
+// const siweResult = await client.getSIWEMessageForHeader({ address: '0x...' });
+```
+
+### 2. Sign the message
+
+Sign the message with your wallet:
+
+```typescript
+const signature = await wallet.signMessage(siweResult.message);
+```
+
+### 3. Upload or delete with the signature
+
+```typescript
+const result = await client.uploadAvatarWithSignature({
+  subname: 'myavatar.offchainsub.eth',
+  file: avatarFile,
+  message: siweResult.message,
+  signature,
+  address: '0x...',
+});
+```
+
+The equivalent delete method is `deleteAvatarWithSignature`. For headers, use `uploadHeaderWithSignature` and `deleteHeaderWithSignature`.
+
+### SIWEMessageOptions
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `address` | `string` | User's wallet address. |
+| `domain` | `string` | Optional. Defaults to the domain set during initialization. |
+| `uri` | `string` | Optional. Defaults to `https://{domain}`. |
+| `chainId` | `number` | Optional. Must match the configured network. |
+
+<Note>
+An explicit `chainId` must match the configured network for the Metadata Service to accept the mutation. The SDK uses `1` for mainnet and `11155111` for sepolia by default.
+</Note>

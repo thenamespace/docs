@@ -1,0 +1,41 @@
+---
+title: "Delete images"
+description: "Remove avatar and header images for a subname."
+sidebarTitle: "Delete images"
+icon: "trash"
+---
+
+Use `deleteAvatar` and `deleteHeader` to remove an avatar or header image. These methods require a `provider` so the SDK can sign the SIWE message for you.
+
+### Delete an avatar
+
+```typescript
+const result = await client.deleteAvatar({
+  subname: 'myavatar.offchainsub.eth',
+});
+
+console.log(result.message);
+```
+
+### Delete a header
+
+```typescript
+const result = await client.deleteHeader({
+  subname: 'myavatar.offchainsub.eth',
+});
+```
+
+### DeleteOptions
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `subname` | `string` | ENS subname to delete the image from. |
+
+### DeleteResult
+
+```typescript
+export interface DeleteResult {
+  message: string;
+  deletedAt: string;
+}
+```

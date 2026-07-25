@@ -148,6 +148,18 @@
                       "developer-guide/sdks/indexer-manager/fetch-l2-subnames",
                       "developer-guide/sdks/indexer-manager/fetch-l2-registries"
                     ]
+                  },
+                  {
+                    "group": "Avatar",
+                    "icon": "image",
+                    "pages": [
+                      "developer-guide/sdks/avatar",
+                      "developer-guide/sdks/avatar/installation",
+                      "developer-guide/sdks/avatar/upload-images",
+                      "developer-guide/sdks/avatar/delete-images",
+                      "developer-guide/sdks/avatar/manual-flow",
+                      "developer-guide/sdks/avatar/errors"
+                    ]
                   }
                 ]
               },
@@ -209,7 +221,8 @@
           "changelog/offchain-sdk",
           "changelog/address-sdk",
           "changelog/indexer-sdk",
-          "changelog/mint-sdk"
+          "changelog/mint-sdk",
+          "changelog/avatar-sdk"
         ]
       }
     ],
@@ -517,50 +530,6 @@
   {
     "source": "/overview/integration/raas",
     "destination": "/developer-guide/integrations/raas"
-  },
-  {
-    "source": "/introduction",
-    "destination": "/getting-started"
-  },
-  {
-    "source": "/overview/what-is-ens",
-    "destination": "/getting-started"
-  },
-  {
-    "source": "/overview/what-is-namespace",
-    "destination": "/getting-started"
-  },
-  {
-    "source": "/overview/how-infra-works",
-    "destination": "/developer-guide/architecture/onchain-subnames"
-  },
-  {
-    "source": "/user-guide/app/subpages",
-    "destination": "/developer-guide/guide/subpages"
-  },
-  {
-    "source": "/tutorials/guide",
-    "destination": "/developer-guide/quickstart"
-  },
-  {
-    "source": "/api-reference/mint-manager/introduction",
-    "destination": "/api-reference/introduction"
-  },
-  {
-    "source": "/api-reference/subnames/create",
-    "destination": "/api-reference/offchain-manager/create-or-update-a-subname"
-  },
-  {
-    "source": "/api-reference/subnames/get",
-    "destination": "/api-reference/offchain-manager/get-subname-by-full-name"
-  },
-  {
-    "source": "/api-reference/subnames/delete",
-    "destination": "/api-reference/offchain-manager/delete-a-subname"
-  },
-  {
-    "source": "/api-reference/subnames/search",
-    "destination": "/api-reference/offchain-manager/query-subnames"
   },
   {
     "source": "/developer-guide/sdks/overview-sdk",

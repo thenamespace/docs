@@ -1,0 +1,86 @@
+---
+title: "Upload images"
+description: "Upload or update avatar and header images for a subname."
+sidebarTitle: "Upload images"
+icon: "upload"
+---
+
+Use `uploadAvatar` and `uploadHeader` to upload or replace the avatar or header image for a subname. These methods require a `provider` so the SDK can sign the SIWE message for you.
+
+### Upload an avatar
+
+```typescript
+import { createAvatarClient } from '@thenamespace/avatar';
+import { createWalletClient, http } from 'viem';
+import { mainnet } from 'viem/chains';
+
+const walletClient = createWalletClient({
+  account,
+  chain: mainnet,
+  transport: http(),
+});
+
+const client = createAvatarClient({
+  domain: 'myapp.com',
+  network: 'mainnet',
+  provider: walletClient,
+});
+
+const result = await client.uploadAvatar({
+  subname: 'myavatar.offchainsub.eth',
+  file: avatarFile,
+  onProgress: (progress) => console.log(`Upload: ${progress}%`),
+});
+
+console.log('Avatar URL:', result.url);
+```
+
+### Upload a header
+
+`uploadHeader` accepts the same options. Header uploads have a higher size limit:
+
+```typescript
+const result = await client.uploadHeader({
+  subname: 'myavatar.offchainsub.eth',
+  file: headerFile,
+});
+```
+
+### UploadOptions
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `subname` | `string` | ENS subname to upload for. |
+| `file` | `File \| Buffer` | Image file to upload. |
+| `onProgress` | `(progress: number) => void` | Optional callback receiving `0`–`100`. |
+
+### UploadResult
+
+```typescript
+export interface UploadResult {
+  url: string;
+  avatarUrl?: string;
+  headerUrl?: string;
+  subname?: string;
+  network?: 'mainnet' | 'sepolia';
+  uploadedAt: string;
+  fileSize: number;
+  isUpdate: boolean;
+  pending?: boolean;
+  message?: string;
+}
+```
+
+- **url** - Stable alias for the public image URL.
+- **avatarUrl / headerUrl** - Canonical URL returned by the Metadata Service for the respective upload type.
+- **isUpdate** - `true` when an existing image was replaced.
+- **pending** - `true` when the subname is not yet registered; the image is stored and applied on registration.
+
+### File limits
+
+| Image | Max size | Formats |
+| --- | --- | --- |
+| Avatar | 2 MB | JPEG, PNG, GIF, WebP |
+| Header | 5 MB | JPEG, PNG, GIF, WebP |
+
+The SDK validates file size and format before uploading and throws `FILE_TOO_LARGE` or `INVALID_FILE_FORMAT` when a check fails.

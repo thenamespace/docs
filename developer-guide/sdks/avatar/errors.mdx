@@ -1,0 +1,59 @@
+---
+title: "Error handling"
+description: "Error types and codes returned by the Avatar SDK."
+sidebarTitle: "Error handling"
+icon: "circle-alert"
+---
+
+The SDK throws `AvatarSDKError` for every failure, including validation, authentication, network, and Metadata Service errors. Inspect `error.code` to branch on the cause.
+
+```typescript
+import { AvatarSDKError, ErrorCodes } from '@thenamespace/avatar';
+
+try {
+  await client.uploadAvatar({ subname, file });
+} catch (error) {
+  if (error instanceof AvatarSDKError) {
+    switch (error.code) {
+      case ErrorCodes.FILE_TOO_LARGE:
+        console.log('File exceeds the size limit');
+        break;
+      case ErrorCodes.NOT_SUBNAME_OWNER:
+        console.log('You do not own this subname');
+        break;
+      case ErrorCodes.INVALID_SIGNATURE:
+        console.log('Signature was rejected by the service');
+        break;
+    }
+  }
+}
+```
+
+### Error codes
+
+| Code | Description |
+| --- | --- |
+| `FILE_TOO_LARGE` | File exceeds the avatar (2 MB) or header (5 MB) limit. |
+| `INVALID_FILE_FORMAT` | File format is not JPEG, PNG, GIF, or WebP. |
+| `INVALID_FILE_TYPE` | File type does not match its declared format. |
+| `INVALID_SIGNATURE` | SIWE signature was rejected by the Metadata Service. |
+| `EXPIRED_NONCE` | The SIWE nonce has expired. |
+| `INVALID_NONCE` | The SIWE nonce is invalid. |
+| `AUTHENTICATION_FAILED` | Authentication failed for a reason other than signature or nonce. |
+| `NOT_SUBNAME_OWNER` | The signer does not own the target subname. |
+| `INVALID_SUBNAME` | The subname format is invalid. |
+| `SUBNAME_NOT_FOUND` | The subname does not exist. |
+| `NETWORK_ERROR` | A network request failed. |
+| `TIMEOUT_ERROR` | A request timed out. |
+| `API_ERROR` | The Metadata Service returned an error. `status`, `serviceCode`, and `details` carry the HTTP status and structured envelope. |
+| `PROVIDER_NOT_CONNECTED` | No wallet is connected to the provider. |
+| `PROVIDER_ERROR` | The provider threw while signing or switching chains. |
+| `PROVIDER_CHAIN_MISMATCH` | The wallet is on the wrong chain and cannot switch. |
+| `INVALID_CONFIG` | The client configuration is invalid. |
+| `MISSING_PROVIDER` | An automatic method was called without a `provider`. |
+| `UPLOAD_FAILED` | The upload failed for a reason other than validation. |
+| `DELETE_FAILED` | The delete failed for a reason other than validation. |
+
+### Metadata Service errors
+
+When the Metadata Service returns an error, the SDK normalizes it into `AvatarSDKError` with `code: 'API_ERROR'`. The HTTP status is on `error.status`, the service-specific code is on `error.serviceCode`, and the structured envelope is on `error.details`.

@@ -1,0 +1,30 @@
+---
+title: "Overview"
+description: "Manage ENS avatar and header images with SIWE authentication."
+icon: "eye"
+---
+
+`@thenamespace/avatar` uploads, updates, and deletes avatar and header images for ENS subnames through the Namespace Metadata Service. Authentication uses SIWE v4, and the SDK accepts a Viem `WalletClient`, an Ethers `Wallet` or `Signer`, or any object matching the `WalletProvider` interface directly, no adapter required.
+
+<CardGroup>
+  <Card title="SIWE v4 Authentication">
+    Sign-In with Ethereum for EOA and smart-contract wallet signatures.
+  </Card>
+  <Card title="Direct Wallet Integration">
+    Pass Viem, Ethers, or any wallet client directly, no adapters needed.
+  </Card>
+  <Card title="Pre-registration Uploads">
+    Upload images for a subname before it is registered.
+  </Card>
+  <Card title="Progress & Validation">
+    Real-time upload progress and built-in file size and format checks.
+  </Card>
+</CardGroup>
+
+## Next steps
+
+- Install and configure the SDK: [Installation](/developer-guide/sdks/avatar/installation)
+- Upload images: [Upload images](/developer-guide/sdks/avatar/upload-images)
+- Remove images: [Delete images](/developer-guide/sdks/avatar/delete-images)
+- Sign manually: [Manual SIWE flow](/developer-guide/sdks/avatar/manual-flow)
+- Handle errors: [Error handling](/developer-guide/sdks/avatar/errors)
