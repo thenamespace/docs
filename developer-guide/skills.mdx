@@ -52,6 +52,22 @@ Once installed, your AI agent can:
 - Fetch full ENS profiles, including texts, addresses, and contenthash, in one request
 - Use bulk endpoints for tables, leaderboards, and multi-row UI data
 
+### Avatar SDK skill
+
+The `avatar-sdk` skill gives your agent the context it needs to manage ENS avatar and header images with the `@thenamespace/avatar` SDK. It covers SIWE v4 authentication, automatic and manual signing flows, and the Metadata Service profile media routes.
+
+**Install in your project:**
+
+```bash
+npx skills add thenamespace/skills -s avatar-sdk
+```
+
+Once installed, your AI agent can:
+- Upload and delete avatar and header images for ENS subnames
+- Wire up a Viem, Ethers, or wagmi wallet as the signing provider with no adapters
+- Use the manual SIWE flow for server-side or custom signing
+- Enforce the correct network and handle SDK error codes
+
 <Note>
   Skills work with any AI coding tool that supports agent context, including Cursor, Claude Code, and GitHub Copilot.
 </Note>
