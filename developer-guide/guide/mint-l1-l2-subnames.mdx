@@ -1,13 +1,13 @@
 ---
-title: "Mint L1 and L2 subnames"
-description: "Mint owner-held subnames on Ethereum or a supported L2."
-sidebarTitle: "Mint L1 and L2 subnames"
+title: "Mint Onchain Subnames on Ethereum or L2"
+description: "Mint ENS subnames on Ethereum or L2 chains."
+sidebarTitle: "Mint Onchain Subnames"
 icon: "coins"
 ---
 
-This guide shows how to mint a subname under an ENS name activated in the Namespace App. The Mint Manager SDK selects the correct L1 or L2 mint contract from the parent name's listing; your Viem clients submit the resulting transaction on the listing's chain.
+This guide shows how to mint an onchain subname under an ENS name activated in the Namespace App. The Mint Manager SDK selects the correct mint contract for Ethereum or the parent listing's L2 chain; your Viem clients submit the resulting transaction on that chain.
 
-The complete example uses Base. The L1 variation is included in [Check availability](#3-check-availability).
+The complete example uses Base. The Ethereum variation is included in [Check availability](#3-check-availability).
 
 ## Prerequisites
 
@@ -22,7 +22,16 @@ The complete example uses Base. The L1 variation is included in [Check availabil
 </Warning>
 
 <Steps>
-  <Step title="1. Install the dependencies">
+  <Step title="1. Activate your ENS name">
+
+    Before you can mint subnames, your parent ENS name must be activated on the Namespace platform. This is a prerequisite for all subname minting operations.
+
+    <Card title="How to activate an ENS name" icon="hat-wizard" horizontal href="/user-guide/app#activate-your-ens-name">
+      See the step-by-step guide on how to activate an ENS name.
+    </Card>
+  </Step>
+
+  <Step title="2. Install the dependencies">
 
     Install the package versions used by this documentation:
 
@@ -37,7 +46,7 @@ The complete example uses Base. The L1 variation is included in [Check availabil
     </CodeGroup>
   </Step>
 
-  <Step title="2. Configure the clients">
+  <Step title="3. Configure the clients">
 
     Add the RPC endpoint and private key to `.env`:
 
@@ -46,7 +55,7 @@ The complete example uses Base. The L1 variation is included in [Check availabil
     WALLET_PRIVATE_KEY=0xYOUR_PRIVATE_KEY
     ```
 
-    Create the Mint Manager and Viem clients:
+    Create the Mint Manager SDK client and Viem clients:
 
     ```typescript clients.ts
     import 'dotenv/config';
@@ -80,13 +89,13 @@ The complete example uses Base. The L1 variation is included in [Check availabil
     ```
 
     <Note>
-      To use testnet listings and Namespace staging services, initialize the Mint Manager with `createMintClient({ isTestnet: true, mintSource: 'my-app' })` and configure Viem clients for the matching testnet chain.
+      To use testnet listings and Namespace staging services, initialize the Mint Manager SDK with `createMintClient({ isTestnet: true, mintSource: 'my-app' })` and configure Viem clients for the matching testnet chain.
     </Note>
   </Step>
 
-  <Step title="3. Check availability">
+  <Step title="4. Check availability">
 
-    For an L2 listing, pass the target chain ID:
+    For a listing on an L2 chain, pass the target chain ID:
 
     ```typescript availability.ts
     import { base } from 'viem/chains';
@@ -101,7 +110,7 @@ The complete example uses Base. The L1 variation is included in [Check availabil
     if (!isAvailable) throw new Error(`${fullName} is not available on Base`);
     ```
 
-    For an L1 listing, use `isL1SubnameAvailable` instead:
+    For a listing on Ethereum, use `isL1SubnameAvailable` instead:
 
     ```typescript
     const isAvailable = await mintClient.isL1SubnameAvailable(
@@ -110,7 +119,7 @@ The complete example uses Base. The L1 variation is included in [Check availabil
     ```
   </Step>
 
-  <Step title="4. Check eligibility and price">
+  <Step title="5. Check eligibility and price">
 
     `getMintDetails` reports whether the wallet can mint and returns the estimated price and fee:
 
@@ -141,7 +150,7 @@ The complete example uses Base. The L1 variation is included in [Check availabil
     ```
   </Step>
 
-  <Step title="5. Generate transaction parameters">
+  <Step title="6. Generate transaction parameters">
 
     Add optional text and address records while preparing the transaction:
 
@@ -168,10 +177,10 @@ The complete example uses Base. The L1 variation is included in [Check availabil
     }
     ```
 
-    The SDK uses the parent listing to return the appropriate contract, ABI, arguments, and transaction value for L1 or L2.
+    The SDK uses the parent listing to return the appropriate contract, ABI, arguments, and transaction value for Ethereum or the listing's L2 chain.
   </Step>
 
-  <Step title="6. Simulate and send the transaction">
+  <Step title="7. Simulate and send the transaction">
 
     Simulate first so contract errors are surfaced before the wallet sends the transaction:
 
@@ -211,14 +220,6 @@ The complete example uses Base. The L1 variation is included in [Check availabil
   </Step>
 </Steps>
 
-## Verify the example
-
-The repository contains a complete type-checked version at `examples/mint-subname.ts`. Documentation contributors can verify it with:
-
-```bash
-npm run check:examples
-```
-
 ## Troubleshooting
 
 - If `canMint` is false, display or log `validationErrors`.
@@ -232,9 +233,9 @@ See [Troubleshooting](/developer-guide/troubleshooting) for authentication, reso
 
 <CardGroup cols={2}>
   <Card title="Mint Manager reference" icon="book" href="/developer-guide/sdks/mint-manager">
-    Review every Mint Manager method and response type.
+    Review every Mint Manager SDK method and response type.
   </Card>
   <Card title="Indexer Manager" icon="database" href="/developer-guide/sdks/indexer-manager">
-    Read indexed L2 subname and registry data after minting.
+    Read indexed subname and registry data from L2 chains after minting.
   </Card>
 </CardGroup>
