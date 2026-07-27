@@ -1,17 +1,17 @@
 ---
 title: "Overview"
-description: "TypeScript SDK for minting ENS subnames on Namespace, supporting Mainnet and L2 networks."
+description: "Generate contract calls to mint onchain subnames on Ethereum or L2 chains."
 icon: "eye"
 ---
 
-`@thenamespace/mint-manager` is a TypeScript library for minting subnames under names activated on the Namespace platform. It abstracts the complexities of interacting with smart contracts, supporting both Ethereum Mainnet and Layer 2 networks like Base and Optimism. The library uses Viem under the hood for seamless integration.
+`@thenamespace/mint-manager` checks mint eligibility and returns the contract call required to mint under a name activated in the Namespace App. It supports Ethereum mainnet and configured L2 networks such as Base and Optimism. Use Viem or another compatible client to simulate and submit the returned transaction.
 
 <CardGroup>
   <Card title="Mint Subnames">
-    Easily mint ENS subnames activated on the Namespace platform.
+    Easily mint ENS subnames on Ethereum or L2 chains.
   </Card>
   <Card title="Mainnet & L2 Support">
-    Works with Ethereum Mainnet and Layer 2 networks such as Base and Optimism.
+    Works with Ethereum Mainnet and L2 networks such as Base and Optimism.
   </Card>
   <Card title="Subname Availability Checks">
     Determine whether a subname is available for minting.

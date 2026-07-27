@@ -1,13 +1,13 @@
 ---
 title: "Fetch L2 Subnames"
-description: "Fetch a single or multiple L2 subnames."
+description: "Read one or more indexed L2 subnames."
 sidebarTitle: "Fetch L2 Subnames"
 icon: "square-user"
 ---
 
 Indexer has methods for fetching single or multiple L2 subnames.
 
-## 1. **getL2Subname**
+## Get one L2 subname
 
 The `getL2Subname` method retrieves a single subname registered on an L2 chain.
 
@@ -74,7 +74,7 @@ export interface L2SubnameResponse {
 |  `price`           | Minting price in ETH                                                                  |
 |  `paymentReceiver` | Ethereum address that received the mint payment (e.g., `0x1234...abcd`)              |
 
-## 2. **getL2Subnames**
+## Get multiple L2 subnames
 
 The `getL2Subnames` method allows you to retrieve a paginated list of Layer 2 (L2) subnames based on various filter criteria.
 

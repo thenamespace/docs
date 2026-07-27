@@ -6,7 +6,7 @@
     "metatags": {}
   },
   "colors": {
-    "primary": "#16A34A",
+    "primary": "#15803D",
     "light": "#07C983",
     "dark": "#15803D"
   },
@@ -25,48 +25,54 @@
         "tab": "Overview",
         "groups": [
           {
-            "group": "Introduction",
-            "pages": ["getting-started", "learn-more", "overview/subnames", "overview/use-cases"]
+            "group": "Start here",
+            "pages": [
+              "getting-started",
+              "learn-more",
+              "overview/subnames"
+            ]
           },
           {
-            "group": "Products and Services",
+            "group": "Find your path",
             "pages": [
-             
-              {                
+              "overview/use-cases",
+              "overview/for-name-owners",
+              "overview/for-product-teams",
+              "overview/for-fintechs-neobanks",
+              "developer-guide/integrations/waas"
+            ]
+          },
+          {
+            "group": "Products & Services",
+            "pages": [
+              {
                 "group": "Namespace App",
                 "icon": "desktop",
                 "pages": [
                   "user-guide/app",
-                  "user-guide/app/activate-ens-name",
-                  "user-guide/app/search-register"
+                  "user-guide/app/search-register",
+                  "user-guide/dev-portal",
+                  "user-guide/ens-widget",
+                  "user-guide/subpages"
                 ]
               },
               {
-                "group": "Offchain",
-                "icon": "cloud",
+                "group": "Developer products",
+                "icon": "code",
                 "pages": [
-                  "user-guide/dev-portal",
-                  "user-guide/dev-portal/subnames",
-                  "user-guide/dev-portal/resolver-set",
-                  "user-guide/dev-portal/api-keys"
+                  "user-guide/sdk-and-api",
+                  "user-guide/resolvio",
+                  "user-guide/ens-components"
                 ]
-              },
-              "user-guide/sdk-and-api",
-              "user-guide/resolvio",
-              "user-guide/ens-components",
-              "user-guide/subpages",
-              "user-guide/ens-widget",
-              "user-guide/custom-solutions"
+              }
             ]
           },
           {
-            "group": "Who it's for",
+            "group": "Work with us",
             "pages": [
-              "overview/for-product-teams",
-              "overview/for-name-owners",
-              "overview/integration/waas"
+              "user-guide/custom-solutions"
             ]
-          }          
+          }
         ]
       },
 
@@ -74,25 +80,21 @@
         "tab": "Developer Guide",
         "groups": [
           {
-            "group": "Getting Started",
+            "group": "Start building",
             "pages": [
-              "developer-guide/quickstart",
-              "developer-guide/ai-development",
-              "developer-guide/skills"
+              "developer-guide/quickstart"
             ]
           },
           {
-            "group": "How to Guides",
+            "group": "How to guides",
             "pages": [
-              "developer-guide/guide",
               "developer-guide/guide/create-offchain-subnames",
-              "developer-guide/guide/mint-l1-l2-subnames"   ,    
+              "developer-guide/guide/mint-l1-l2-subnames",
               "developer-guide/guide/subpages"
             ]
           },
-
           {
-            "group": "Integrations",
+            "group": "Starter kits",
             "pages": [
               "developer-guide/integrations",
               "developer-guide/integrations/starters/rainbowkit-nextjs",
@@ -100,95 +102,128 @@
               "developer-guide/integrations/starters/openfort-nextjs"
             ]
           },
-
           {
-            "group": "API Reference",
-            "pages": ["api-reference/introduction",
-            {
-              "group": "Offchain API Reference",
-              "icon": "cloud",
-              "pages": [
-                "api-reference/offchain-manager/create-or-update-a-subname",
-                "api-reference/offchain-manager/get-subname-by-full-name",
-                "api-reference/offchain-manager/query-subnames",
-                "api-reference/offchain-manager/delete-a-subname"
-              ]
-            },
-            {
-              "group": "Mint API Reference",
-              "icon": "gauge",
-              "pages": [
-                "api-reference/mint-manager/estimate-mint-params",
-                "api-reference/mint-manager/generate-mint-params"
-              ]
-            },
-            {
-              "group": "Resolvio — ENS Resolution",
-              "icon": "magnifying-glass",
-              "pages": [
-                "api-reference/resolvio/list-supported-chains",
-                "api-reference/resolvio/bulk-reverse-resolve",
-                "api-reference/resolvio/reverse-resolve-single",
-                "api-reference/resolvio/get-ens-profile",
-                "api-reference/resolvio/get-bulk-ens-profiles",
-                "api-reference/resolvio/get-ens-addresses",
-                "api-reference/resolvio/get-ens-texts",
-                "api-reference/resolvio/get-ens-contenthash",
-                "api-reference/resolvio/clear-ens-cache"
-              ]
-            }
-          ]
+            "group": "Concepts",
+            "pages": [
+              "developer-guide/architecture/onchain-subnames"
+            ]
           },
           {
-            "group": "SDK Reference",
+            "group": "Reference",
             "pages": [
-              "developer-guide/sdks/introduction",
               {
-                "group": "Offchain Manager",
-                "icon": "cloud",
+                "group": "SDK",
+                "icon": "code",
                 "pages": [
-                  "developer-guide/sdks/offchain-manager",
-                  "developer-guide/sdks/offchain-manager/installation",
-                  "developer-guide/sdks/offchain-manager/generate-api-key",
-                  "developer-guide/sdks/offchain-manager/is-subname-available",
-                  "developer-guide/sdks/offchain-manager/create-update-subname",
-                  "developer-guide/sdks/offchain-manager/get-single-subname",
-                  "developer-guide/sdks/offchain-manager/get-filtered-subnames",
-                  "developer-guide/sdks/offchain-manager/delete-subname",
-                  "developer-guide/sdks/offchain-manager/address-records",
-                  "developer-guide/sdks/offchain-manager/set-default-evm-address",
-                  "developer-guide/sdks/offchain-manager/chainname",
-                  "developer-guide/sdks/offchain-manager/text-records",
-                  "developer-guide/sdks/offchain-manager/data-records"
+                  "developer-guide/sdks/introduction",
+                  {
+                    "group": "Offchain Manager",
+                    "icon": "cloud",
+                    "pages": [
+                      "developer-guide/sdks/offchain-manager",
+                      "developer-guide/sdks/offchain-manager/installation",
+                      "developer-guide/sdks/offchain-manager/generate-api-key",
+                      "developer-guide/sdks/offchain-manager/is-subname-available",
+                      "developer-guide/sdks/offchain-manager/create-update-subname",
+                      "developer-guide/sdks/offchain-manager/get-single-subname",
+                      "developer-guide/sdks/offchain-manager/get-filtered-subnames",
+                      "developer-guide/sdks/offchain-manager/delete-subname",
+                      "developer-guide/sdks/offchain-manager/address-records",
+                      "developer-guide/sdks/offchain-manager/chainname",
+                      "developer-guide/sdks/offchain-manager/set-default-evm-address",
+                      "developer-guide/sdks/offchain-manager/text-records",
+                      "developer-guide/sdks/offchain-manager/data-records"
+                    ]
+                  },
+                  {
+                    "group": "Mint Manager",
+                    "icon": "gauge",
+                    "pages": [
+                      "developer-guide/sdks/mint-manager",
+                      "developer-guide/sdks/mint-manager/installation",
+                      "developer-guide/sdks/mint-manager/is-subname-available",
+                      "developer-guide/sdks/mint-manager/get-mint-details",
+                      "developer-guide/sdks/mint-manager/get-mint-transaction-parameters"
+                    ]
+                  },
+                  {
+                    "group": "Indexer Manager",
+                    "icon": "database",
+                    "pages": [
+                      "developer-guide/sdks/indexer-manager",
+                      "developer-guide/sdks/indexer-manager/installation",
+                      "developer-guide/sdks/indexer-manager/fetch-l2-subnames",
+                      "developer-guide/sdks/indexer-manager/fetch-l2-registries"
+                    ]
+                  },
+                  {
+                    "group": "Avatar",
+                    "icon": "image",
+                    "pages": [
+                      "developer-guide/sdks/avatar",
+                      "developer-guide/sdks/avatar/installation",
+                      "developer-guide/sdks/avatar/upload-images",
+                      "developer-guide/sdks/avatar/delete-images",
+                      "developer-guide/sdks/avatar/manual-flow",
+                      "developer-guide/sdks/avatar/errors"
+                    ]
+                  }
                 ]
               },
               {
-                "group": "Mint Manager",
-                "icon": "gauge",
+                "group": "API",
+                "icon": "brackets-curly",
                 "pages": [
-                  "developer-guide/sdks/mint-manager",
-                  "developer-guide/sdks/mint-manager/installation",
-                  "developer-guide/sdks/mint-manager/get-mint-details",
-                  "developer-guide/sdks/mint-manager/get-mint-transaction-parameters",
-                  "developer-guide/sdks/mint-manager/is-subname-available"
-                ]
-              },
-              {
-                "group": "Indexer Manager",
-                "icon": "database",
-                "pages": [
-                  "developer-guide/sdks/indexer-manager",
-                  "developer-guide/sdks/indexer-manager/installation",
-                  "developer-guide/sdks/indexer-manager/fetch-l2-subnames",
-                  "developer-guide/sdks/indexer-manager/fetch-l2-registries"
+                  "api-reference/introduction",
+                  {
+                    "group": "Offchain API",
+                    "icon": "cloud",
+                    "pages": [
+                      "api-reference/offchain-manager/create-or-update-a-subname",
+                      "api-reference/offchain-manager/get-subname-by-full-name",
+                      "api-reference/offchain-manager/query-subnames",
+                      "api-reference/offchain-manager/delete-a-subname"
+                    ]
+                  },
+                  {
+                    "group": "Mint API",
+                    "icon": "gauge",
+                    "pages": [
+                      "api-reference/mint-manager/estimate-mint-params",
+                      "api-reference/mint-manager/generate-mint-params"
+                    ]
+                  },
+                  {
+                    "group": "Resolvio API",
+                    "icon": "magnifying-glass",
+                    "pages": [
+                      "api-reference/resolvio/list-supported-chains",
+                      "api-reference/resolvio/reverse-resolve-single",
+                      "api-reference/resolvio/reverse-resolve-profile",
+                      "api-reference/resolvio/bulk-reverse-resolve",
+                      "api-reference/resolvio/get-ens-profile",
+                      "api-reference/resolvio/get-bulk-ens-profiles",
+                      "api-reference/resolvio/get-ens-addresses",
+                      "api-reference/resolvio/get-ens-texts",
+                      "api-reference/resolvio/get-ens-contenthash",
+                      "api-reference/resolvio/clear-ens-cache"
+                    ]
+                  }
                 ]
               }
             ]
           },
           {
-            "group": "Architecture",
+            "group": "AI tooling",
             "pages": [
-              "developer-guide/architecture/onchain-subnames"
+              "developer-guide/ai-development",
+              "developer-guide/skills"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "developer-guide/troubleshooting"
             ]
           }
         ]
@@ -199,7 +234,8 @@
           "changelog/offchain-sdk",
           "changelog/address-sdk",
           "changelog/indexer-sdk",
-          "changelog/mint-sdk"
+          "changelog/mint-sdk",
+          "changelog/avatar-sdk"
         ]
       }
     ],
@@ -310,15 +346,15 @@
   },
   {
     "source": "/apps/onchain-subnames-app/wizard",
-    "destination": "/user-guide/app/wizard"
+    "destination": "/user-guide/app"
   },
   {
     "source": "/apps/onchain-subnames-app/wizard/activate-an-ens-name",
-    "destination": "/user-guide/app/activate-ens-name"
+    "destination": "/user-guide/app"
   },
   {
     "source": "/apps/onchain-subnames-app/wizard/features-list",
-    "destination": "/user-guide/app/features-list"
+    "destination": "/user-guide/app"
   },
   {
     "source": "/apps/offchain-subnames-devapp",
@@ -326,19 +362,39 @@
   },
   {
     "source": "/apps/offchain-subnames-devapp/subnames",
-    "destination": "/user-guide/dev-portal/subnames"
+    "destination": "/user-guide/dev-portal"
   },
   {
     "source": "/apps/offchain-subnames-devapp/resolver-set",
-    "destination": "/user-guide/dev-portal/resolver-set"
+    "destination": "/user-guide/dev-portal"
   },
   {
     "source": "/apps/offchain-subnames-devapp/api-keys",
-    "destination": "/user-guide/dev-portal/api-keys"
+    "destination": "/user-guide/dev-portal"
+  },
+  {
+    "source": "/user-guide/app/activate-ens-name",
+    "destination": "/user-guide/app"
+  },
+  {
+    "source": "/user-guide/dev-portal/subnames",
+    "destination": "/user-guide/dev-portal"
+  },
+  {
+    "source": "/user-guide/dev-portal/resolver-set",
+    "destination": "/user-guide/dev-portal"
+  },
+  {
+    "source": "/user-guide/dev-portal/api-keys",
+    "destination": "/user-guide/dev-portal"
   },
   {
     "source": "/how-to-guides-and-demos",
-    "destination": "developer-guide/guide"
+    "destination": "/developer-guide/quickstart"
+  },
+  {
+    "source": "/developer-guide/guide",
+    "destination": "/developer-guide/quickstart"
   },
   {
     "source": "/dev-docs/sdk",
@@ -438,7 +494,7 @@
   },
   {
     "source": "/dev-docs/infrastructure/namespace-l2-subnames",
-    "destination": "/overview/namespace-onchain-subnames"
+    "destination": "/developer-guide/architecture/onchain-subnames"
   },
   {
     "source": "/dev-docs/subpages",
@@ -447,6 +503,154 @@
   {
     "source": "/ecosystem/use-cases",
     "destination": "/overview/use-cases"
+  },
+  {
+    "source": "/overview/ecosystem",
+    "destination": "/learn-more"
+  },
+  {
+    "source": "/quickstart",
+    "destination": "/developer-guide/quickstart"
+  },
+  {
+    "source": "/user-guide/overview",
+    "destination": "/getting-started"
+  },
+  {
+    "source": "/user-guide/app/wizard",
+    "destination": "/user-guide/app"
+  },
+  {
+    "source": "/user-guide/app/features-list",
+    "destination": "/user-guide/app"
+  },
+  {
+    "source": "/user-guide/app/widget",
+    "destination": "/user-guide/ens-widget"
+  },
+  {
+    "source": "/overview/offchain-subnames",
+    "destination": "/overview/subnames#offchain-subnames"
+  },
+  {
+    "source": "/overview/namespace-onchain-subnames",
+    "destination": "/developer-guide/architecture/onchain-subnames"
+  },
+  {
+    "source": "/overview/integration/waas",
+    "destination": "/developer-guide/integrations/waas"
+  },
+  {
+    "source": "/overview/integration/raas",
+    "destination": "/developer-guide/integrations/raas"
+  },
+  {
+    "source": "/developer-guide/sdks/overview-sdk",
+    "destination": "/developer-guide/sdks/introduction"
+  },
+  {
+    "source": "/developer-guide/sdks/offchain-sdk",
+    "destination": "/developer-guide/sdks/offchain-manager"
+  },
+  {
+    "source": "/developer-guide/sdks/offchain-sdk/installation",
+    "destination": "/developer-guide/sdks/offchain-manager/installation"
+  },
+  {
+    "source": "/developer-guide/sdks/offchain-sdk/generate-api-key",
+    "destination": "/developer-guide/sdks/offchain-manager/generate-api-key"
+  },
+  {
+    "source": "/developer-guide/sdks/offchain-sdk/is-subname-available",
+    "destination": "/developer-guide/sdks/offchain-manager/is-subname-available"
+  },
+  {
+    "source": "/developer-guide/sdks/offchain-sdk/create-update-subname",
+    "destination": "/developer-guide/sdks/offchain-manager/create-update-subname"
+  },
+  {
+    "source": "/developer-guide/sdks/offchain-sdk/get-filtered-subnames",
+    "destination": "/developer-guide/sdks/offchain-manager/get-filtered-subnames"
+  },
+  {
+    "source": "/developer-guide/sdks/offchain-sdk/delete-subname",
+    "destination": "/developer-guide/sdks/offchain-manager/delete-subname"
+  },
+  {
+    "source": "/developer-guide/sdks/offchain-sdk/address-records",
+    "destination": "/developer-guide/sdks/offchain-manager/address-records"
+  },
+  {
+    "source": "/developer-guide/sdks/offchain-sdk/chainname",
+    "destination": "/developer-guide/sdks/offchain-manager/chainname"
+  },
+  {
+    "source": "/developer-guide/sdks/offchain-sdk/text-records",
+    "destination": "/developer-guide/sdks/offchain-manager/text-records"
+  },
+  {
+    "source": "/developer-guide/sdks/offchain-sdk/data-records",
+    "destination": "/developer-guide/sdks/offchain-manager/data-records"
+  },
+  {
+    "source": "/developer-guide/sdks/mint-sdk",
+    "destination": "/developer-guide/sdks/mint-manager"
+  },
+  {
+    "source": "/developer-guide/sdks/mint-sdk/installation",
+    "destination": "/developer-guide/sdks/mint-manager/installation"
+  },
+  {
+    "source": "/developer-guide/sdks/mint-sdk/get-mint-details",
+    "destination": "/developer-guide/sdks/mint-manager/get-mint-details"
+  },
+  {
+    "source": "/developer-guide/sdks/mint-sdk/get-mint-transaction-parameters",
+    "destination": "/developer-guide/sdks/mint-manager/get-mint-transaction-parameters"
+  },
+  {
+    "source": "/developer-guide/sdks/mint-sdk/is-subname-available",
+    "destination": "/developer-guide/sdks/mint-manager/is-subname-available"
+  },
+  {
+    "source": "/developer-guide/sdks/indexer-sdk",
+    "destination": "/developer-guide/sdks/indexer-manager"
+  },
+  {
+    "source": "/developer-guide/sdks/indexer-sdk/installation",
+    "destination": "/developer-guide/sdks/indexer-manager/installation"
+  },
+  {
+    "source": "/developer-guide/sdks/indexer-sdk/fetch-l2-subnames",
+    "destination": "/developer-guide/sdks/indexer-manager/fetch-l2-subnames"
+  },
+  {
+    "source": "/developer-guide/sdks/indexer-sdk/fetch-l2-registries",
+    "destination": "/developer-guide/sdks/indexer-manager/fetch-l2-registries"
+  },
+  {
+    "source": "/user-guide/dev-app",
+    "destination": "/user-guide/dev-portal"
+  },
+  {
+    "source": "/user-guide/dev-app/api-keys",
+    "destination": "/user-guide/dev-portal"
+  },
+  {
+    "source": "/user-guide/dev-app/resolver-set",
+    "destination": "/user-guide/dev-portal"
+  },
+  {
+    "source": "/user-guide/dev-app/subnames",
+    "destination": "/user-guide/dev-portal"
+  },
+  {
+    "source": "/overview/namespace-l2-subname-infrastructure",
+    "destination": "/developer-guide/architecture/onchain-subnames"
+  },
+  {
+    "source": "/how-to/guide",
+    "destination": "/developer-guide/quickstart"
   }
 ]
 }

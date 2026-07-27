@@ -1,36 +1,91 @@
 ---
-title: "Overview"
-description: "Namespace App is a no-code interface for Onchain Subnames on L1 and L2 networks."
-icon: "sitemap"
+title: "Onchain subnames"
+description: "No-code onchain subname issuance on Ethereum and L2 chains."
+sidebarTitle: "Onchain subnames"
+icon: "coins"
 ---
 
-[Namespace App](https://app.namespace.ninja/) — **onchain hub** for searching, registering, and 'activating' ENS names to let anyone mint onchain subnames.
+Use the [Onchain section of the Namespace App](https://app.namespace.ninja/onchain) to activate an ENS name, configure its minting rules, and issue onchain subnames on Ethereum or a supported L2.
 
-## What you can do
+## Choose L1 or L2
 
-- [**Search & Register**](/user-guide/app/search-register): Discover and mint ENS names and subnames in the app.
-- [**Activate (List) your ENS name**](/user-guide/app/activate-ens-name): Required to enable onchain subname minting.
-  - After activation, you can:
-    - Let anyone mint via the app's [Search & Register](/user-guide/app/search-register)
-    - Let anyone mint via your name (e.g., https://app.namespace.ninja/\*\*[yourname].eth\*\*)
-    - Create an [ENS Widget (no‑code)](/user-guide/app/widget) in the app and embed it on any website
-    - Launch a custom site ([Subpages, advanced](/developer-guide/guide/subpages)) — see Developer Guide
+| Model | Best for | Issuance cost | Ownership |
+| --- | --- | --- | --- |
+| L1 | Ethereum-native ownership | Ethereum transaction and mint price | The minted subname is held by its owner |
+| L2 | Lower-cost onchain ownership | L2 transaction and mint price | The minted subname is held by its owner |
 
-## Features:
+<Danger>
+  Names activated on Ethereum Mainnet cannot be migrated to Namechain (ENS v2). If you plan to use Namechain, activate on a supported L2 such as Base or Optimism instead.
+</Danger>
 
-- Customize pricing for subnames
-- Rent or sell subnames for a one-time fee
-- Reserve or blacklist specific words
-- Whitelist wallets to enable minting
-- Token-gate subname minting
+## Before you begin
+
+- Connect the wallet that owns the parent ENS name.
+- Decide whether you want to issue subnames on Ethereum Mainnet or a supported L2.
+- Choose your pricing, treasury address, and any minting restrictions.
+
+## Activate your ENS name
+
+<Steps>
+  <Step title="Open the Onchain section">
+    Visit [app.namespace.ninja/onchain](https://app.namespace.ninja/onchain), connect the owner wallet, select the ENS name, and click **Activate Name**.
+
+    <img src="/assets/activate-ens-name-1.png" alt="Onchain section with an ENS name selected and the Activate Name button" />
+  </Step>
+
+  <Step title="Choose L1 or L2 issuance">
+    Select **L1 ENS Subnames** for Ethereum mainnet or **L2 ENS Subnames** for a supported L2. For L2, select the network from the dropdown, then click **Next**.
+
+    <img src="/assets/activate-ens-name-2.png" alt="Listing type selection for L1 and L2 subnames" />
+  </Step>
+
+  <Step title="Configure the listing">
+    Set the currency, treasury address, collection name and symbol, and whether subnames can be burned or rented. Then configure the base mint price and any length-based or special-name pricing.
+
+    <img src="/assets/activate-ens-name-3.png" alt="Listing setup fields for currency, treasury, collection metadata, burning, and renting" />
+  </Step>
+
+  <Step title="Add optional minting rules">
+    Use reservations to block or specially price names. You can also add a deadline, restrict minting with an allowlist, or require ownership of an ERC-20 or ERC-721 token.
+
+    <img src="/assets/activate-ens-name-5.png" alt="Reservation settings for blocking names or assigning custom prices" />
+  </Step>
+
+  <Step title="Activate the listing">
+    Review the configuration, click **Activate**, and confirm the transaction in your wallet.
+
+    <Note>
+      Activation on Ethereum Mainnet may require wrapping the ENS name. For activation on an L2 chain, the app may also prompt you to deploy the registry contract and configure the Namespace Hybrid Resolver.
+    </Note>
+  </Step>
+
+  <Step title="Finish the activation">
+    Complete any remaining registry or resolver transactions, then click **Finish Activation**. The ENS name now shows an **Activated** badge and is ready for subname minting.
+
+    <img src="/assets/activate-ens-name-11.png" alt="Activated ENS name with its minted subnames" />
+  </Step>
+</Steps>
+
+<Tip>
+  Use **Edit Activation** to update pricing, reservations, deadlines, allowlists, or token-gating rules later. Review every transaction carefully because some ENS fuse changes may be irreversible.
+</Tip>
+
+## Choose how users mint
+
+After activation, users can mint through:
+
+- [Namespace search](/user-guide/app/search-register) for registering an ENS name or an available onchain subname.
+- The [ENS Widget](/user-guide/ens-widget) embedded on your website without building a registration interface.
+- A [custom minting website](/developer-guide/guide/subpages) based on the white-label Subpages starter.
+- A custom app using the [mint onchain subnames workflow](/developer-guide/guide/mint-l1-l2-subnames).
 
 ## Next steps
 
 <CardGroup cols={2}>
-  <Card title="Activate ENS Name (Required)" icon="toggle-on" href="/user-guide/app/activate-ens-name">
-    
+  <Card title="Create an ENS Widget" icon="puzzle-piece" href="/user-guide/ens-widget">
+    Embed onchain subname registration on your website.
   </Card>
-  <Card title="Search & Register" icon="user-magnifying-glass" href="/user-guide/app/search-register">
-    
+  <Card title="Integrate onchain minting in your app" icon="code" href="/developer-guide/guide/mint-l1-l2-subnames">
+    Add availability checks and mint transactions for Ethereum Mainnet or supported L2 chains to your app.
   </Card>
 </CardGroup>

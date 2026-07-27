@@ -1,23 +1,24 @@
 ---
 title: "Overview"
-description: "Namespace offers different SDKs to interact with the Namespace backend APIs and smart contracts for ENS subname management."
+description: "Pick the SDK for the operation your app performs."
 icon: "code"
 ---
 
-# SDK
-
-The Namespace SDK is a TypeScript library designed to simplify ENS Subname registration and management in Web3 projects. It enables seamless interaction with Namespace backend APIs and smart contracts, supporting subnames on L2 chains (Base, Optimism, etc.) and Offchain Subnames. The SDK is ideal for projects offering Subname-as-a-Service or integrating subname features into decentralized apps, DAOs, or blockchain tools.
+Namespace publishes focused TypeScript SDKs for offchain management, mint preparation, and indexed onchain data. Choose the client that matches the operation your application performs.
 
 SDK packages include:
 
 <CardGroup cols={2}>
-  <Card title="Offchain Manager" icon="cloud" href="./offchain-manager">
-    Manage offchain subnames with ease.
+  <Card title="Offchain Manager" icon="cloud" href="/developer-guide/sdks/offchain-manager">
+    Create, update, delete, and query gasless offchain subnames and records.
   </Card>
-  <Card title="Mint Manager" icon="gauge" href="./mint-manager">
-    Simplify minting processes for subnames.
+  <Card title="Mint Manager" icon="gauge" href="/developer-guide/sdks/mint-manager">
+    Check eligibility and generate mint transaction parameters for Ethereum or L2 chains.
   </Card>
-  <Card title="Indexer Manager" icon="database" href="./indexer-manager">
-    Efficiently manage indexer operations.
+  <Card title="Indexer Manager" icon="database" href="/developer-guide/sdks/indexer-manager">
+    Query indexed subnames and registry deployments from L2 chains.
+  </Card>
+  <Card title="Avatar" icon="image" href="/developer-guide/sdks/avatar">
+    Upload and delete ENS avatar and header images with SIWE authentication.
   </Card>
 </CardGroup>

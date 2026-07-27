@@ -1,40 +1,41 @@
 ---
-title: "SDK and API"
-description: "Quickest way to build ENS subname projects"
+title: "SDKs and APIs"
+description: "Build with Namespace SDKs and APIs."
 icon: "code"
 ---
 
-We provide the easiest way to bring **ENS subnames**—onchain or offchain—directly into your app, wallet, rollup, AI-agent, community, or service. Whether you’re a developer building from scratch or a product team shipping at scale, our tools simplify subname integration while keeping everything fully **ENS-compatible** and **production-ready**.
+Namespace provides TypeScript SDKs and hosted APIs for creating, minting, querying, and resolving ENS subnames. Choose the interface that fits your runtime and how much infrastructure you want to manage.
 
-Namespace SDK and API already power wallets, rollups, payment apps, communities, and AI projects across the ecosystem and run hundreds of thousands of subnames. They’re designed to scale from **one** to **millions of subnames**, without tradeoffs between simplicity and control.
+## Choose an interface
 
-## **One toolkit, two ways to build**
+<CardGroup cols={2}>
+  <Card title="TypeScript SDKs" icon="display-code" href="/developer-guide/sdks/introduction">
+    Use typed clients in a Node.js or TypeScript application.
+  </Card>
+  <Card title="REST APIs" icon="code-simple" href="/api-reference/introduction">
+    Call hosted HTTP endpoints from any server-side language.
+  </Card>
+</CardGroup>
 
-1. **Namespace SDK**: A developer toolkit for teams who want to run their own setup and bake ENS logic straight into their stack.
+## Available tools
 
-   <Card title="SDK reference" icon="display-code" horizontal href="developer-guide/sdks/introduction.mdx">
-     Dive deeper into Namespace SDK
-   </Card>
-2. **Namespace API**: A hosted service for teams who just want it to work—fast, scalable, no infrastructure required.
+| Tool | Use it to |
+| --- | --- |
+| Offchain Manager | Create, update, delete, and query gasless offchain subnames and records |
+| Mint Manager | Check eligibility and generate mint transaction parameters for Ethereum Mainnet or L2 chains |
+| Indexer Manager | Query indexed registries and subnames from L2 chains |
+| Offchain API | Manage offchain subnames over HTTP |
+| Mint API | Estimate and generate mint parameters over HTTP |
+| Resolvio API | Resolve ENS names, profiles, addresses, text records, and content hashes |
 
-   <Card title="API reference" icon="code-simple" horizontal href="api-reference/introduction.mdx">
-     Dive deeper into Namespace API
-   </Card>
+## Before you integrate
 
-Both paths give you the same outcomes: subname creation, resolution, management, and scaling—without reinventing the wheel.
+- Keep Namespace API keys in server-side environment variables.
+- Decide whether your product needs operator-managed offchain records or onchain subnames on Ethereum or L2 chains.
+- Use a testnet configuration during development.
+- Handle unavailable labels, authentication failures, rate limiting, and resolver errors explicitly.
+- Pin supported package versions and review the changelog before upgrading.
 
-## **Why Use Namespace SDK & API?**
-
-- **Simple Integration** – Get up and running in minutes with clear documentation, prebuilt functions, and support for both onchain and offchain subnames.
-- **Scalable & Flexible** – Handle high-volume naming with ease. From gasless offchain subnames to fully onchain integrations, you choose the model that fits your product.
-- **Universal Resolution** – Use ENS names or subnames as a universal identity layer across wallets, apps, chains, contracts, and communities.
-- **Developer Friendly** – Our SDK (JavaScript/TypeScript) and API are designed to plug directly into your stack and make it easy to build on ENS and Subnames.
-
-## **What you can do with it**
-
-With Namespace, you can:
-
-- **Issue identities at scale** → Give every user, wallet, or agent their own ENS name.
-- **Simplify resolution** → Resolve any ENS name/subname instantly.
-- **Customize experiences** → Branded subnames for your product, community, or ecosystem.
-- **Stay flexible** → Start with offchain subnames (gasless, free to mint) and move onchain or to L2s when it makes sense.
+<Card title="Developer quickstart" icon="rocket" href="/developer-guide/quickstart">
+  Create and query an offchain subname with the TypeScript SDK.
+</Card>

@@ -24,7 +24,7 @@ icon: "cloud"
 
 <Update label="January 20, 2026" description="v1.0.11">
   - Added:
-    - **Custom HTTP Headers**: New `setCustomHeaders(headers)` method on `OffchainClient` and matching `customHeaders` field on `OffchainClientConfig`. Headers set this way are applied to every outgoing request — useful for tracing IDs, multi-tenant routing, or additional auth metadata.
+    - **Custom HTTP Headers**: New `setCustomHeaders(headers)` method on `OffchainClient` and matching `customHeaders` field on `OffchainClientConfig`. Headers set this way are applied to every outgoing request, which is useful for tracing IDs, multi-tenant routing, or additional authentication metadata.
   - Testing:
     - Added integration tests covering custom-header propagation through the client.
 </Update>

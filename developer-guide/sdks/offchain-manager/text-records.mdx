@@ -1,26 +1,26 @@
 ---
-title: "Text Records"
-description: "Manage text records for ENS subnames."
-sidebarTitle: "Text Records"
+title: "Text records"
+description: "Read and write ENS text records on a subname."
+sidebarTitle: "Text records"
 icon: "address-card"
 ---
 
 <Note>
-  Text records are key-value pairs that can be used to store any arbitrary data associated with a name. Think of this as a user's digital backpack utilized for the storage of preferences, public details, and more.
+  Text records store public profile details such as a display name, website, avatar, or social handle. Do not store secrets in text records.
 </Note>
 
 These methods allow you to manage text records for a given ENS subname. You can fetch, add, update, or delete individual records.
 
-### 1. addTextRecord
+## Add or update a text record
 
 Add or update a text record.
 
 ```typescript
-client.addTextRecord({
-  subname: "ns.myensname.eth",
-  key: "description",
-  value: "HODL ENS!",
-});
+await client.addTextRecord(
+  'alice.example.eth',
+  'description',
+  'Namespace community member',
+);
 ```
 
 **Parameters:**
@@ -28,29 +28,29 @@ client.addTextRecord({
 - `key` - Text record key (e.g., "description")
 - `value` - Value to associate with the key
 
-### 2. deleteTextRecord
+## Delete a text record
 
 Delete a text record.
 
 ```typescript
-client.deleteTextRecord({ subname: "ns.myensname.eth", key: "description" });
+await client.deleteTextRecord('alice.example.eth', 'description');
 ```
 
-### 3. getTextRecords
+## Get all text records
 
 Get all text records for a subname.
 
 ```typescript
-const records = await client.getTextRecords("ns.myensname.eth");
+const records = await client.getTextRecords('alice.example.eth');
 // Returns: Record<string, string>
 ```
 
-### 4. getTextRecord
+## Get one text record
 
 Get a specific text record by key.
 
 ```typescript
-const response = await client.getTextRecord("ns.myensname.eth", "description");
+const response = await client.getTextRecord('alice.example.eth', 'description');
 const description = response.record;
 ```
 

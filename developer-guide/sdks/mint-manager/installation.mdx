@@ -1,6 +1,6 @@
 ---
-title: "Mint SDK Installation"
-description: "Learn how to install and initialize the Namespace Mint SDK for minting ENS subnames."
+title: "Install the Mint Manager SDK"
+description: "Install and initialize the Mint Manager SDK."
 sidebarTitle: "Installation"
 icon: "download"
 ---
@@ -8,49 +8,50 @@ icon: "download"
 Install the required packages, depending on your package manager:
 
 <Tabs>
-<Tab title="Npm">
+<Tab title="npm">
 
 ```bash
-npm install @thenamespace/mint-manager@latest viem
+npm install @thenamespace/mint-manager@1.1.1 viem
 ```
 
 </Tab>
 <Tab title="Yarn">
 
 ```bash
-yarn add @thenamespace/mint-manager@latest viem
+yarn add @thenamespace/mint-manager@1.1.1 viem
 ```
 
 </Tab>
 </Tabs>
 
-Create an instance of mint client with a proper configuration:
+Create a Mint Manager client. The default configuration uses production services and mainnet listings:
 
 ```typescript
-import {
-  MintClientConfig,
-  createMintClient,
-  MintClient,
-} from "@thenamespace/mint-manager";
+import { createMintClient } from '@thenamespace/mint-manager';
 
-const TOKEN = process.env.ALCHEMY_TOKEN;
+export const mintClient = createMintClient({
+  mintSource: 'my-app',
+});
+```
 
-const clientConfig: MintClientConfig = {
-  isTestnet: false,
-  customRpcUrls: {
-    [mainnet.id]: `https://eth-mainnet.g.alchemy.com/v2/${TOKEN}`,
-    [base.id]: `https://base-mainnet.g.alchemy.com/v2/${TOKEN}`,
-  },
-  mintSource: "my-perfect-app",
-};
+For testnet listings and staging services, set `isTestnet: true`:
 
-const mintClient: MintClient = createMintClient(clientConfig);
+```typescript
+import { createMintClient } from '@thenamespace/mint-manager';
+
+export const mintClient = createMintClient({ isTestnet: true });
 ```
 
 ### MintClientConfig
 
-| Parameter     | Default       | Description                                                                                                                                                                                    |
-| ------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| isTestnet     | false         | Specifies whether the testnet app is used or not.                                                                                                                                              |
-| customRpcUrls | undefined     | Sets a map of chain.id - rpc urls that a mint client is going to use when making external calls. If the rpc url is not specified, the client will default to a public client for a given chain |
-| mintSource    | namespace-sdk | When a subname is minted, the mint event also emits a source parameter which is useful to track where the subname mints are coming from                                                        |
+| Parameter | Default | Description |
+| --- | --- | --- |
+| `isTestnet` | `false` | Uses testnet listings and staging services when `true`. |
+| `mintSource` | `namespace-sdk` | Identifies your integration in the mint transaction. |
+| `listingCacheMilliseconds` | 15 minutes | Controls how long listing metadata remains cached. |
+| `listManagerUri` | Namespace service | Advanced override for the listing API base URL. |
+| `mintManagerUri` | Namespace service | Advanced override for the mint API base URL. |
+
+<Note>
+  Version 1.1.1 currently exports the custom RPC map as `cursomRpcUrls`. Because that spelling is part of the published type, prefer configuring the Viem clients used to send the transaction unless you specifically need to override the SDK's read client.
+</Note>

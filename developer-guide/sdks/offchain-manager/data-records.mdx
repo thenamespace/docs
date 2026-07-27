@@ -1,7 +1,7 @@
 ---
-title: "Metadata Records"
-description: "Manage custom metadata records for ENS subnames. Useful for discovery and filtering."
-sidebarTitle: "Metadata Records"
+title: "Metadata records"
+description: "Metadata for discovery and filtering."
+sidebarTitle: "Metadata records"
 icon: "id-card-clip"
 ---
 
@@ -11,16 +11,16 @@ Custom key-value metadata records for offchain ENS subnames. Not used for onchai
   Do not store sensitive information. Values are retrievable by anyone with read access.
 </Hint>
 
-### 1. addDataRecord
+## Add or update a metadata record
 
 Add or update a metadata record.
 
 ```typescript
-await client.addDataRecord({
-  subname: "ns.myensname.eth",
-  key: "token-holder",
-  data: "1200",
-});
+await client.addDataRecord(
+  'alice.example.eth',
+  'membership-tier',
+  'pro',
+);
 ```
 
 **Parameters:**
@@ -32,24 +32,21 @@ await client.addDataRecord({
   If the key exists, its value will be overwritten.
 </Warning>
 
-### 2. deleteDataRecord
+## Delete a metadata record
 
 Delete a metadata record.
 
 ```typescript
-await client.deleteDataRecord({
-  subname: "ns.myensname.eth",
-  key: "token-holder",
-});
+await client.deleteDataRecord('alice.example.eth', 'membership-tier');
 ```
 
-### 3. getDataRecords
+## Get all metadata records
 
 Get all metadata records for a subname.
 
 ```typescript
-const allMetadata = await client.getDataRecords("ns.myensname.eth");
-// Returns: Record<string, string>
+const allMetadata = await client.getDataRecords('alice.example.eth');
+// Returns: Record<string, unknown>
 ```
 
 **Example Result:**
@@ -60,13 +57,16 @@ const allMetadata = await client.getDataRecords("ns.myensname.eth");
 }
 ```
 
-### 4. getDataRecord
+## Get one metadata record
 
 Get a specific metadata record by key.
 
 ```typescript
-const response = await client.getDataRecord("ns.myensname.eth", "token-holder");
-const data = response.record; // "1200"
+const response = await client.getDataRecord(
+  'alice.example.eth',
+  'membership-tier',
+);
+const data = response.record; // 'pro'
 ```
 
 **Return Type:**

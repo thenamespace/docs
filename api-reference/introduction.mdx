@@ -1,6 +1,6 @@
 ---
 title: "Overview"
-description: "API reference for the Mint Manager and Offchain Manager (Subnames) APIs with authentication and endpoints."
+description: "Authentication and endpoints for Namespace subname APIs."
 sidebarTitle: "Overview"
 icon: "book-bookmark"
 ---
@@ -34,14 +34,6 @@ x-auth-token: YOUR_API_KEY
     Get detailed information about existing subnames by full name.
   </Card>
   <Card
-    title="Delete Subnames"
-    icon="trash"
-    href="/api-reference/offchain-manager/delete-a-subname"
-    arrow="true"
-  >
-    Remove subnames from the system (requires API key).
-  </Card>
-  <Card
     title="Search Subnames"
     icon="magnifying-glass"
     href="/api-reference/offchain-manager/query-subnames"
@@ -49,6 +41,14 @@ x-auth-token: YOUR_API_KEY
   >
     Query multiple subnames with flexible filters including parent name, label
     search, ownership, and metadata.
+  </Card>
+  <Card
+    title="Delete Subnames"
+    icon="trash"
+    href="/api-reference/offchain-manager/delete-a-subname"
+    arrow="true"
+  >
+    Remove subnames from the system (requires API key).
   </Card>
 </CardGroup>
 
@@ -73,11 +73,35 @@ x-auth-token: YOUR_API_KEY
   </Card>
 </CardGroup>
 
-## Resolvio — ENS Resolution API
+## Resolvio API
 
 Base URL: `https://api.resolvio.xyz/`
 
 <CardGroup cols={2}>
+  <Card
+    title="List Supported Chains"
+    icon="link"
+    href="/api-reference/resolvio/list-supported-chains"
+    arrow="true"
+  >
+    List supported chain names and coin types for address resolution.
+  </Card>
+  <Card
+    title="Reverse Resolve Single"
+    icon="user"
+    href="/api-reference/resolvio/reverse-resolve-single"
+    arrow="true"
+  >
+    Resolve one address to its primary ENS name.
+  </Card>
+  <Card
+    title="Reverse Resolve Profile"
+    icon="id-card"
+    href="/api-reference/resolvio/reverse-resolve-profile"
+    arrow="true"
+  >
+    Reverse-resolve an address to its full verified ENS profile in one call.
+  </Card>
   <Card
     title="Bulk Reverse Resolve"
     icon="list"
@@ -87,11 +111,53 @@ Base URL: `https://api.resolvio.xyz/`
     Resolve multiple Ethereum addresses to ENS names in one request.
   </Card>
   <Card
-    title="Reverse Resolve Single"
-    icon="user"
-    href="/api-reference/resolvio/reverse-resolve-single"
+    title="Get ENS Profile"
+    icon="circle-user"
+    href="/api-reference/resolvio/get-ens-profile"
     arrow="true"
   >
-    Resolve one address to its primary ENS name.
+    Retrieve addresses, text records, and content hash for an ENS name in one
+    response.
+  </Card>
+  <Card
+    title="Get Bulk ENS Profiles"
+    icon="users"
+    href="/api-reference/resolvio/get-bulk-ens-profiles"
+    arrow="true"
+  >
+    Resolve profile data for multiple ENS names in one request.
+  </Card>
+  <Card
+    title="Get ENS Addresses"
+    icon="wallet"
+    href="/api-reference/resolvio/get-ens-addresses"
+    arrow="true"
+  >
+    Retrieve multichain addresses associated with an ENS name.
+  </Card>
+  <Card
+    title="Get ENS Text Records"
+    icon="align-left"
+    href="/api-reference/resolvio/get-ens-texts"
+    arrow="true"
+  >
+    Retrieve selected or complete text records for an ENS name.
+  </Card>
+  <Card
+    title="Get ENS Content Hash"
+    icon="hashtag"
+    href="/api-reference/resolvio/get-ens-contenthash"
+    arrow="true"
+  >
+    Retrieve the IPFS, IPNS, or other content identifier published through an
+    ENS name.
+  </Card>
+  <Card
+    title="Clear ENS Cache"
+    icon="broom"
+    href="/api-reference/resolvio/clear-ens-cache"
+    arrow="true"
+  >
+    Invalidate cached resolver data before your next read.
   </Card>
 </CardGroup>
