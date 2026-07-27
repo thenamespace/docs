@@ -1,11 +1,11 @@
 ---
 title: "Onchain subnames"
-description: "No-code onchain subname issuance on L1 and L2."
+description: "No-code onchain subname issuance on Ethereum and L2 chains."
 sidebarTitle: "Onchain subnames"
 icon: "coins"
 ---
 
-Use the [Onchain section of the Namespace App](https://app.namespace.ninja/onchain) to activate an ENS name, configure its minting rules, and issue owner-held subnames on Ethereum or a supported L2.
+Use the [Onchain section of the Namespace App](https://app.namespace.ninja/onchain) to activate an ENS name, configure its minting rules, and issue onchain subnames on Ethereum or a supported L2.
 
 ## Choose L1 or L2
 
@@ -15,13 +15,13 @@ Use the [Onchain section of the Namespace App](https://app.namespace.ninja/oncha
 | L2 | Lower-cost onchain ownership | L2 transaction and mint price | The minted subname is held by its owner |
 
 <Danger>
-  Names activated on Ethereum L1 cannot be migrated to Namechain (ENS v2). If you plan to use Namechain, activate on a supported L2 such as Base or Optimism instead.
+  Names activated on Ethereum Mainnet cannot be migrated to Namechain (ENS v2). If you plan to use Namechain, activate on a supported L2 such as Base or Optimism instead.
 </Danger>
 
 ## Before you begin
 
 - Connect the wallet that owns the parent ENS name.
-- Decide whether you want to issue subnames on L1 or a supported L2.
+- Decide whether you want to issue subnames on Ethereum Mainnet or a supported L2.
 - Choose your pricing, treasury address, and any minting restrictions.
 
 ## Activate your ENS name
@@ -55,7 +55,7 @@ Use the [Onchain section of the Namespace App](https://app.namespace.ninja/oncha
     Review the configuration, click **Activate**, and confirm the transaction in your wallet.
 
     <Note>
-      L1 activation may require wrapping the ENS name. For L2 activation, the app may also prompt you to deploy the registry contract and configure the Namespace Hybrid Resolver.
+      Activation on Ethereum Mainnet may require wrapping the ENS name. For activation on an L2 chain, the app may also prompt you to deploy the registry contract and configure the Namespace Hybrid Resolver.
     </Note>
   </Step>
 
@@ -77,7 +77,7 @@ After activation, users can mint through:
 - [Namespace search](/user-guide/app/search-register) for registering an ENS name or an available onchain subname.
 - The [ENS Widget](/user-guide/ens-widget) embedded on your website without building a registration interface.
 - A [custom minting website](/developer-guide/guide/subpages) based on the white-label Subpages starter.
-- A custom app using the [Mint Manager workflow](/developer-guide/guide/mint-l1-l2-subnames).
+- A custom app using the [mint onchain subnames workflow](/developer-guide/guide/mint-l1-l2-subnames).
 
 ## Next steps
 
@@ -86,6 +86,6 @@ After activation, users can mint through:
     Embed onchain subname registration on your website.
   </Card>
   <Card title="Integrate onchain minting in your app" icon="code" href="/developer-guide/guide/mint-l1-l2-subnames">
-    Add L1 or L2 availability checks and mint transactions to your app.
+    Add availability checks and mint transactions for Ethereum Mainnet or supported L2 chains to your app.
   </Card>
 </CardGroup>

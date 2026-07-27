@@ -5,6 +5,17 @@ import { dirname, join, relative, resolve } from 'node:path';
 const root = process.cwd();
 const ignoredDirectories = new Set(['.git', 'node_modules']);
 
+const mintignorePath = join(root, '.mintignore');
+const ignoredRoutes = new Set(
+  existsSync(mintignorePath)
+    ? readFileSync(mintignorePath, 'utf8')
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line && !line.startsWith('#'))
+        .map((line) => line.replace(/\.mdx$/, ''))
+    : [],
+);
+
 function walk(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const file = join(directory, entry.name);
@@ -51,7 +62,7 @@ const config = JSON.parse(readFileSync(configPath, 'utf8'));
 const navigationRoutes = collectNavigationRoutes(config.navigation);
 
 for (const route of routes) {
-  if (!navigationRoutes.has(route)) {
+  if (!navigationRoutes.has(route) && !ignoredRoutes.has(route)) {
     failures.push(`${route}.mdx: page is missing from docs.json navigation`);
   }
 }

@@ -8,16 +8,16 @@ icon: "hand-wave"
 
 [Namespace](https://namespace.ninja/) provides no-code apps, APIs, and SDKs for issuing and managing ENS subnames. It lets developers easily implement Subname (identity) registration for their users, agents, or general-purpose identifier.
 
-**Choose where subnames live:** Subnames can be issued on Ethereum L1, on an L2, or through an offchain service. All 3 work the same, but they differ in cost, control, and ownership.
+**Choose where subnames live:** Subnames can be issued on Ethereum, on an L2 chain, or through an offchain service. All 3 work the same, but they differ in cost, control, and ownership.
 
-| Model | Best for | Cost to issue | Ownership model |
+| Model | Best for | Cost to issue | Ownership model | Trust assumptions |
 | --- | --- | --- | --- |
 | Offchain | High-volume onboarding and application-managed identities | No blockchain transaction | The parent-name operator manages records |
-| L2 | Lower-cost NFT ownership on a supported L2 | L2 transaction and mint price | The minted subname is held by its owner |
-| L1 | Lower-volume, Ethereum-native ownership | Ethereum transaction and mint price | The minted subname is held by its owner |
+| L2 (Base, Optimism) | Lower-cost NFT ownership on a supported L2 | L2 transaction and mint price | The minted subname is held by its owner |
+| Ethereum (L1) | Lower-volume, Ethereum-native ownership | Ethereum transaction and mint price | The minted subname is held by its owner |
 
 <Tip>
-  Start with offchain subnames when you need gasless, high-volume issuance. Choose L1 or L2 when holding the subname as an onchain asset is a product requirement.
+  Start with offchain subnames when you need gasless, high-volume issuance. Choose Ethereum or an L2 chain when holding the subname as an onchain asset is a product requirement.
 </Tip>
 
 ## Choose your path
@@ -38,7 +38,7 @@ icon: "hand-wave"
 
 <CardGroup cols={2}>
   <Card title="Learn about Subnames" icon="question" href="/overview/subnames">
-    Compare L1, L2, and offchain subnames in more detail.
+    Compare Ethereum, L2, and offchain subnames in more detail.
   </Card>
   <Card title="About Namespace" icon="sparkles" href="/learn-more">
     Learn how Namespace products fit into the ENS ecosystem.

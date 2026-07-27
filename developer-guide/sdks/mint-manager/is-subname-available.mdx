@@ -5,9 +5,9 @@ sidebarTitle: "Subname availability"
 icon: "magnifying-glass"
 ---
 
-Check availability before generating mint transaction parameters. Use the L1 or L2 method that matches the parent name's listing.
+Check availability before generating mint transaction parameters. Use the method that matches the parent name's listing: `isL1SubnameAvailable` for Ethereum, or `isL2SubnameAvailable` for an L2 chain.
 
-## Check availability on L1
+## Check availability on Ethereum
 
 Use `isL1SubnameAvailable` for a parent name listed on Ethereum mainnet:
 
@@ -17,7 +17,7 @@ const isAvailable = await mintClient.isL1SubnameAvailable(
 );
 ```
 
-## Check availability on L2
+## Check availability on L2 chains
 
 Use `isL2SubnameAvailable` with the target chain ID. This example checks Base:
 

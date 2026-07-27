@@ -28,19 +28,18 @@
             "group": "Start here",
             "pages": [
               "getting-started",
-              "overview/subnames",
-              "learn-more"
+              "learn-more",
+              "overview/subnames"
             ]
           },
           {
             "group": "Find your path",
             "pages": [
+              "overview/use-cases",
               "overview/for-name-owners",
               "overview/for-product-teams",
               "overview/for-fintechs-neobanks",
-              "developer-guide/integrations/waas",
-              "developer-guide/integrations/raas",
-              "overview/use-cases"
+              "developer-guide/integrations/waas"
             ]
           },
           {
@@ -50,23 +49,27 @@
                 "group": "Namespace App",
                 "icon": "desktop",
                 "pages": [
-                  "user-guide/app/search-register",
                   "user-guide/app",
+                  "user-guide/app/search-register",
                   "user-guide/dev-portal",
-                  "user-guide/ens-widget"
+                  "user-guide/ens-widget",
+                  "user-guide/subpages"
                 ]
               },
               {
                 "group": "Developer products",
                 "icon": "code",
                 "pages": [
-                  "user-guide/developer-products",
                   "user-guide/sdk-and-api",
                   "user-guide/resolvio",
-                  "user-guide/ens-components",
-                  "user-guide/subpages"
+                  "user-guide/ens-components"
                 ]
-              },
+              }
+            ]
+          },
+          {
+            "group": "Work with us",
+            "pages": [
               "user-guide/custom-solutions"
             ]
           }
@@ -79,9 +82,7 @@
           {
             "group": "Start building",
             "pages": [
-              "developer-guide/quickstart",
-              "developer-guide/ai-development",
-              "developer-guide/skills"
+              "developer-guide/quickstart"
             ]
           },
           {
@@ -99,6 +100,12 @@
               "developer-guide/integrations/starters/rainbowkit-nextjs",
               "developer-guide/integrations/starters/privy-nextjs",
               "developer-guide/integrations/starters/openfort-nextjs"
+            ]
+          },
+          {
+            "group": "Concepts",
+            "pages": [
+              "developer-guide/architecture/onchain-subnames"
             ]
           },
           {
@@ -122,8 +129,8 @@
                       "developer-guide/sdks/offchain-manager/get-filtered-subnames",
                       "developer-guide/sdks/offchain-manager/delete-subname",
                       "developer-guide/sdks/offchain-manager/address-records",
-                      "developer-guide/sdks/offchain-manager/set-default-evm-address",
                       "developer-guide/sdks/offchain-manager/chainname",
+                      "developer-guide/sdks/offchain-manager/set-default-evm-address",
                       "developer-guide/sdks/offchain-manager/text-records",
                       "developer-guide/sdks/offchain-manager/data-records"
                     ]
@@ -134,9 +141,9 @@
                     "pages": [
                       "developer-guide/sdks/mint-manager",
                       "developer-guide/sdks/mint-manager/installation",
+                      "developer-guide/sdks/mint-manager/is-subname-available",
                       "developer-guide/sdks/mint-manager/get-mint-details",
-                      "developer-guide/sdks/mint-manager/get-mint-transaction-parameters",
-                      "developer-guide/sdks/mint-manager/is-subname-available"
+                      "developer-guide/sdks/mint-manager/get-mint-transaction-parameters"
                     ]
                   },
                   {
@@ -191,9 +198,9 @@
                     "icon": "magnifying-glass",
                     "pages": [
                       "api-reference/resolvio/list-supported-chains",
-                      "api-reference/resolvio/bulk-reverse-resolve",
                       "api-reference/resolvio/reverse-resolve-single",
                       "api-reference/resolvio/reverse-resolve-profile",
+                      "api-reference/resolvio/bulk-reverse-resolve",
                       "api-reference/resolvio/get-ens-profile",
                       "api-reference/resolvio/get-bulk-ens-profiles",
                       "api-reference/resolvio/get-ens-addresses",
@@ -207,9 +214,15 @@
             ]
           },
           {
-            "group": "Architecture and support",
+            "group": "AI tooling",
             "pages": [
-              "developer-guide/architecture/onchain-subnames",
+              "developer-guide/ai-development",
+              "developer-guide/skills"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
               "developer-guide/troubleshooting"
             ]
           }

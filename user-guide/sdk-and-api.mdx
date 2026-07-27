@@ -22,8 +22,8 @@ Namespace provides TypeScript SDKs and hosted APIs for creating, minting, queryi
 | Tool | Use it to |
 | --- | --- |
 | Offchain Manager | Create, update, delete, and query gasless offchain subnames and records |
-| Mint Manager | Check eligibility and generate L1 or L2 mint transaction parameters |
-| Indexer Manager | Query indexed L2 registries and subnames |
+| Mint Manager | Check eligibility and generate mint transaction parameters for Ethereum Mainnet or L2 chains |
+| Indexer Manager | Query indexed registries and subnames from L2 chains |
 | Offchain API | Manage offchain subnames over HTTP |
 | Mint API | Estimate and generate mint parameters over HTTP |
 | Resolvio API | Resolve ENS names, profiles, addresses, text records, and content hashes |
@@ -31,7 +31,7 @@ Namespace provides TypeScript SDKs and hosted APIs for creating, minting, queryi
 ## Before you integrate
 
 - Keep Namespace API keys in server-side environment variables.
-- Decide whether your product needs operator-managed offchain records or owner-held onchain subnames.
+- Decide whether your product needs operator-managed offchain records or onchain subnames on Ethereum or L2 chains.
 - Use a testnet configuration during development.
 - Handle unavailable labels, authentication failures, rate limiting, and resolver errors explicitly.
 - Pin supported package versions and review the changelog before upgrading.

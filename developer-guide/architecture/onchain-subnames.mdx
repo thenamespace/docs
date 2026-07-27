@@ -1,6 +1,6 @@
 ---
 title: "Onchain subname architecture"
-description: "How Namespace handles L1 and L2 subname issuance."
+description: "How Namespace issues onchain subnames on Ethereum and L2 chains."
 sidebarTitle: "Onchain architecture"
 ---
 
@@ -12,15 +12,15 @@ The Namespace App lets ENS name owners activate a parent name and configure how 
 - Token-gated access
 - Deadline
 
-Namespace supports issuing subnames on both **L1 (Ethereum mainnet)** and **L2 networks (currently Base and Optimism)**.
+Namespace supports issuing onchain subnames on **Ethereum mainnet** and **L2 chains (currently Base and Optimism)**.
 
 ## ENS name activation
 
-The activation process differs depending on whether the ENS name owner chooses to issue subnames on L1 or L2.
+The activation process differs depending on whether the ENS name owner chooses to issue subnames on Ethereum or an L2 chain.
 
-### L1 activation
+### Activation on Ethereum
 
-Activating subnames on L1 involves **four main steps**:
+Activating subnames on Ethereum involves **four main steps**:
 
 1. **Create Activation Configuration:** The List Manager backend generates the activation configuration for the subname.
 2. **Approve Mint Controller:** The owner grants approval to the Mint Controller smart contract. This is a **one-time approval** and does not need to be repeated for future names.
@@ -29,14 +29,14 @@ Activating subnames on L1 involves **four main steps**:
 
 <img
   src="/images/l1_activate_process.svg"
-  alt="L1 activation flow from configuration through approval, wrapping, and verification"
-  title="L1 subname activation flow"
+  alt="Ethereum activation flow from configuration through approval, wrapping, and verification"
+  title="Ethereum subname activation flow"
   style={{ width:"63%" }}
 />
 
-### L2 activation
+### Activation on L2 chains
 
-Activating subnames on an L2 network follows **four key steps**:
+Activating subnames on an L2 chain follows **four key steps**:
 
 1. **Create activation configuration:** The List Manager backend generates the rules for the subname minting flow.
 2. **Deploy ERC-721 Registry:** An ERC-721 registry contract is deployed on the chosen L2 chain to manage ownership of subnames.
@@ -45,14 +45,14 @@ Activating subnames on an L2 network follows **four key steps**:
 
 <img
   src="/images/l2_activate_process.svg"
-  alt="L2 activation flow from configuration through registry deployment, resolver setup, and verification"
+  alt="L2 chain activation flow from configuration through registry deployment, resolver setup, and verification"
   title="L2 subname activation flow"
   style={{ width:"66%" }}
 />
 
 ## Minting process
 
-Mint preparation happens offchain, while ownership changes happen in an onchain transaction. The minter requests signed parameters from the Mint Manager service and uses them to call the configured L1 or L2 mint contract.
+Mint preparation happens offchain, while ownership changes happen in an onchain transaction. The minter requests signed parameters from the Mint Manager service and uses them to call the configured mint contract on Ethereum or the listing's L2 chain.
 
 - **Flexible listing rules:** The service can evaluate reservations, allowlists, token requirements, deadlines, and pricing before signing parameters.
 - **Configuration updates:** Listing rules can change without redeploying the mint contract, subject to the activated name's onchain configuration.
@@ -67,17 +67,17 @@ Mint preparation happens offchain, while ownership changes happen in an onchain 
 
 ## Resolution process
 
-### L1 subname resolution
+### Resolution on Ethereum
 
-Since L1 subnames are part of the existing ENS contracts on Ethereum mainnet, they resolve just like any other ENS name:
+Since onchain subnames on Ethereum are part of the existing ENS contracts on mainnet, they resolve just like any other ENS name:
 
 1. **Fetch Resolver:** Call `getResolver` on the ENS Registry to retrieve the resolver contract for `namehash(name.eth)`.
 2. **Resolve Records:** Call the required resolver function (`addr`, `text`, `contenthash`, etc.) on the resolver contract.
 
-### L2 subname resolution
+### Resolution on L2 chains
 
-Resolution on L2 relies on [CCIP Read](https://eips.ethereum.org/EIPS/eip-3668) with [ENSIP-10 wildcard resolution](https://docs.ens.domains/ensip/10/).
-ENSIP-10 defines a workflow that allows resolving subnames of a parent name, even if those subnames don’t technically exist on L1.
+Resolution on L2 chains relies on [CCIP Read](https://eips.ethereum.org/EIPS/eip-3668) with [ENSIP-10 wildcard resolution](https://docs.ens.domains/ensip/10/).
+ENSIP-10 defines a workflow that allows resolving subnames of a parent name, even if those subnames don’t technically exist on Ethereum.
 
 The process works as follows:
 
@@ -94,3 +94,17 @@ The process works as follows:
 6. **Response Returned:** The server processes the request offchain and returns signed resolution data with a callback function.
 7. **Callback Onchain:** The client submits the signed response back to the resolver contract via the designated callback function.
 8. **Final Resolution:** The resolver verifies the signature and returns the final resolved record (e.g., `addr`, `text`, or `contenthash`).
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Mint Manager SDK" icon="gauge" href="/developer-guide/sdks/mint-manager">
+    Generate mint transaction parameters for onchain subname issuance on Ethereum or L2 chains.
+  </Card>
+  <Card title="Offchain Manager SDK" icon="cloud" href="/developer-guide/sdks/offchain-manager">
+    Issue gasless subnames and manage their records offchain.
+  </Card>
+  <Card title="Developer quickstart" icon="rocket" href="/developer-guide/quickstart">
+    Create and query your first subname with TypeScript.
+  </Card>
+</CardGroup>
