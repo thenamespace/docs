@@ -6,9 +6,15 @@
     "metatags": {}
   },
   "colors": {
-    "primary": "#15803D",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#5876F4",
+    "light": "#7B93F7",
+    "dark": "#3D5BEB"
+  },
+  "fonts": {
+    "family": "Inter",
+    "heading": {
+      "family": "Space Grotesk"
+    }
   },
   "favicon": "/favicon.ico",
   "integrations": {
