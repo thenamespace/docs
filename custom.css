@@ -1,0 +1,477 @@
+/* Snippet styles. Mintlify auto-loads every .css file in the content dir on
+   every page, so nothing here needs a docs.json entry or an import.
+
+   .fx-*  FlowExplainer — SVG CCIP-Read resolution diagram
+   .rf-*  ResolveFlow   — earlier station/wire walkthrough */
+
+
+/* ── ResolveFlow ──────────────────────────────────────────────────────────
+   Self-contained styles; colors flip on Mintlify's .dark class. */
+
+.rf {
+  --rf-primary: #2b6cb0;
+  --rf-primary-soft: rgba(43,108,176,.18);
+  --rf-bg: #fbfcfe;
+  --rf-panel: #f3f5f9;
+  --rf-card: #fff;
+  --rf-border: #dfe3ea;
+  --rf-line: #c6ccd6;
+  --rf-text: #12161d;
+  --rf-text-2: #545c69;
+  --rf-hint: #858d99;
+  --rf-warn-bg: rgba(180,120,0,.12); --rf-warn: #8a5b00;
+  --rf-ok-bg: rgba(0,140,90,.12); --rf-ok: #06724b;
+  --rf-ease: cubic-bezier(.23,1,.32,1);
+  /* Breakpoints below key off this box, not the viewport: the docs content
+     column narrows when the sidebar and TOC appear, so viewport width says
+     nothing about how much room the diagram actually has. */
+  container: rf / inline-size;
+  font-size: 14px;
+  border: 1px solid var(--rf-border);
+  border-radius: 12px;
+  background: var(--rf-bg);
+  padding: 18px;
+  display: flex; flex-direction: column; gap: 16px;
+  outline: none;
+}
+.dark .rf, html[data-theme="dark"] .rf {
+  --rf-primary: #7cb9ff;
+  --rf-primary-soft: rgba(124,185,255,.2);
+  --rf-bg: #0c0912;
+  --rf-panel: #120e1a;
+  --rf-card: #171223;
+  --rf-border: #2a2338;
+  --rf-line: #3a3150;
+  --rf-text: #f2eefa;
+  --rf-text-2: #a79fbb;
+  --rf-hint: #7c7391;
+  --rf-warn-bg: rgba(255,190,80,.14); --rf-warn: #ffc55c;
+  --rf-ok-bg: rgba(80,220,160,.14); --rf-ok: #5fe0a8;
+}
+.rf:focus-visible { outline: 2px solid var(--rf-primary); outline-offset: 4px; }
+
+.rf-head { font-weight: 700; font-size: 17px; color: var(--rf-text);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .3em; letter-spacing: -.01em; }
+.rf-dim { color: var(--rf-text-2); font-weight: 600; }
+.rf-arrow { color: var(--rf-primary); }
+
+/* Stage */
+.rf-stage { display: flex; align-items: center; padding: 14px 10px;
+  border: 1px solid var(--rf-border); border-radius: 10px; background: var(--rf-panel); overflow: hidden; }
+.rf-split { display: flex; flex-direction: column; gap: 8px; flex: 0 0 auto; }
+
+.rf-st { flex: 0 0 auto; width: 106px; padding: 8px 10px; display: flex; flex-direction: column; gap: 1px;
+  border: 1px solid var(--rf-border); border-radius: 8px; background: var(--rf-card);
+  transition: transform .22s var(--rf-ease), border-color .22s var(--rf-ease),
+              box-shadow .22s var(--rf-ease), opacity .22s var(--rf-ease); }
+.rf-st[data-state="off"] { opacity: .42; }
+.rf-st[data-state="on"], .rf-st[data-state="pulse"] {
+  border-color: var(--rf-primary);
+  box-shadow: 0 0 0 1px var(--rf-primary-soft), 0 6px 24px -12px var(--rf-primary);
+  transform: translateY(-2px); }
+.rf-st[data-state="pulse"] { animation: rf-pulse 1200ms ease-in-out infinite; }
+@keyframes rf-pulse { 0%,100% { transform: translateY(-2px) scale(1) } 50% { transform: translateY(-2px) scale(1.035) } }
+.rf-chain { font-size: 9px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--rf-hint); }
+.rf-st[data-state="on"] .rf-chain, .rf-st[data-state="pulse"] .rf-chain { color: var(--rf-primary); }
+.rf-name { font-size: 12px; font-weight: 700; color: var(--rf-text); }
+.rf-sub { font-size: 10px; color: var(--rf-text-2); word-break: break-all; }
+
+/* Connectors */
+.rf-link { flex: 1 1 30px; min-width: 24px; padding: 0 4px;
+  display: flex; flex-direction: column; justify-content: space-around; gap: 10px; }
+.rf-link[data-flow="reverse"] { transform: scaleX(-1); }
+.rf-wire { container-type: inline-size; position: relative; height: 2px; border-radius: 2px; background: var(--rf-line); }
+.rf-wire::after { content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(90deg, var(--rf-primary-soft), var(--rf-primary));
+  transform: scaleX(0); transform-origin: left center; }
+.rf-packet { position: absolute; top: 50%; left: 0; width: 7px; height: 7px; margin-top: -3.5px;
+  border-radius: 50%; background: var(--rf-primary); box-shadow: 0 0 10px 2px var(--rf-primary-soft);
+  opacity: 0; transform: translateX(-4px); }
+.rf-link[data-flow="forward"] .rf-packet, .rf-link[data-flow="reverse"] .rf-packet {
+  animation: rf-travel 900ms ease-in-out forwards; }
+.rf-link[data-flow="forward"] .rf-wire::after, .rf-link[data-flow="reverse"] .rf-wire::after {
+  animation: rf-trail 900ms ease-in-out forwards; }
+.rf-link .rf-wire:nth-child(2) .rf-packet, .rf-link .rf-wire:nth-child(2)::after { animation-delay: 90ms; }
+@keyframes rf-travel {
+  0% { opacity: 0; transform: translateX(-4px) }
+  12% { opacity: 1 } 88% { opacity: 1 }
+  100% { opacity: 0; transform: translateX(calc(100cqw - 4px)) } }
+@keyframes rf-trail { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+
+/* Rail */
+.rf-rail { display: flex; gap: 5px; }
+.rf-tab { flex: 1 1 0; display: flex; flex-direction: column; gap: 6px; padding: 0; border: 0;
+  background: none; cursor: pointer; font: inherit; font-size: 10px; font-weight: 600;
+  text-align: left; color: var(--rf-hint); transition: color .2s var(--rf-ease), transform .16s var(--rf-ease); }
+.rf-tab:active { transform: scale(.97); }
+.rf-tab[data-state="on"] { color: var(--rf-text); }
+.rf-tab[data-state="past"] { color: var(--rf-text-2); }
+.rf-bar { height: 3px; border-radius: 3px; background: var(--rf-line);
+  transform-origin: left center; transition: background-color .24s var(--rf-ease); }
+.rf-tab[data-state="past"] .rf-bar, .rf-tab[data-state="on"] .rf-bar { background: var(--rf-primary); }
+.rf-tab[data-state="on"] .rf-bar { animation: rf-grow 260ms var(--rf-ease); }
+@keyframes rf-grow { from { transform: scaleX(.2) } to { transform: scaleX(1) } }
+@media (hover: hover) and (pointer: fine) { .rf-tab:hover { color: var(--rf-text); } }
+
+/* Body */
+.rf-title { font-size: 15px; font-weight: 700; color: var(--rf-text);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 6px; }
+.rf-blurb { font-size: 13px; line-height: 1.6; color: var(--rf-text-2); margin: 0; }
+.rf-badge { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 999px; }
+.rf-badge[data-tone="warn"] { background: var(--rf-warn-bg); color: var(--rf-warn); }
+.rf-badge[data-tone="ok"] { background: var(--rf-ok-bg); color: var(--rf-ok); }
+
+.rf-payload { padding: 12px; border: 1px solid var(--rf-border); border-radius: 10px;
+  background: var(--rf-card); overflow-x: auto; }
+.rf-ptitle { font-size: 10px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--rf-hint); margin: 0 0 10px; }
+.rf-lines { display: flex; flex-direction: column; gap: 7px; margin: 0; }
+.rf-line { display: grid; grid-template-columns: 88px minmax(0,1fr); gap: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; line-height: 1.5;
+  opacity: 0; transform: translateY(6px); animation: rf-in 320ms var(--rf-ease) forwards; }
+.rf-line dt { color: var(--rf-primary); white-space: nowrap; margin: 0; }
+.rf-line dd { color: var(--rf-text); word-break: break-all; margin: 0; }
+.rf-line[data-soft="true"] dd { color: var(--rf-hint); }
+.rf-line:nth-child(1) { animation-delay: 0ms }
+.rf-line:nth-child(2) { animation-delay: 45ms }
+.rf-line:nth-child(3) { animation-delay: 90ms }
+.rf-line:nth-child(4) { animation-delay: 135ms }
+.rf-line:nth-child(5) { animation-delay: 180ms }
+@keyframes rf-in { to { opacity: 1; transform: translateY(0) } }
+
+/* Controls */
+.rf-ctls { display: flex; gap: 8px; }
+.rf-btn { padding: 7px 14px; border: 1px solid var(--rf-border); border-radius: 999px;
+  background: var(--rf-card); color: var(--rf-text); font: inherit; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: transform .16s var(--rf-ease), border-color .16s var(--rf-ease); }
+.rf-btn:active { transform: scale(.97); }
+.rf-btn[data-primary] { min-width: 78px; background: var(--rf-primary); border-color: var(--rf-primary); color: var(--rf-bg); }
+@media (hover: hover) and (pointer: fine) { .rf-btn:hover { border-color: var(--rf-primary); } }
+
+/* Narrow: stack the stage, wires travel downward. The row layout needs ~556px;
+   below that it used to overflow into `overflow: hidden` and lose a station. */
+@container rf (max-width: 570px) {
+  .rf-stage { flex-direction: column; align-items: stretch; }
+  .rf-split { flex-direction: row; }
+  .rf-split > .rf-st { flex: 1 1 0; min-width: 0; }
+  .rf-st { width: auto; }
+  .rf-link { min-height: 30px; flex-direction: row; justify-content: center; }
+  .rf-wire { width: 30px; align-self: center; transform: rotate(90deg); }
+  .rf-link[data-flow="reverse"] { transform: scaleY(-1); }
+}
+
+/* Only drop the step labels once they genuinely stop fitting. */
+@container rf (max-width: 420px) {
+  .rf-tab { font-size: 0; gap: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rf-st[data-state="pulse"] { animation: none; }
+  .rf-st { transform: none !important; }
+  .rf-link[data-flow="forward"] .rf-packet, .rf-link[data-flow="reverse"] .rf-packet {
+    animation: none; opacity: 1; transform: translateX(calc(50cqw - 4px)); }
+  .rf-link[data-flow="forward"] .rf-wire::after, .rf-link[data-flow="reverse"] .rf-wire::after {
+    animation: none; transform: scaleX(1); }
+  .rf-line { animation: rf-in 200ms ease forwards; transform: none; }
+  .rf-tab[data-state="on"] .rf-bar { animation: none; }
+}
+
+/* ── FlowExplainer ────────────────────────────────────────────────────────
+   The palette is self-contained and dark in both site themes: this card owns
+   its look rather than inheriting the page theme. The extra resets marked
+   "docs:" undo Mintlify prose styling the diagram never expects. */
+
+.fx {
+  --fx-ink: #0c0f17;
+  --fx-surface: #151926;
+  --fx-line: rgba(255, 255, 255, 0.11);
+  --fx-text: rgba(255, 255, 255, 0.93);
+  --fx-dim: rgba(255, 255, 255, 0.46);
+  --fx-faint: rgba(255, 255, 255, 0.24);
+  --fx-accent: #5aa9ff;
+
+  /* One hue per party, all far enough apart to stay separable when two light
+     up at once. The accent belongs to motion — edges, chips, packets — so no
+     node borrows it. */
+  --fx-wallet: #7fb2ff;
+  --fx-eth: #f2a54c;
+  --fx-gw: #4fc98a;
+  --fx-chain: #3fd3c6;
+  --fx-api: #bb8ef7;
+
+  --fx-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --fx-ease-io: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* Never set container-type here. Style containment on this element makes
+     Chrome resolve every `fill: var(--fx-*)` inside the SVG to black — the
+     custom properties still inherit, but the paint does not. */
+  margin: 0;
+  padding: 22px 22px 16px;
+  border: 1px solid var(--fx-line);
+  border-radius: 20px;
+  background:
+    radial-gradient(90% 70% at 85% 0%, rgba(90, 169, 255, 0.1), transparent 62%),
+    radial-gradient(80% 70% at 5% 100%, rgba(187, 142, 247, 0.07), transparent 60%),
+    var(--fx-ink);
+  color: var(--fx-text);
+  font-family: inherit;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Toggles: the parent name on the left, where the records live on the right —
+   the two ends of the diagram they each control. Neither changes the path,
+   which is the point the card is making. */
+.fx-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: 18px;
+}
+.fx-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+}
+.fx-toggle[data-align="end"] { align-items: flex-end; text-align: right; }
+.fx-toggle-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--fx-faint);
+}
+.fx-toggle-row {
+  display: flex;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+}
+.fx-btn {
+  padding: 5px 13px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fx-dim);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: color 200ms var(--fx-ease-out), background 200ms var(--fx-ease-out);
+}
+.fx-btn[data-on="true"] {
+  background: color-mix(in srgb, var(--fx-accent) 18%, transparent);
+  color: var(--fx-accent);
+}
+.fx-btn:focus-visible { outline: 2px solid var(--fx-accent); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .fx-btn[data-on="false"]:hover { color: var(--fx-text); }
+}
+.fx-toggle-note {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--fx-dim);
+}
+
+.fx-scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+
+/* The widest docs content column leaves only ~679px inside this box, so a
+   720px floor made the diagram scroll at every window size and kept the
+   right-hand record nodes just off the edge. 640 fits the common desktop
+   columns outright and still scrolls — visibly, never clipped — once the
+   column gets genuinely narrow. */
+.fx-svg { display: block; width: 100%; min-width: 640px; height: auto; }
+
+/* Layer groups */
+.fx-group rect {
+  fill: rgba(255, 255, 255, 0.018);
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1;
+  stroke-dasharray: 4 5;
+}
+.fx-group text {
+  fill: var(--fx-faint);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* Nodes */
+.fx-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 220ms var(--fx-ease-out);
+}
+.fx-node rect {
+  fill: var(--fx-surface);
+  stroke: var(--fx-line);
+  stroke-width: 1;
+  transition: stroke 200ms var(--fx-ease-out), fill 200ms var(--fx-ease-out);
+}
+.fx-node[data-on="true"] {
+  transform: scale(1.03);
+  filter: drop-shadow(0 4px 16px color-mix(in srgb, var(--tone) 26%, transparent));
+}
+/* The store this lookup does not use. Present, so the either/or is visible;
+   dimmed, so it never reads as a second request. */
+.fx-node[data-muted="true"] { opacity: 0.3; }
+.fx-node[data-on="true"] rect {
+  stroke: var(--tone);
+  fill: color-mix(in srgb, var(--tone) 15%, var(--fx-surface));
+}
+
+.fx-node[data-tone="wallet"] { --tone: var(--fx-wallet); }
+.fx-node[data-tone="eth"]    { --tone: var(--fx-eth); }
+.fx-node[data-tone="gw"]     { --tone: var(--fx-gw); }
+.fx-node[data-tone="chain"]  { --tone: var(--fx-chain); }
+.fx-node[data-tone="api"]    { --tone: var(--fx-api); }
+
+.fx-node-label {
+  fill: var(--fx-text);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-anchor: middle;
+  transition: fill 200ms var(--fx-ease-out);
+}
+.fx-node[data-on="true"] .fx-node-label { fill: var(--tone); }
+.fx-node-sub { fill: var(--fx-dim); font-size: 10.5px; text-anchor: middle; }
+
+/* Edges */
+.fx-edge {
+  fill: none;
+  stroke: var(--fx-faint);
+  stroke-width: 1.25;
+  transition: stroke 220ms var(--fx-ease-out);
+}
+.fx-edge[data-on="true"] { stroke: var(--fx-accent); }
+.fx-arrow { fill: var(--fx-faint); }
+.fx-arrow-on { fill: var(--fx-accent); }
+
+.fx-edge-num {
+  fill: var(--fx-faint);
+  font-size: 11px;
+  font-weight: 600;
+  text-anchor: middle;
+  transition: fill 220ms var(--fx-ease-out);
+}
+.fx-edge-num[data-on="true"] { fill: var(--fx-accent); }
+
+/* Payload chips — one per active edge, remounted with the beat. */
+.fx-chip { animation: fx-chip 320ms var(--fx-ease-out) both; }
+.fx-chip rect {
+  fill: color-mix(in srgb, var(--fx-accent) 14%, var(--fx-ink));
+  stroke: color-mix(in srgb, var(--fx-accent) 38%, transparent);
+  stroke-width: 1;
+}
+.fx-chip text {
+  fill: color-mix(in srgb, var(--fx-accent) 62%, #ffffff);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: -0.01em;
+  text-anchor: middle;
+}
+@keyframes fx-chip { from { opacity: 0; transform: translateY(3px); } }
+
+/* Travelling packet — remounted each beat, so it always starts clean. */
+.fx-packet {
+  fill: var(--fx-accent);
+  filter: drop-shadow(0 0 6px var(--fx-accent));
+  offset-distance: 0%;
+  opacity: 0;
+  animation: fx-flow 1500ms var(--fx-ease-io) forwards;
+}
+@keyframes fx-flow {
+  0%   { offset-distance: 0%;   opacity: 0; }
+  10%  { opacity: 1; }
+  78%  { offset-distance: 100%; opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* Caption + rail */
+.fx-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--fx-line);
+}
+.fx-caption {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  min-height: 38px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--fx-text);
+  animation: fx-caption 260ms var(--fx-ease-out);
+}
+@keyframes fx-caption { from { opacity: 0; transform: translateY(4px); } }
+
+.fx-step {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--fx-accent) 20%, transparent);
+  color: var(--fx-accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Step arrows. Six anonymous dots asked the reader to count; an arrow pair
+   plus a position readout says where you are and where you can go. */
+.fx-nav {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.fx-navbtn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--fx-line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--fx-dim);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 180ms var(--fx-ease-out), border-color 180ms var(--fx-ease-out),
+              background 180ms var(--fx-ease-out), transform 140ms var(--fx-ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .fx-navbtn:hover {
+    border-color: color-mix(in srgb, var(--fx-accent) 45%, transparent);
+    background: color-mix(in srgb, var(--fx-accent) 12%, transparent);
+    color: var(--fx-accent);
+  }
+}
+.fx-navbtn:active { transform: scale(0.92); }
+.fx-navbtn:focus-visible { outline: 2px solid var(--fx-accent); outline-offset: 3px; }
+.fx-count {
+  min-width: 40px;
+  text-align: center;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--fx-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-packet { display: none; }
+  .fx-chip, .fx-node, .fx-caption { transition: none; animation: none; transform: none; }
+  .fx-node[data-on="true"] { transform: none; }
+}
