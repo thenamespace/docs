@@ -1,0 +1,74 @@
+---
+title: "Make your usernames universal"
+description: "Give the usernames you already issue an ENS name."
+sidebarTitle: "Universal usernames"
+icon: "globe"
+---
+
+import { FlowExplainer } from '/snippets/flow-explainer.jsx'
+
+Inside your product, `happy.brand` is enough to find someone or send them money. Outside it, the name means nothing. No other wallet has heard of your suffix, so your user goes back to pasting an address.
+
+The usual fix is to ask every wallet to support your names. That is a long list of integrations you do not control.
+
+The shorter path is a second name pointing at the same person and the same records:
+
+```
+Your username:   happy.brand
+ENS name:        happy.brand.eth
+        or       happy.brand.id, using a domain you already own
+```
+
+Your system stays the source of truth and no data moves. The username just gains a form that ENS-aware wallets already know how to read.
+
+<Note>
+This does not turn `.brand` into a new ENS top-level domain. Each user gets an ENS name for the identity they already have.
+</Note>
+
+## ENS is not only about .eth
+
+Two assumptions stop teams before they start.
+
+**You do not have to use a `.eth` name.** Either register `brand.eth` and issue `happy.brand.eth`, or take a domain you already own like `brand.id`, turn on DNSSEC, and [import it into ENS](https://docs.ens.domains/learn/dns/). Both resolve the same way, so choose on branding, not mechanics.
+
+**ENS names are not only for Ethereum.** One name holds an address record per chain, and they need not be EVM chains. Bitcoin, Solana, Base, Arbitrum, and Ethereum can all sit on the same name, alongside profile fields like a display name and avatar.
+
+## Follow one lookup
+
+The diagram is a single name being looked up, start to finish. Its two toggles are the decisions above: the parent name, and where records are read from. Neither changes the path.
+
+It loops on its own. Hover to pause, or use the dots to step through it.
+
+<FlowExplainer />
+
+Nothing there asked you to move your users, usernames, or records. The wallet asked a question, your system answered, the wallet showed the result.
+
+## Your records stay where they are
+
+Records can live in the database you run today, on an L2, or on another chain. No second registry on Ethereum, nothing to keep in sync. Whatever answers the question inside your product answers it here too.
+
+## Decide before you build
+
+1. **The naming rule.** A parent name and a predictable pattern, such as `happy.brand` becoming `happy.brand.eth`. Nobody should have to learn a second identity.
+2. **Where the answer comes from.** Your database, a contract in your existing registry, or a proof Ethereum can verify.
+3. **Who runs it.** Someone holds the parent name, keeps the lookup path online, and fixes it when it breaks.
+
+## What this does not do
+
+- Your existing suffix does not become part of ENS. Users gain an ENS name; `.brand` stays yours.
+- Support varies. Most major wallets resolve these names, but not every app does, so test the ones your users actually use.
+- Anything served this way is public. Addresses, avatars, and profile fields are readable by anyone who asks.
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Learn about subnames" icon="tag" href="/overview/subnames">
+    Compare offchain and onchain names before you pick how to issue them.
+  </Card>
+  <Card title="Issue gasless subnames" icon="cloud" href="/developer-guide/guide/create-offchain-subnames">
+    Create names and manage their records with the Offchain Manager SDK.
+  </Card>
+  <Card title="Talk to us" icon="compass-drafting" href="/user-guide/custom-solutions">
+    Bring your existing naming service and we will map it onto ENS with you.
+  </Card>
+</CardGroup>

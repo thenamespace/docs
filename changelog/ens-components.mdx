@@ -1,0 +1,33 @@
+---
+title: "ENS Components"
+description: "Changelog for ENS Components releases."
+sidebarTitle: "ENS Components"
+icon: "puzzle-piece"
+---
+
+<Update label="July 27, 2026" description="v1.5.0">
+  - Changed:
+    - Updated avatar and header record support to use `@thenamespace/avatar` v2.
+    - Externalized the Avatar SDK from the browser bundle.
+</Update>
+
+<Update label="July 11, 2026" description="v1.4.0">
+  - Fixed:
+    - Populated ENS registration fees when the registration form opens.
+    - Preserved the displayed registration fees when no wallet is connected.
+</Update>
+
+<Update label="April 30, 2026" description="v1.3.1">
+  - Fixed:
+    - Stabilized ENS registration fee estimation.
+    - Added an RPC fallback for fee estimation.
+    - Displayed estimated fees with consistent precision.
+</Update>
+
+<Update label="April 28, 2026" description="v1.3.0">
+  - Added:
+    - Calendar-based duration selection for ENS registration and onchain subname minting.
+    - Agent instructions and quick-start resources for ENS Components integrations.
+  - Changed:
+    - Updated duration handling to use seconds across registration and minting flows.
+</Update>

@@ -1,0 +1,65 @@
+---
+title: "Overview"
+description: "Add ENS workflows to React applications."
+sidebarTitle: "Overview"
+icon: "puzzle-piece"
+---
+
+`@thenamespace/ens-components` provides React components for `.eth` registration, ENS record editing, and onchain or offchain subname issuance. The components use wagmi and Viem for wallet and chain interactions.
+
+## Install
+
+Install the package and its peer dependencies:
+
+```bash
+npm install @thenamespace/ens-components react react-dom wagmi viem @tanstack/react-query
+```
+
+Import the component styles once in your application:
+
+```tsx
+import '@thenamespace/ens-components/styles';
+```
+
+Your application must provide `WagmiProvider` and `QueryClientProvider`.
+
+## Use a component
+
+Import the form that matches your ENS workflow:
+
+```tsx
+import { EnsNameRegistrationForm } from '@thenamespace/ens-components';
+
+export function RegisterName() {
+  return <EnsNameRegistrationForm isTestnet={false} />;
+}
+```
+
+Set `isTestnet` to `true` to use Sepolia instead of Ethereum mainnet.
+
+## Available components
+
+<CardGroup cols={2}>
+  <Card title="ENS name registration" icon="signature">
+    `EnsNameRegistrationForm` handles the search, commit, wait, and register flow for `.eth` names.
+  </Card>
+  <Card title="ENS records" icon="list">
+    `EnsRecordsForm` edits addresses, text records, contenthash, avatar, and header records.
+  </Card>
+  <Card title="Record selection" icon="list-check">
+    `SelectRecordsForm` collects ENS records without requiring a wallet or transaction.
+  </Card>
+  <Card title="Onchain subnames" icon="link">
+    `SubnameMintForm` handles price lookup, record selection, and onchain minting from a Namespace listing.
+  </Card>
+  <Card title="Offchain subnames" icon="cloud">
+    `OffchainSubnameForm` creates and updates gasless subnames through the Namespace API.
+  </Card>
+</CardGroup>
+
+## Resources
+
+- Explore the components and their props in the [interactive documentation](https://enscomponents.com/).
+- View the source on [GitHub](https://github.com/thenamespace/ens-components).
+- Install the [ENS Components skill](/developer-guide/skills#ens-components-skill) for agent-assisted integration.
+- Review release changes in the [ENS Components changelog](/changelog/ens-components).

@@ -45,6 +45,7 @@
               "overview/for-name-owners",
               "overview/for-product-teams",
               "overview/for-fintechs-neobanks",
+              "overview/make-usernames-universal",
               "developer-guide/integrations/waas"
             ]
           },
@@ -173,6 +174,13 @@
                       "developer-guide/sdks/avatar/manual-flow",
                       "developer-guide/sdks/avatar/errors"
                     ]
+                  },
+                  {
+                    "group": "ENS Components",
+                    "icon": "puzzle-piece",
+                    "pages": [
+                      "developer-guide/sdks/ens-components"
+                    ]
                   }
                 ]
               },
@@ -241,7 +249,8 @@
           "changelog/address-sdk",
           "changelog/indexer-sdk",
           "changelog/mint-sdk",
-          "changelog/avatar-sdk"
+          "changelog/avatar-sdk",
+          "changelog/ens-components"
         ]
       }
     ],
