@@ -39,8 +39,9 @@
  *     keeps role="img" and its aria-label, which is what actually carries the
  *     diagram to a screen reader.
  *
- * The palette is deliberately self-contained and dark in both site themes, so
- * the card reads identically wherever it is dropped.
+ * The palette is entirely token-driven in /custom.css and follows the site
+ * theme: light tokens on `.fx`, dark ones under `.dark .fx`. No rule here or
+ * there names a literal color.
  */
 
 export const FlowExplainer = () => {

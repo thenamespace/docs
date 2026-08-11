@@ -181,23 +181,36 @@
    its look rather than inheriting the page theme. The extra resets marked
    "docs:" undo Mintlify prose styling the diagram never expects. */
 
+/* Light is the default set; the dark block below swaps the same tokens, so
+   every rule underneath is written once and never names a literal color.
+   Both palettes carry the same five party hues, darkened for white and
+   lifted for near-black, so a reader switching themes sees the same diagram
+   rather than a different one. */
 .fx {
-  --fx-ink: #0c0f17;
-  --fx-surface: #151926;
-  --fx-line: rgba(255, 255, 255, 0.11);
-  --fx-text: rgba(255, 255, 255, 0.93);
-  --fx-dim: rgba(255, 255, 255, 0.46);
-  --fx-faint: rgba(255, 255, 255, 0.24);
-  --fx-accent: #5aa9ff;
+  --fx-ink: #fbfcfe;
+  --fx-surface: #ffffff;
+  --fx-line: rgba(16, 24, 40, 0.12);
+  --fx-text: rgba(16, 24, 40, 0.94);
+  --fx-dim: rgba(16, 24, 40, 0.58);
+  --fx-faint: rgba(16, 24, 40, 0.34);
+  --fx-accent: #2563eb;
+
+  --fx-group-fill: rgba(16, 24, 40, 0.02);
+  --fx-group-stroke: rgba(16, 24, 40, 0.18);
+  --fx-well: rgba(16, 24, 40, 0.05);
+  --fx-glow-a: rgba(37, 99, 235, 0.07);
+  --fx-glow-b: rgba(109, 40, 217, 0.05);
+  --fx-chip-text: color-mix(in srgb, var(--fx-accent) 82%, #0b1220);
+  --fx-muted: 0.4;
 
   /* One hue per party, all far enough apart to stay separable when two light
      up at once. The accent belongs to motion — edges, chips, packets — so no
      node borrows it. */
-  --fx-wallet: #7fb2ff;
-  --fx-eth: #f2a54c;
-  --fx-gw: #4fc98a;
-  --fx-chain: #3fd3c6;
-  --fx-api: #bb8ef7;
+  --fx-wallet: #2f6fed;
+  --fx-eth: #b45309;
+  --fx-gw: #0e7a52;
+  --fx-chain: #0e7490;
+  --fx-api: #6d28d9;
 
   --fx-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --fx-ease-io: cubic-bezier(0.77, 0, 0.175, 1);
@@ -210,13 +223,37 @@
   border: 1px solid var(--fx-line);
   border-radius: 20px;
   background:
-    radial-gradient(90% 70% at 85% 0%, rgba(90, 169, 255, 0.1), transparent 62%),
-    radial-gradient(80% 70% at 5% 100%, rgba(187, 142, 247, 0.07), transparent 60%),
+    radial-gradient(90% 70% at 85% 0%, var(--fx-glow-a), transparent 62%),
+    radial-gradient(80% 70% at 5% 100%, var(--fx-glow-b), transparent 60%),
     var(--fx-ink);
   color: var(--fx-text);
   font-family: inherit;
   box-sizing: border-box;
   width: 100%;
+}
+
+.dark .fx, html[data-theme="dark"] .fx {
+  --fx-ink: #0c0f17;
+  --fx-surface: #151926;
+  --fx-line: rgba(255, 255, 255, 0.11);
+  --fx-text: rgba(255, 255, 255, 0.93);
+  --fx-dim: rgba(255, 255, 255, 0.46);
+  --fx-faint: rgba(255, 255, 255, 0.24);
+  --fx-accent: #5aa9ff;
+
+  --fx-group-fill: rgba(255, 255, 255, 0.018);
+  --fx-group-stroke: rgba(255, 255, 255, 0.16);
+  --fx-well: rgba(255, 255, 255, 0.04);
+  --fx-glow-a: rgba(90, 169, 255, 0.1);
+  --fx-glow-b: rgba(187, 142, 247, 0.07);
+  --fx-chip-text: color-mix(in srgb, var(--fx-accent) 62%, #ffffff);
+  --fx-muted: 0.3;
+
+  --fx-wallet: #7fb2ff;
+  --fx-eth: #f2a54c;
+  --fx-gw: #4fc98a;
+  --fx-chain: #3fd3c6;
+  --fx-api: #bb8ef7;
 }
 
 /* Toggles: the parent name on the left, where the records live on the right —
@@ -247,7 +284,7 @@
   display: flex;
   padding: 3px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--fx-well);
 }
 .fx-btn {
   padding: 5px 13px;
@@ -287,8 +324,8 @@
 
 /* Layer groups */
 .fx-group rect {
-  fill: rgba(255, 255, 255, 0.018);
-  stroke: rgba(255, 255, 255, 0.16);
+  fill: var(--fx-group-fill);
+  stroke: var(--fx-group-stroke);
   stroke-width: 1;
   stroke-dasharray: 4 5;
 }
@@ -318,7 +355,7 @@
 }
 /* The store this lookup does not use. Present, so the either/or is visible;
    dimmed, so it never reads as a second request. */
-.fx-node[data-muted="true"] { opacity: 0.3; }
+.fx-node[data-muted="true"] { opacity: var(--fx-muted); }
 .fx-node[data-on="true"] rect {
   stroke: var(--tone);
   fill: color-mix(in srgb, var(--tone) 15%, var(--fx-surface));
@@ -369,7 +406,7 @@
   stroke-width: 1;
 }
 .fx-chip text {
-  fill: color-mix(in srgb, var(--fx-accent) 62%, #ffffff);
+  fill: var(--fx-chip-text);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 10px;
   letter-spacing: -0.01em;
