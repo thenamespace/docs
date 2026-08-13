@@ -45,7 +45,7 @@
               "overview/for-name-owners",
               "overview/for-product-teams",
               "overview/for-fintechs-neobanks",
-              "overview/make-usernames-universal",
+              "overview/universal-usernames",
               "developer-guide/integrations/waas"
             ]
           },
@@ -351,6 +351,10 @@
     ]
   },
   "redirects": [
+  {
+    "source": "/overview/make-usernames-universal",
+    "destination": "/overview/universal-usernames"
+  },
   {
     "source": "/apps/onchain-subnames-app",
     "destination": "/user-guide/app"
