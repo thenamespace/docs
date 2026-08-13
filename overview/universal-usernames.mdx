@@ -1,17 +1,23 @@
 ---
-title: "Make your usernames universal"
-description: "Give the usernames you already issue an ENS name."
+title: "Universal usernames"
+description: "Connect ENS to your existing usernames."
 sidebarTitle: "Universal usernames"
 icon: "globe"
 ---
 
 import { FlowExplainer } from '/snippets/flow-explainer.jsx'
 
-Inside your product, `happy.brand` is enough to find someone or send them money. Outside it, the name means nothing. No other wallet has heard of your suffix, so your user goes back to pasting an address.
+## Two ways teams do usernames today
 
-The usual fix is to ask every wallet to support your names. That is a long list of integrations you do not control.
+Almost every product that ships usernames picks one of two approaches. Both leave the user stuck at the same place.
 
-The shorter path is a second name pointing at the same person and the same records:
+**Plain usernames:** usually displayed like `@alice` or `alice`. Fast to build, and inside your app they work exactly as intended. But the name only exists in your database. Send `@alice` to someone in another wallet or app, and it simply won't work. Users are back to copying and pasting an address.
+
+**A custom TLD:** something like `alice.wallet` or `alice.pay`, whatever reads well next to your brand name. This looks like the better option but it's not. Your TLD isn't in DNS and isn't in ENS, so no wallet outside your product has any way to look it up. Making it work means asking every wallet, explorer, and app to integrate your naming system one at a time. Also, collisions are the other half of the problem: multiple projects have built competing versions of the same TLD, so `alice.wallet` can resolve to two different people depending on which app you ask.
+
+## A better way with ENS
+
+Every username you've already issued gets a matching ENS name. One rule, applied across your whole user base:
 
 ```
 Your username:   happy.brand
@@ -25,13 +31,17 @@ Your system stays the source of truth and no data moves. The username just gains
 This does not turn `.brand` into a new ENS top-level domain. Each user gets an ENS name for the identity they already have.
 </Note>
 
-## ENS is not only about .eth
+## ENS isn't limited to .eth or Ethereum
 
-Two assumptions stop teams before they start.
+Two (wrong) assumptions people usually make.
 
-**You do not have to use a `.eth` name.** Either register `brand.eth` and issue `happy.brand.eth`, or take a domain you already own like `brand.id`, turn on DNSSEC, and [import it into ENS](https://docs.ens.domains/learn/dns/). Both resolve the same way, so choose on branding, not mechanics.
+**You don't need a `.eth` name.**
 
-**ENS names are not only for Ethereum.** One name holds an address record per chain, and they need not be EVM chains. Bitcoin, Solana, Base, Arbitrum, and Ethereum can all sit on the same name, alongside profile fields like a display name and avatar.
+`happy.brand.eth` and `happy.brand.id` resolve identically. The first means registering `brand.eth`. The second means taking a domain you already own, turning on DNSSEC, and [importing it into ENS](https://docs.ens.domains/learn/dns/). Same result, so pick on branding.
+
+**ENS isn't only for Ethereum.**
+
+One name holds a separate address record for every chain, and they don't have to be EVM chains. Bitcoin, Solana, Base, Arbitrum, and Ethereum sit side by side on the same name, along with profile fields like display name and avatar. Your user has one name and it works everywhere they hold funds.
 
 ## Follow one lookup
 
@@ -55,7 +65,7 @@ Records can live in the database you run today, on an L2, or on another chain. N
 
 ## What this does not do
 
-- Your existing suffix does not become part of ENS. Users gain an ENS name; `.brand` stays yours.
+- Your existing TLD does not become part of ENS. Users gain an ENS name; `.brand` stays yours.
 - Support varies. Most major wallets resolve these names, but not every app does, so test the ones your users actually use.
 - Anything served this way is public. Addresses, avatars, and profile fields are readable by anyone who asks.
 
