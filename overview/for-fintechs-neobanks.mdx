@@ -1,5 +1,5 @@
 ---
-title: "For fintechs and neobanks"
+title: "Fintechs and neobanks"
 description: "Add readable payment identities to accounts, wallets, and transfers."
 sidebarTitle: "Fintechs / Neobanks"
 icon: "building-columns"
@@ -7,12 +7,35 @@ icon: "building-columns"
 
 Give each customer a readable ENS name they can recognize and share instead of relying only on wallet addresses. Subnames can support branded onboarding, customer profiles, and username-based payments in compatible wallets and apps.
 
-## Why use ENS
+## Addresses break payment products
 
-- **Readable payment identities:** Let customers send and receive with a name such as `alice.bank.eth`.
-- **Branded onboarding:** Issue a name when an account or embedded wallet is created.
-- **Multichain records:** Associate one name with supported address records across multiple networks.
-- **Portable profiles:** Publish public profile and contact records that compatible ENS clients can resolve.
+1. **Nobody knows who `0x71C7…F2a9` is.** Addresses are unreadable and impossible to confirm at a glance — the highest-friction input in consumer finance.
+2. **Wrong-address transfers are irreversible.** Address poisoning targets payment behavior; tracked attempts rose from ~628,000 in November 2025 to 3.4 million in January 2026, with one user losing close to 50 million USDT. You can only prevent it, by making the destination human-readable before the user signs.
+3. **Siloed usernames.** Cash App usernames work in Cash App, Revolut usernames work in Revolut, etc. but none interoperate. The moment your user wants to pay someone outside your app, they're back to copying and pasting a raw address.
+4. **Your brand is invisible, but it shouldn't be.** Every external transfer shows an anonymous string. A name like `alice.yourbank.id` puts your brand in the other side's app, in explorers, and in transaction history — distribution you don't pay for.
+
+## Why ENS usernames
+
+<CardGroup cols={2}>
+  <Card title="Claim at signup">
+    `alice.yourapp.eth`, issued automatically with the account. No transaction, no gas, no extra step for the user to understand.
+  </Card>
+  <Card title="Send by name">
+    The user types a name. Your app resolves it, displays the avatar and profile, and only then enables the confirm button.
+  </Card>
+  <Card title="Request and payment links">
+    Share a name instead of an address. It fits in a message, a bio, an invoice, or a QR code, and it does not change when the user rotates wallets.
+  </Card>
+  <Card title="One name, every chain, 1,000+ apps">
+    Store address records per chain under the same name. The sender picks a person, your app picks the rail.
+  </Card>
+  <Card title="Interoperable by default">
+    Because these are ENS names, someone in a different wallet can pay your user without your app being involved at all.
+  </Card>
+  <Card title="Secured and verified">
+    Resolution is verified onchain through ENS, so the name your user pays is provably the account it belongs to. Lookalike addresses and spoofed handles are attack surface.
+  </Card>
+</CardGroup>
 
 ## Recommended integration
 
