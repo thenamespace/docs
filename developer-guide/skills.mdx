@@ -68,6 +68,23 @@ Once installed, your AI agent can:
 - Use the manual SIWE flow for server-side or custom signing
 - Enforce the correct network and handle SDK error codes
 
+### Mint Manager SDK skill
+
+The `mint-manager-sdk` skill gives your agent the context it needs to mint onchain ENS subnames with the `@thenamespace/mint-manager` SDK. It covers the check-then-mint flow, setting records at mint time, and every typed error code.
+
+**Install in your project:**
+
+```bash
+npx skills add thenamespace/skills -s mint-manager-sdk
+```
+
+Once installed, your AI agent can:
+- Check availability, price, and mint eligibility in a single `checkName` call
+- Build, simulate, and submit the mint transaction on Ethereum, Base, or Optimism
+- Apply text, address, and contenthash records in the same transaction as the mint
+- Tell a name obstacle from a minter obstacle, so a gated wallet is not sent back to the name field
+- Cap the price with `maxValue` and handle `MintManagerError` codes
+
 <Note>
   Skills work with any AI coding tool that supports agent context, including Cursor, Claude Code, and GitHub Copilot.
 </Note>
