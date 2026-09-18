@@ -5,6 +5,28 @@ sidebarTitle: "Mint SDK"
 icon: "gauge"
 ---
 
+<Update label="September 18, 2026" description="v2.0.0">
+  - Added:
+    - **`checkName`**: One call returns whether a name is free *and* whether an address may mint it, with the chain derived from the listing. Reconciles the API against the ENS registry, which the previous methods could not do on a gated listing.
+    - **`prepareMint`**: Builds the mint transaction from a `checkName` result or a bare name.
+    - **`maxValue`**: Caps `price + fee` in wei, so a price that moves between the quote and the signature throws `PRICE_EXCEEDS_MAX` instead of being charged.
+    - **`MintManagerError`**: Every failure now carries a stable `code`, plus `details` and often `docsUrl`.
+    - **Normalization helpers**: `normalizeName`, `normalizeLabel`, and `normalizeSubname` are exported, alongside `MAX_NAME_BYTES` and `MAX_LABEL_BYTES`.
+    - **`customRpcUrls`**: Correctly spelled RPC map. `cursomRpcUrls` is still honored as a deprecated alias.
+    - **Signed parameter verification**: The API's signed mint parameters are checked against the request before they reach a wallet, throwing `MINT_PARAMS_MISMATCH` or `SIGNATURE_EXPIRED`.
+    - **`logger` and `timeoutMilliseconds`** configuration options.
+  - Changed:
+    - **Availability checks throw on RPC failure** instead of returning `false`. An outage was previously indistinguishable from a taken name. Add a `try`/`catch` if you call these directly.
+    - **Names are normalized per ENSIP-15 before hashing.** A name that cannot be normalized now throws `INVALID_NAME` rather than producing an arbitrary namehash.
+    - **Unknown chain names in `records.addresses` throw** rather than being skipped silently.
+    - **`isTestnet` on `MintDetailsRequest` is ignored.** The network comes from the client, so a quote cannot disagree with the transaction it precedes.
+  - Fixed:
+    - **`ContenthashType.Ipfs` writes the `ipfs-ns` codec.** It previously wrote `p2p` (`0xa503`), which ENS clients do not read as IPFS. `Swarm`, `Arweave`, and `Skynet` previously threw `multicodec not recognized` and now work.
+    - **Nested parent names** resolve correctly in L2 availability checks. The parent of `a.sub.example.eth` is `sub.example.eth`, not `example.eth`.
+  - Deprecated:
+    - `isL1SubnameAvailable` and `isL2SubnameAvailable`, in favor of `checkName`. Both continue to work.
+</Update>
+
 <Update label="October 28, 2025" description="v1.1.1">
   - Added:
     - Default EVM chain configuration for address records: `ChainName.Default` with coin type `2147483648`.

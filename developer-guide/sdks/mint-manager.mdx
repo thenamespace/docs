@@ -4,7 +4,9 @@ description: "Generate contract calls to mint onchain subnames on Ethereum or L2
 icon: "eye"
 ---
 
-`@thenamespace/mint-manager` checks mint eligibility and returns the contract call required to mint under a name activated in the Namespace App. It supports Ethereum mainnet and configured L2 networks such as Base and Optimism. Use Viem or another compatible client to simulate and submit the returned transaction.
+`@thenamespace/mint-manager` checks mint eligibility and returns the contract call required to mint under a name activated in the Namespace App. It supports Ethereum mainnet and configured L2 networks such as Base and Optimism. Use viem or another compatible client to simulate and submit the returned transaction.
+
+The SDK never holds a private key and never sends a transaction.
 
 <CardGroup>
   <Card title="Mint Subnames">
@@ -15,5 +17,41 @@ icon: "eye"
   </Card>
   <Card title="Subname Availability Checks">
     Determine whether a subname is available for minting.
+  </Card>
+</CardGroup>
+
+## The mint flow
+
+```typescript
+import { createMintClient } from '@thenamespace/mint-manager';
+
+const mintClient = createMintClient();
+
+const check = await mintClient.checkName('alice.example.eth', {
+  minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+});
+
+if (check.status === 'available') {
+  const transaction = await mintClient.prepareMint(check, { minterAddress });
+  // Simulate and submit with your own wallet client.
+}
+```
+
+Pass the whole name. The SDK normalizes it, resolves the parent's listing, works out whether the mint runs on L1 or an L2, and returns the matching contract call.
+
+## Where to go next
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/developer-guide/sdks/mint-manager/installation">
+    Install the package and configure the client.
+  </Card>
+  <Card title="Check a name" icon="circle-check" href="/developer-guide/sdks/mint-manager/check-name">
+    Eligibility, price, and the reason a mint is refused.
+  </Card>
+  <Card title="Transaction parameters" icon="list-check" href="/developer-guide/sdks/mint-manager/get-mint-transaction-parameters">
+    Build the call, cap the price, set records at mint time.
+  </Card>
+  <Card title="Error handling" icon="circle-alert" href="/developer-guide/sdks/mint-manager/errors">
+    Every error code and how to handle it.
   </Card>
 </CardGroup>
