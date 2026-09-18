@@ -1,9 +1,14 @@
 import 'dotenv/config';
-import { ChainName, createMintClient } from '@thenamespace/mint-manager';
+import {
+  ChainName,
+  MintManagerError,
+  createMintClient,
+} from '@thenamespace/mint-manager';
 import {
   createPublicClient,
   createWalletClient,
   http,
+  parseEther,
   type Hex,
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
@@ -21,9 +26,12 @@ if (!privateKey) {
 }
 
 const account = privateKeyToAccount(privateKey);
+
+// One RPC endpoint shared by the SDK's reads and the viem clients, so the
+// availability check and the transaction that follows cannot disagree about
+// chain state because they hit different providers.
 const mintClient = createMintClient({
-  // The v1.1.1 SDK exports this configuration key with this spelling.
-  cursomRpcUrls: { [base.id]: rpcUrl },
+  customRpcUrls: { [base.id]: rpcUrl },
   mintSource: 'namespace-docs-example',
 });
 const publicClient = createPublicClient({ chain: base, transport: http(rpcUrl) });
@@ -33,38 +41,38 @@ const walletClient = createWalletClient({
   transport: http(rpcUrl),
 });
 
-const parentName = 'example.eth';
-const label = 'alice';
+const fullName = 'alice.example.eth';
 
 async function main() {
-  const fullName = `${label}.${parentName}`;
-  const isAvailable = await mintClient.isL2SubnameAvailable(fullName, base.id);
-
-  if (!isAvailable) {
-    throw new Error(`${fullName} is not available on Base.`);
-  }
-
-  const details = await mintClient.getMintDetails({
-    parentName,
-    label,
+  // One call covers whether the name is free and whether this address may
+  // mint it. The chain comes from the listing, so it is never passed in.
+  const check = await mintClient.checkName(fullName, {
     minterAddress: account.address,
+    expiryInYears: 1,
   });
 
-  if (!details.canMint) {
-    throw new Error(details.validationErrors.join(', '));
+  if (check.status !== 'available') {
+    throw new Error(`${fullName} is ${check.status}: ${check.reasons.join(', ')}`);
   }
 
-  const transaction = await mintClient.getMintTransactionParameters({
-    parentName,
-    label,
+  // Cap what the signed quote is allowed to charge. Without this, a price
+  // that moves between the quote and the signature is simply charged.
+  const quoted = parseEther(
+    (check.estimatedPriceEth + check.estimatedFeeEth).toFixed(18),
+  );
+
+  const transaction = await mintClient.prepareMint(check, {
     minterAddress: account.address,
     owner: account.address,
+    expiryInYears: 1,
+    maxValue: quoted,
     records: {
       addresses: [{ chain: ChainName.Ethereum, value: account.address }],
       texts: [{ key: 'description', value: 'Minted with Namespace' }],
     },
   });
 
+  // Simulating first surfaces a revert reason without spending gas.
   const { request } = await publicClient.simulateContract({
     account,
     address: transaction.contractAddress,
@@ -79,6 +87,13 @@ async function main() {
 }
 
 main().catch((error: unknown) => {
+  if (error instanceof MintManagerError) {
+    // Codes are stable; match on them rather than on message text.
+    console.error(error.code, error.message, error.details);
+    process.exitCode = 1;
+    return;
+  }
+
   console.error(error);
   process.exitCode = 1;
 });

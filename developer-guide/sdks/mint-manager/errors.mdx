@@ -1,0 +1,84 @@
+---
+title: "Error handling"
+description: "Error codes returned by the Mint Manager SDK."
+sidebarTitle: "Error handling"
+icon: "circle-alert"
+---
+
+Every failure the SDK raises is a `MintManagerError` carrying a stable `code`. Branch on `code`; the `message` is written for a human reading a log and may change between releases.
+
+```typescript
+import { MintManagerError } from '@thenamespace/mint-manager';
+
+try {
+  const check = await mintClient.checkName('alice.example.eth', {
+    minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+  });
+} catch (error) {
+  if (!(error instanceof MintManagerError)) throw error;
+
+  switch (error.code) {
+    case 'RPC_ERROR':
+      // Infrastructure, not the name. Offer a retry.
+      break;
+    case 'PRICE_EXCEEDS_MAX':
+      // The price moved past your cap. Re-quote and confirm with the user.
+      break;
+    default:
+      console.error(error.code, error.message, error.details);
+  }
+}
+```
+
+Each error also carries `details` with the offending values, and often `docsUrl` and `cause`.
+
+### Error codes
+
+| Code | Cause | How to handle it |
+| --- | --- | --- |
+| `INVALID_NAME` | A full name failed ENSIP-15 normalization, or was empty | Reject the input at the form and show the reason |
+| `INVALID_LABEL` | A label was empty, contained `.`, was an encoded labelhash, or failed normalization | Usually a full name passed where a label was expected |
+| `INVALID_ADDRESS` | A value that must be a 20-byte EVM address was not one | Resolve ENS names to addresses first; checksums must be correct |
+| `UNSUPPORTED_CHAIN` | The chain has no Namespace deployment in this environment | Check `isTestnet`. Mainnet and testnet chains are separate sets |
+| `UNSUPPORTED_LISTING` | The listing is neither `L1` nor `L2` | Offchain names mint with [Offchain Manager](/developer-guide/sdks/offchain-manager) instead |
+| `NAME_NOT_AVAILABLE` | A check result that was not `available` reached `prepareMint` | Handle `taken` and `blocked` first |
+| `LISTING_NOT_FOUND` | No listing exists for the parent name on the selected network | Activate the name in the [Namespace App](/user-guide/app#activate-your-ens-name), or check `isTestnet` and the spelling |
+| `RPC_ERROR` | A contract read or JSON-RPC call failed | Retryable. Supply your own `customRpcUrls` |
+| `API_ERROR` | The Namespace API returned a non-2xx response | A 404 usually means the name is not listed on this network; retry 5xx with backoff |
+| `MINT_PARAMS_MISMATCH` | The API signed a different label, parent, or owner than requested | Normalize inputs first, then request parameters with the normalized values |
+| `PRICE_EXCEEDS_MAX` | The quoted total exceeded your `maxValue` | Nothing was submitted. Re-quote, then raise the cap or show the new price |
+| `SIGNATURE_EXPIRED` | The mint authorization is past its expiry | Call `prepareMint` again and submit promptly |
+| `CONFIG_ERROR` | `createMintClient` received unusable options, such as a plain `http` URI override | Fix the options and construct the client again |
+
+## RPC_ERROR is not an answer about the name
+
+A failed registry lookup means the name's status is unknown, not unavailable. Showing "name taken" on the strength of an RPC failure tells a user a free name is gone, and they leave.
+
+```typescript
+try {
+  const check = await mintClient.checkName(name, { minterAddress });
+} catch (error) {
+  if (error instanceof MintManagerError && error.code === 'RPC_ERROR') {
+    showRetryableError('Could not reach the registry. Try again.');
+  }
+}
+```
+
+The usual cause is rate limiting on the shared public endpoint. Pass your own endpoints keyed by numeric chain ID. The error reports which chain failed in `details.chainId`.
+
+```typescript
+const mintClient = createMintClient({
+  customRpcUrls: {
+    1: process.env.MAINNET_RPC_URL,
+    8453: process.env.BASE_RPC_URL,
+  },
+});
+```
+
+## The signed quote is verified for you
+
+Three codes guard the signed mint parameters the API returns. The SDK checks the signature describes the mint you asked for before the transaction reaches a wallet, so a wrong or tampered response cannot be presented to a user as a valid-looking mint.
+
+- `MINT_PARAMS_MISMATCH` — the signed label, parent node, or owner disagrees with the request.
+- `PRICE_EXCEEDS_MAX` — the total is above the ceiling you set. See [`maxValue`](/developer-guide/sdks/mint-manager/get-mint-transaction-parameters#cap-the-price-with-maxvalue).
+- `SIGNATURE_EXPIRED` — the authorization aged out between quoting and submitting.

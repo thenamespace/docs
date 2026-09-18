@@ -7,6 +7,10 @@ icon: "file-circle-info"
 
 Use `getMintDetails` to check whether a wallet can mint a subname and to retrieve the estimated price and fee.
 
+<Note>
+  For most integrations, prefer [`checkName`](/developer-guide/sdks/mint-manager/check-name). It takes the whole name, derives the chain from the listing, and reconciles this response with the registry. `getMintDetails` validation stops at the first failure, so on a gated listing it never evaluates the name at all, and a free name and a taken name return identical responses.
+</Note>
+
 ### Usage
 
 ```typescript
@@ -21,6 +25,9 @@ const request: MintDetailsRequest = {
   minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
   expiryInYears: 1,
 };
+
+// `label` must be a single label. Passing 'alice.example.eth' here throws
+// INVALID_LABEL rather than hashing it as one long label.
 
 const mintDetails: MintDetailsResponse = await mintClient.getMintDetails(
   request
@@ -51,13 +58,19 @@ export interface MintDetailsResponse {
 
 ### MintingValidationErrorType
 
-Validation Errors are a standard set of errors that are present when a given subname cannot be minted.
+Validation errors are a standard set of reasons a subname cannot be minted. They are not interchangeable: what your app should do next depends on whether the obstacle is the name or the minter, and whether another label would help.
 
-| Error                  | Description                                                             |
-| ---------------------- | ----------------------------------------------------------------------- |
-| SUBNAME_TAKEN          | Subname not available                                                   |
-| MINTER_NOT_TOKEN_OWNER | Listing uses Token Gated Access and minter does not hold required token |
-| MINTER_NOT_WHITELISTED | Listing uses Whitelisting feature and minter is not whitelisted         |
-| LISTING_EXPIRED        | Listing uses Deadline feature with expiry set                           |
-| SUBNAME_RESERVED       | A subname label is reserved and not mintable                            |
-| VERIFIED_MINTER_ADDRESS_REQUIRED | The listing requires a verified minter address              |
+| Error | Obstacle | Another label helps? | Description |
+| --- | --- | --- | --- |
+| `SUBNAME_TAKEN` | name | Yes | The subname is already registered. |
+| `SUBNAME_RESERVED` | name | Yes | The label is reserved by the parent owner. It is not registered, so the registry reports it free. |
+| `MINTER_NOT_WHITELISTED` | minter | No | The listing uses whitelisting and the minter is not on the list. |
+| `MINTER_NOT_TOKEN_OWNER` | minter | No | The listing is token gated and the minter holds no qualifying token. |
+| `VERIFIED_MINTER_ADDRESS_REQUIRED` | minter | No | The listing requires a verified minter address. |
+| `LISTING_EXPIRED` | listing | No | The listing's deadline has passed. |
+
+Validation stops at the first failure, so `validationErrors` is a partial list. Clearing one reason can reveal another.
+
+<Note>
+  `isTestnet` on `MintDetailsRequest` is deprecated and ignored. The network comes from the client's own `isTestnet`, so a quote can no longer disagree with the transaction it precedes.
+</Note>
