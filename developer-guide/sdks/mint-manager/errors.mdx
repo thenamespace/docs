@@ -77,7 +77,7 @@ const mintClient = createMintClient({
 
 ## The signed quote is verified for you
 
-Three codes guard the signed mint parameters the API returns. The SDK checks the signature describes the mint you asked for before the transaction reaches a wallet, so a wrong or tampered response cannot be presented to a user as a valid-looking mint.
+Three codes cover the signed mint parameters the API returns. The SDK checks that the signature matches the mint you asked for before the transaction reaches a wallet. A mismatched or tampered response throws at this step.
 
 - `MINT_PARAMS_MISMATCH` — the signed label, parent node, or owner disagrees with the request.
 - `PRICE_EXCEEDS_MAX` — the total is above the ceiling you set. See [`maxValue`](/developer-guide/sdks/mint-manager/get-mint-transaction-parameters#cap-the-price-with-maxvalue).

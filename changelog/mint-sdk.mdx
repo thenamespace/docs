@@ -7,7 +7,7 @@ icon: "gauge"
 
 <Update label="September 18, 2026" description="v2.0.0">
   - Added:
-    - **`checkName`**: One call returns whether a name is free *and* whether an address may mint it, with the chain derived from the listing. Reconciles the API against the ENS registry, which the previous methods could not do on a gated listing.
+    - **`checkName`**: Returns whether a name is free and whether an address may mint it, with the chain taken from the listing. Compares the API result with the ENS registry. The previous methods could not do that on a gated listing.
     - **`prepareMint`**: Builds the mint transaction from a `checkName` result or a bare name.
     - **`maxValue`**: Caps `price + fee` in wei, so a price that moves between the quote and the signature throws `PRICE_EXCEEDS_MAX` instead of being charged.
     - **`MintManagerError`**: Every failure now carries a stable `code`, plus `details` and often `docsUrl`.

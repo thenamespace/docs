@@ -5,7 +5,7 @@ sidebarTitle: "Check a name"
 icon: "circle-check"
 ---
 
-`checkName` answers the question you actually have before a mint: can this address mint this name, and if not, why. Pass the whole subname. The SDK normalizes it, splits it, resolves the listing, and works out the chain itself.
+`checkName` reports whether this address can mint this name. If it cannot, the result says why. Pass the whole subname. The SDK normalizes it, splits it, resolves the listing, and picks the chain.
 
 ### Usage
 
