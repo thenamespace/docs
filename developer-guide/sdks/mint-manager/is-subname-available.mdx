@@ -1,11 +1,15 @@
 ---
 title: "Check subname availability"
-description: "Determine if a specific ENS subname is available for minting."
+description: "Registry-level ownership checks for a subname."
 sidebarTitle: "Subname availability"
 icon: "magnifying-glass"
 ---
 
-Check availability before generating mint transaction parameters. Use the method that matches the parent name's listing: `isL1SubnameAvailable` for Ethereum, or `isL2SubnameAvailable` for an L2 chain.
+`isL1SubnameAvailable` and `isL2SubnameAvailable` report raw registry ownership. Use the method that matches the parent name's listing: `isL1SubnameAvailable` for Ethereum, or `isL2SubnameAvailable` for an L2 chain.
+
+<Warning>
+  Both methods are deprecated in favor of [`checkName`](/developer-guide/sdks/mint-manager/check-name). `checkName` reports registry ownership and whether the minter is permitted to mint, and it takes the chain from the listing. A `true` from these methods can still be followed by a failed mint, because an allowlist, a reservation, or an expired listing is invisible to the registry. Use them only when you want ownership alone and have no minter address in hand.
+</Warning>
 
 ## Check availability on Ethereum
 
@@ -29,3 +33,21 @@ const isAvailable = await mintClient.isL2SubnameAvailable(
   base.id,
 );
 ```
+
+## Handle lookup failures
+
+Both methods throw `RPC_ERROR` when the registry cannot be reached. A failed lookup is not an answer about the name, and reporting it as "taken" tells a user a free name is gone.
+
+```typescript
+import { MintManagerError } from '@thenamespace/mint-manager';
+
+try {
+  const isAvailable = await mintClient.isL1SubnameAvailable('alice.example.eth');
+} catch (error) {
+  if (error instanceof MintManagerError && error.code === 'RPC_ERROR') {
+    // Temporary lookup failure. Offer a retry rather than a result.
+  }
+}
+```
+
+Because these methods read from an RPC endpoint, supply your own through `customRpcUrls` for anything user facing. The default is a shared public endpoint and is rate limited.

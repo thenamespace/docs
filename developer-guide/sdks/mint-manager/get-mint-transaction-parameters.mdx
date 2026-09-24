@@ -5,23 +5,29 @@ sidebarTitle: "Transaction parameters"
 icon: "list-check"
 ---
 
-Use `getMintTransactionParameters` to generate the contract address, ABI, arguments, and value required to mint a subname.
+`prepareMint` returns the contract address, ABI, arguments, and value required to mint a subname. Submit the result with viem, ethers, or wagmi; the SDK never holds a key and never sends a transaction.
 
 ### Usage
 
-```typescript title="index.ts" data-overflow="wrap"
-import type {
-  MintTransactionRequest,
-  MintTransactionResponse,
-} from '@thenamespace/mint-manager';
+Pass a [`checkName`](/developer-guide/sdks/mint-manager/check-name) result. The listing is already resolved, so nothing is fetched twice:
+
+```typescript title="mint.ts"
+import { parseEther } from 'viem';
 import { ChainName } from '@thenamespace/mint-manager';
 
-const request: MintTransactionRequest = {
-  parentName: 'example.eth',
-  label: 'alice',
-  owner: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8', // optional
+const check = await mintClient.checkName('alice.example.eth', {
   minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+});
+
+if (check.status !== 'available') {
+  throw new Error(`Cannot mint: ${check.status}`);
+}
+
+const transaction = await mintClient.prepareMint(check, {
+  minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+  owner: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8', // optional
   expiryInYears: 1, // optional
+  maxValue: parseEther('0.01'), // optional, strongly recommended
   records: {
     texts: [
       { key: 'name', value: 'Alice' },
@@ -34,26 +40,28 @@ const request: MintTransactionRequest = {
       },
     ],
   },
-};
-
-const response: MintTransactionResponse =
-  await mintClient.getMintTransactionParameters(request);
+});
 ```
 
-### MintTransactionRequest
+You can also pass a bare name when you already know it is mintable. That path resolves the listing again:
 
-| Parameter     | Description                                                                 | Required                       |
-| ------------- | --------------------------------------------------------------------------- | ------------------------------ |
-| parentName    | Name of listed ENS name                                                     | Yes                            |
-| label         | The full subname will be `${label}.${parentName}`                           | Yes                            |
-| owner         | The owner of minted subname NFT                                             | No, defaults to minter address |
-| minterAddress | Address of a wallet which is going to perform mint transaction              | Yes                            |
-| expiryInYears | For subnames which are expirable, this is where the expiry in years is set. | No, defaults to 1 year         |
-| records       | Text and Address records to be set in the same transaction                  | No                             |
+```typescript
+const transaction = await mintClient.prepareMint('alice.example.eth', {
+  minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+});
+```
+
+### PrepareMintOptions
+
+| Parameter | Description | Required |
+| --- | --- | --- |
+| `minterAddress` | Address of the wallet that will send the mint transaction | Yes |
+| `owner` | The owner of the minted subname | No, defaults to the minter address |
+| `expiryInYears` | Registration length for expirable subnames | No, defaults to 1 year |
+| `records` | Text, address, and contenthash records set in the same transaction | No |
+| `maxValue` | Hard cap on `price + fee`, in wei | No, but set it whenever a price was shown to a user |
 
 ### MintTransactionResponse
-
-The response object contains all the needed information that can be used to send a transaction and mint a subname.
 
 ```typescript
 export interface MintTransactionResponse {
@@ -64,4 +72,84 @@ export interface MintTransactionResponse {
   functionName: string;
   value: bigint;
 }
+```
+
+`value` is already wei as a `bigint`. Pass it through untouched.
+
+## Submit the transaction
+
+Simulate before you write. The simulation runs the call against current chain state and returns a revert reason without spending gas.
+
+```typescript title="submit.ts"
+const { request } = await publicClient.simulateContract({
+  account,
+  address: transaction.contractAddress,
+  abi: transaction.abi,
+  functionName: transaction.functionName,
+  args: transaction.args,
+  value: transaction.value,
+});
+
+const hash = await walletClient.writeContract(request);
+const receipt = await publicClient.waitForTransactionReceipt({ hash });
+```
+
+Signed mint parameters are short lived, so submit promptly rather than caching the result. A stale one throws `SIGNATURE_EXPIRED`.
+
+## Cap the price with maxValue
+
+The mint API returns a signed price that the contract will honor. The SDK checks that the signature covers the name, parent, and owner you requested, and rejects the response otherwise. `maxValue` is the cap on what you will pay.
+
+Prices are quoted per request and can move between your quote and your signature. With `maxValue` set, a higher price throws `PRICE_EXCEEDS_MAX` and nothing is submitted. Without it, the contract charges the new price. The wallet confirmation is the first time the user sees that number.
+
+```typescript
+const quoted = parseEther(
+  (check.estimatedPriceEth + check.estimatedFeeEth).toFixed(18),
+);
+
+const transaction = await mintClient.prepareMint(check, {
+  minterAddress,
+  maxValue: quoted,
+});
+```
+
+## Set records at mint time
+
+Records are encoded into resolver calldata and written in the same transaction as the mint. The name is registered with those records already set.
+
+```typescript
+import { ChainName, ContenthashType } from '@thenamespace/mint-manager';
+
+const transaction = await mintClient.prepareMint(check, {
+  minterAddress,
+  records: {
+    texts: [{ key: 'avatar', value: 'https://example.com/avatar.png' }],
+    addresses: [
+      { chain: ChainName.Ethereum, value: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8' },
+      { chain: ChainName.Base, value: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8' },
+    ],
+    contenthash: {
+      type: ContenthashType.Ipfs,
+      value: 'bafybeicnesqbuvzjxhkylkzwaqxi5jvbvzf7z4rjnkvjnvbsrqxlgnzpqu',
+    },
+  },
+});
+```
+
+`texts`, `addresses`, and `contenthash` are each optional. An unknown chain name or a malformed address throws rather than being skipped, so you cannot pay for a mint and silently receive a name with no records on it.
+
+`ContenthashType` supports `Ipfs`, `Ipns`, `Onion`, `Swarm`, `Arweave`, and `Skynet`. Reference the enum members rather than their string values; the members are the stable API.
+
+## Lower-level alternative
+
+`getMintTransactionParameters` does the same work from a pre-split `label` and `parentName`, and `prepareMint` calls it internally. Use it when you already have the parts separately:
+
+```typescript
+const transaction = await mintClient.getMintTransactionParameters({
+  parentName: 'example.eth',
+  label: 'alice',
+  minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+  expiryInYears: 1,
+  maxValue: parseEther('0.01'),
+});
 ```

@@ -7,7 +7,7 @@ icon: "coins"
 
 This guide shows how to mint an onchain subname under an ENS name activated in the Namespace App. The Mint Manager SDK selects the correct mint contract for Ethereum or the parent listing's L2 chain; your Viem clients submit the resulting transaction on that chain.
 
-The complete example uses Base. The Ethereum variation is included in [Check availability](#3-check-availability).
+The complete example uses Base. The SDK derives the chain from the parent listing, so the same code mints an Ethereum listing without change.
 
 ## Prerequisites
 
@@ -37,11 +37,11 @@ The complete example uses Base. The Ethereum variation is included in [Check ava
 
     <CodeGroup>
       ```bash npm
-      npm install @thenamespace/mint-manager@1.1.1 viem dotenv
+      npm install @thenamespace/mint-manager@2.0.0 viem dotenv
       ```
 
       ```bash yarn
-      yarn add @thenamespace/mint-manager@1.1.1 viem dotenv
+      yarn add @thenamespace/mint-manager@2.0.0 viem dotenv
       ```
     </CodeGroup>
   </Step>
@@ -76,7 +76,13 @@ The complete example uses Base. The Ethereum variation is included in [Check ava
     if (!privateKey) throw new Error('Missing WALLET_PRIVATE_KEY');
 
     export const account = privateKeyToAccount(privateKey);
-    export const mintClient = createMintClient({ mintSource: 'my-app' });
+    export const mintClient = createMintClient({
+      mintSource: 'my-app',
+      // Share one endpoint between the SDK's reads and your viem clients, so
+      // the availability check and the transaction cannot disagree about
+      // chain state. The SDK default is shared and rate limited.
+      customRpcUrls: { [base.id]: rpcUrl },
+    });
     export const publicClient = createPublicClient({
       chain: base,
       transport: http(rpcUrl),
@@ -93,78 +99,69 @@ The complete example uses Base. The Ethereum variation is included in [Check ava
     </Note>
   </Step>
 
-  <Step title="4. Check availability">
+  <Step title="4. Check the name">
 
-    For a listing on an L2 chain, pass the target chain ID:
+    `checkName` answers both questions a mint needs in one call: is the name free, and may this wallet mint it. Pass the whole subname; the SDK normalizes it, resolves the listing, and works out the chain itself.
 
-    ```typescript availability.ts
-    import { base } from 'viem/chains';
-    import { mintClient } from './clients';
-
-    const fullName = 'alice.example.eth';
-    const isAvailable = await mintClient.isL2SubnameAvailable(
-      fullName,
-      base.id,
-    );
-
-    if (!isAvailable) throw new Error(`${fullName} is not available on Base`);
-    ```
-
-    For a listing on Ethereum, use `isL1SubnameAvailable` instead:
-
-    ```typescript
-    const isAvailable = await mintClient.isL1SubnameAvailable(
-      'alice.example.eth',
-    );
-    ```
-  </Step>
-
-  <Step title="5. Check eligibility and price">
-
-    `getMintDetails` reports whether the wallet can mint and returns the estimated price and fee:
-
-    ```typescript quote.ts
+    ```typescript check.ts
     import { account, mintClient } from './clients';
 
-    export const parentName = 'example.eth';
-    export const label = 'alice';
+    export const fullName = 'alice.example.eth';
 
-    export async function getQuote() {
-      const details = await mintClient.getMintDetails({
-        parentName,
-        label,
+    export async function checkSubname() {
+      const check = await mintClient.checkName(fullName, {
         minterAddress: account.address,
+        expiryInYears: 1,
       });
 
-      if (!details.canMint) {
-        throw new Error(details.validationErrors.join(', '));
+      if (check.status !== 'available') {
+        // The advice depends on the obstacle. A taken or reserved label means
+        // try another one; an allowlist or token gate fails the same way for
+        // every label, so sending the user back to the name field wastes
+        // their time.
+        throw new Error(
+          `${fullName} is ${check.status}: ${check.reasons.join(', ')}`,
+        );
       }
 
       console.log({
-        priceEth: details.estimatedPriceEth,
-        feeEth: details.estimatedFeeEth,
+        priceEth: check.estimatedPriceEth,
+        feeEth: check.estimatedFeeEth,
+        chainId: check.chainId,
       });
 
-      return details;
+      return check;
     }
     ```
+
+    The result is a discriminated union on `status`, so the price fields exist only on the `available` branch. See [Check a name](/developer-guide/sdks/mint-manager/check-name) for every status and the full table of refusal reasons.
   </Step>
 
-  <Step title="6. Generate transaction parameters">
+  <Step title="5. Generate transaction parameters">
 
-    Add optional text and address records while preparing the transaction:
+    Pass the check result to `prepareMint`. The listing is already resolved, so nothing is fetched twice. Add optional text and address records to apply them in the same transaction as the mint:
 
     ```typescript transaction.ts
+    import { parseEther } from 'viem';
     import { ChainName } from '@thenamespace/mint-manager';
     import { account, mintClient } from './clients';
-    import { label, parentName } from './quote';
+    import { checkSubname } from './check';
 
     export async function getTransaction() {
-      return mintClient.getMintTransactionParameters({
-        parentName,
-        label,
+      const check = await checkSubname();
+
+      // Cap what the signed quote may charge. Prices are quoted per request
+      // and can move between the quote and the signature; without this, the
+      // new price is simply charged.
+      const quoted = parseEther(
+        (check.estimatedPriceEth + check.estimatedFeeEth).toFixed(18),
+      );
+
+      return mintClient.prepareMint(check, {
         minterAddress: account.address,
         owner: account.address,
+        expiryInYears: 1,
+        maxValue: quoted,
         records: {
           texts: [
             { key: 'description', value: 'Minted with Namespace' },
@@ -180,21 +177,20 @@ The complete example uses Base. The Ethereum variation is included in [Check ava
     The SDK uses the parent listing to return the appropriate contract, ABI, arguments, and transaction value for Ethereum or the listing's L2 chain.
   </Step>
 
-  <Step title="7. Simulate and send the transaction">
+  <Step title="6. Simulate and send the transaction">
 
     Simulate first so contract errors are surfaced before the wallet sends the transaction:
 
     ```typescript mint.ts
+    import { MintManagerError } from '@thenamespace/mint-manager';
     import {
       account,
       publicClient,
       walletClient,
     } from './clients';
-    import { getQuote } from './quote';
     import { getTransaction } from './transaction';
 
     async function main() {
-      await getQuote();
       const transaction = await getTransaction();
 
       const { request } = await publicClient.simulateContract({
@@ -211,6 +207,14 @@ The complete example uses Base. The Ethereum variation is included in [Check ava
     }
 
     main().catch((error: unknown) => {
+      if (error instanceof MintManagerError) {
+        // Codes are stable across minor versions; match on them rather than
+        // on message text.
+        console.error(error.code, error.message, error.details);
+        process.exitCode = 1;
+        return;
+      }
+
       console.error(error);
       process.exitCode = 1;
     });
@@ -222,10 +226,14 @@ The complete example uses Base. The Ethereum variation is included in [Check ava
 
 ## Troubleshooting
 
-- If `canMint` is false, display or log `validationErrors`.
-- If simulation fails, confirm the wallet and public clients use the listing's chain.
-- If the mint price changed, generate fresh transaction parameters before retrying.
-- If the subname is unavailable, choose another label; do not submit the transaction.
+- If `checkName` returns `blocked`, read `reasons`. A minter gate fails identically for every label, so prompt for a different wallet rather than a different name.
+- If it returns `taken`, choose another label; do not submit the transaction.
+- If a call throws `RPC_ERROR`, the name's status is unknown rather than unavailable. Retry, and set `customRpcUrls` to your own endpoints.
+- If `prepareMint` throws `PRICE_EXCEEDS_MAX`, the price moved past your cap. Re-run `checkName` and confirm the new price before retrying.
+- If it throws `SIGNATURE_EXPIRED`, the authorization aged out. Call `prepareMint` again and submit promptly.
+- If simulation fails, confirm the wallet and public clients use the chain reported in `check.chainId`.
+
+See [Error handling](/developer-guide/sdks/mint-manager/errors) for every code.
 
 See [Troubleshooting](/developer-guide/troubleshooting) for authentication, resolver, network, and transaction diagnostics.
 

@@ -148,9 +148,12 @@
                     "pages": [
                       "developer-guide/sdks/mint-manager",
                       "developer-guide/sdks/mint-manager/installation",
+                      "developer-guide/sdks/mint-manager/check-name",
+                      "developer-guide/sdks/mint-manager/get-mint-transaction-parameters",
+                      "developer-guide/sdks/mint-manager/normalization",
+                      "developer-guide/sdks/mint-manager/errors",
                       "developer-guide/sdks/mint-manager/is-subname-available",
-                      "developer-guide/sdks/mint-manager/get-mint-details",
-                      "developer-guide/sdks/mint-manager/get-mint-transaction-parameters"
+                      "developer-guide/sdks/mint-manager/get-mint-details"
                     ]
                   },
                   {

@@ -11,18 +11,27 @@ Install the required packages, depending on your package manager:
 <Tab title="npm">
 
 ```bash
-npm install @thenamespace/mint-manager@1.1.1 viem
+npm install @thenamespace/mint-manager@2.0.0 viem
 ```
 
 </Tab>
 <Tab title="Yarn">
 
 ```bash
-yarn add @thenamespace/mint-manager@1.1.1 viem
+yarn add @thenamespace/mint-manager@2.0.0 viem
+```
+
+</Tab>
+<Tab title="pnpm">
+
+```bash
+pnpm add @thenamespace/mint-manager@2.0.0 viem
 ```
 
 </Tab>
 </Tabs>
+
+`viem` is a peer dependency. Installing it yourself keeps a single copy in your dependency tree, which matters because the SDK type-checks errors returned by viem.
 
 Create a Mint Manager client. The default configuration uses production services and mainnet listings:
 
@@ -34,24 +43,64 @@ export const mintClient = createMintClient({
 });
 ```
 
-For testnet listings and staging services, set `isTestnet: true`:
+For testnet listings and staging services, set `isTestnet: true`. The flag switches the listing source (Sepolia) and the API environment together, so a price quote can never come from a different network than the transaction that follows it:
 
 ```typescript
-import { createMintClient } from '@thenamespace/mint-manager';
-
 export const mintClient = createMintClient({ isTestnet: true });
+```
+
+<Note>
+  Listings are per network. A name listed on mainnet is invisible to a client created with `isTestnet: true`, and looking one up throws `LISTING_NOT_FOUND`.
+</Note>
+
+## Supply your own RPC endpoints
+
+The SDK reads the ENS registry to confirm availability. Its default endpoints are shared and rate limited, so pass your own for anything user facing. Keys are numeric chain IDs:
+
+```typescript
+export const mintClient = createMintClient({
+  customRpcUrls: {
+    1: process.env.MAINNET_RPC_URL,
+    8453: process.env.BASE_RPC_URL,
+    10: process.env.OPTIMISM_RPC_URL,
+  },
+});
 ```
 
 ### MintClientConfig
 
 | Parameter | Default | Description |
 | --- | --- | --- |
-| `isTestnet` | `false` | Uses testnet listings and staging services when `true`. |
+| `isTestnet` | `false` | Uses Sepolia listings and staging services when `true`. |
+| `customRpcUrls` | `{}` | RPC endpoints keyed by numeric chain ID. Strongly recommended. |
 | `mintSource` | `namespace-sdk` | Identifies your integration in the mint transaction. |
 | `listingCacheMilliseconds` | 15 minutes | Controls how long listing metadata remains cached. |
-| `listManagerUri` | Namespace service | Advanced override for the listing API base URL. |
-| `mintManagerUri` | Namespace service | Advanced override for the mint API base URL. |
+| `timeoutMilliseconds` | `30000` | HTTP timeout for the listing and mint APIs. |
+| `logger` | silent | Receives SDK diagnostics. The SDK logs nothing unless you pass one. |
+| `listManagerUri` | Namespace service | Advanced override for the listing API base URL. Must use `https`. |
+| `mintManagerUri` | Namespace service | Advanced override for the mint API base URL. Must use `https`. |
 
-<Note>
-  Version 1.1.1 currently exports the custom RPC map as `cursomRpcUrls`. Because that spelling is part of the published type, prefer configuring the Viem clients used to send the transaction unless you specifically need to override the SDK's read client.
-</Note>
+`logger` takes any object with `debug`, `info`, `warn`, and `error` methods that accept a string.
+
+## Supported networks
+
+| Network | Chain ID | Mint path |
+| --- | --- | --- |
+| Ethereum Mainnet | 1 | L1 |
+| Sepolia | 11155111 | L1 testnet |
+| Base | 8453 | L2 |
+| Base Sepolia | 84532 | L2 testnet |
+| Optimism | 10 | L2 |
+
+The SDK resolves the parent name's listing and selects the L1 or L2 path for you, so you pass names rather than chain IDs.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Check a name" icon="circle-check" href="/developer-guide/sdks/mint-manager/check-name">
+    Confirm eligibility and get a price in one call.
+  </Card>
+  <Card title="Transaction parameters" icon="list-check" href="/developer-guide/sdks/mint-manager/get-mint-transaction-parameters">
+    Build the contract call and set records at mint time.
+  </Card>
+</CardGroup>

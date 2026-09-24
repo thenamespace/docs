@@ -1,0 +1,152 @@
+---
+title: "Check a name before you mint"
+description: "One call for eligibility, price, and reason."
+sidebarTitle: "Check a name"
+icon: "circle-check"
+---
+
+`checkName` reports whether this address can mint this name. If it cannot, the result says why. Pass the whole subname. The SDK normalizes it, splits it, resolves the listing, and picks the chain.
+
+### Usage
+
+```typescript
+const check = await mintClient.checkName('alice.example.eth', {
+  minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+  expiryInYears: 1,
+});
+```
+
+The result is a discriminated union on `status`. Narrow on it before reading anything else; the price fields exist only on the `available` branch, so TypeScript stops you reading a quote that was never returned.
+
+```typescript
+switch (check.status) {
+  case 'available':
+    console.log(check.estimatedPriceEth, check.estimatedFeeEth);
+    break;
+  case 'taken':
+    // The name is registered. Offer a different label.
+    break;
+  case 'blocked':
+    // The name is free, but this minter cannot mint it.
+    console.log(check.reasons);
+    break;
+}
+```
+
+| Status | Meaning | What to do |
+| --- | --- | --- |
+| `available` | The name is free and this minter may mint it now | Pass the result to `prepareMint` |
+| `taken` | The name is registered | Offer a different label |
+| `blocked` | The name is free, but this minter is gated out | Read `reasons` and act on the obstacle |
+
+Every result also carries `name` (the normalized form), `label`, `parentName`, `listingType`, and `chainId`. The chain comes from the listing, so you never supply it.
+
+### NameCheck
+
+```typescript
+interface NameCheckBase {
+  name: string;
+  label: string;
+  parentName: string;
+  listingType: 'L1' | 'L2';
+  chainId: number;
+}
+
+type NameCheck =
+  | (NameCheckBase & {
+      status: 'available';
+      estimatedPriceEth: number;
+      estimatedFeeEth: number;
+      isStandardFee: boolean;
+    })
+  | (NameCheckBase & {
+      status: 'taken';
+      reasons: MintingValidationErrorType[];
+    })
+  | (NameCheckBase & {
+      status: 'blocked';
+      reasons: MintingValidationErrorType[];
+      nameAvailabilityConfirmed: boolean;
+    });
+```
+
+## Why a mint is refused
+
+The entries in `reasons` are not interchangeable. Your app should check two things. Is the obstacle the name or the minter? Would a different label help? Mixing those up sends someone back to the name field when the problem is their wallet.
+
+| Reason | Obstacle | Another label helps? | What to tell the user |
+| --- | --- | --- | --- |
+| `SUBNAME_TAKEN` | name | Yes | The name is registered and gone for everyone. Offer alternatives. |
+| `SUBNAME_RESERVED` | name | Yes | The parent owner is holding this label back. It is not registered, so the registry reports it free. Offer alternatives. |
+| `MINTER_NOT_WHITELISTED` | minter | No | This address is not on the parent's allowlist. Switch wallets or request access. |
+| `MINTER_NOT_TOKEN_OWNER` | minter | No | The parent is token gated and this address holds no qualifying token. The user can usually acquire one. |
+| `VERIFIED_MINTER_ADDRESS_REQUIRED` | minter | No | The wallet is recognized but has not completed verification. Send the user through the parent's verification flow. |
+| `LISTING_EXPIRED` | listing | No | The minting window has closed. No label under this parent is mintable until the owner relists. |
+
+Validation stops at the first failure, so `reasons` is a partial list. Clearing one reason can reveal another. Re-run `checkName` after the user acts rather than assuming the rest are unchanged.
+
+<Note>
+  A reserved name is held back, not minted, so the registry reports it as free. That is why `checkName` consults the registry before it decides between `taken` and `blocked`.
+</Note>
+
+## When the registry is consulted
+
+`getMintDetails` stops validating at the first failure. On a gated listing it never evaluates the name at all, so a free name and a taken name come back identical:
+
+```text
+gated listing, free name   ->  canMint: false, ['MINTER_NOT_WHITELISTED']
+gated listing, taken name  ->  canMint: false, ['MINTER_NOT_WHITELISTED']
+```
+
+`checkName` reconciles the API with the registry, and reads the registry exactly when that ambiguity appears.
+
+| Situation | Requests | Result |
+| --- | --- | --- |
+| Name mintable | listing + API | `available` |
+| Name taken, open listing | listing + API | `taken` |
+| Gated listing | listing + API + registry | `blocked` or `taken` |
+
+Override with the `rpc` option:
+
+| Policy | Registry lookup | Use when |
+| --- | --- | --- |
+| `auto` (default) | Only when the API's answer leaves availability unresolved | Almost always |
+| `always` | Every call | The API's view may be stale and correctness matters more than latency |
+| `never` | Skipped | You need to stay offchain, and can accept `nameAvailabilityConfirmed: false` on a `blocked` result |
+
+```typescript
+const check = await mintClient.checkName('alice.example.eth', {
+  minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+  rpc: 'always',
+});
+```
+
+## Mint from the result
+
+`prepareMint` takes the check result and returns the contract call. The listing is already cached, so nothing is fetched twice.
+
+```typescript
+import { parseEther } from 'viem';
+
+if (check.status === 'available') {
+  const transaction = await mintClient.prepareMint(check, {
+    minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+    expiryInYears: 1,
+    maxValue: parseEther('0.01'),
+  });
+}
+```
+
+Passing a result whose status is not `available` throws `NAME_NOT_AVAILABLE`, and the error message carries the advice that matches the reason. You can also pass a bare name when you already know it is mintable:
+
+```typescript
+const transaction = await mintClient.prepareMint('alice.example.eth', {
+  minterAddress: '0x1D84ad46F1ec91b4Bb3208F645aD2fA7aBEc19f8',
+});
+```
+
+See [Transaction parameters](/developer-guide/sdks/mint-manager/get-mint-transaction-parameters) for the response shape, `maxValue`, and setting records at mint time.
+
+<Warning>
+  A failed registry lookup throws `RPC_ERROR`. That is not an answer about the name: the status is unknown, not unavailable. Surface it as a temporary failure with a retry. See [Error handling](/developer-guide/sdks/mint-manager/errors).
+</Warning>

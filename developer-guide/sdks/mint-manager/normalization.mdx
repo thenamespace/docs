@@ -1,0 +1,58 @@
+---
+title: "Name normalization"
+description: "How the SDK normalizes names and labels."
+sidebarTitle: "Normalization"
+icon: "text-cursor-input"
+---
+
+Every name and label you pass to the SDK is normalized per [ENSIP-15](https://docs.ens.domains/ensip/15) before it is hashed, sent to the API, or compared.
+
+Viem's `namehash()` does not normalize. Skip this step and `Alice.eth` and `alice.eth` hash to different nodes, so an availability check can report a registered name as free.
+
+```typescript
+// These refer to the same name, and both are accepted:
+await mintClient.checkName('Alice.example.eth', { minterAddress });
+await mintClient.checkName('alice.example.eth', { minterAddress });
+
+// Rejected before any network call, with an explanation:
+await mintClient.checkName('аlice.example.eth', { minterAddress });
+// MintManagerError [INVALID_NAME]: illegal mixture: Cyrillic + Latin
+```
+
+The normalized form is returned to you on every `checkName` result as `name`, alongside its `label` and `parentName` parts.
+
+## Normalize on your own side too
+
+If your app stores, compares, or caches names, use the same helpers the SDK uses so your keys agree with its.
+
+```typescript
+import {
+  normalizeName,
+  normalizeLabel,
+  normalizeSubname,
+} from '@thenamespace/mint-manager';
+
+normalizeName('Alice.ETH'); // 'alice.eth'
+normalizeLabel('Alice'); // 'alice'
+normalizeSubname('Alice.example.eth'); // 'alice.example.eth'
+
+normalizeLabel('alice.eth'); // throws INVALID_LABEL: a label has no dots
+```
+
+| Helper | Input | Throws |
+| --- | --- | --- |
+| `normalizeName` | A full ENS name, with or without parents | `INVALID_NAME` |
+| `normalizeLabel` | A single label, the leftmost segment only | `INVALID_LABEL` |
+| `normalizeSubname` | A full name that must have at least one parent label | `INVALID_NAME` |
+
+The SDK also exports `MAX_NAME_BYTES` (255) and `MAX_LABEL_BYTES` (63), the length bounds it enforces after normalization.
+
+<Note>
+  Passing a full name where a label is expected is the most common mint bug, so `normalizeLabel` rejects any value containing a `.` outright rather than hashing it as one long label.
+</Note>
+
+## ENS v2
+
+[ENS v2](https://docs.ens.domains/ensv2/migration) moves name ownership into per-name subregistries, so a v1 registry `owner()` lookup reports a migrated name as unowned. The contracts are not final and nothing is deployed to mainnet yet.
+
+This is why [`checkName`](/developer-guide/sdks/mint-manager/check-name) treats the Namespace API as the primary source of truth and the registry as corroboration: the API can follow the migration without an SDK release. Normalization is unaffected, since ENSIP-15 does not change in v2.
