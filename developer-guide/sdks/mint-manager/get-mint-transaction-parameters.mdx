@@ -78,7 +78,7 @@ export interface MintTransactionResponse {
 
 ## Submit the transaction
 
-Simulate before you write. Simulating runs the call against current chain state and surfaces a revert reason without spending gas, so a doomed mint fails for free:
+Simulate before you write. The simulation runs the call against current chain state and returns a revert reason without spending gas.
 
 ```typescript title="submit.ts"
 const { request } = await publicClient.simulateContract({
@@ -100,7 +100,7 @@ Signed mint parameters are short lived, so submit promptly rather than caching t
 
 The mint API returns a signed price that the contract will honor. The SDK checks that the signature covers the name, parent, and owner you requested, and rejects the response otherwise. `maxValue` is the cap on what you will pay.
 
-Prices are quoted per request and can move between your quote and your signature. With `maxValue` set, that fails loudly as `PRICE_EXCEEDS_MAX` and nothing is submitted. Without it, the moved price is simply charged, and the wallet confirmation is the first the user hears of it.
+Prices are quoted per request and can move between your quote and your signature. With `maxValue` set, a higher price throws `PRICE_EXCEEDS_MAX` and nothing is submitted. Without it, the contract charges the new price. The wallet confirmation is the first time the user sees that number.
 
 ```typescript
 const quoted = parseEther(
@@ -142,7 +142,7 @@ const transaction = await mintClient.prepareMint(check, {
 
 ## Lower-level alternative
 
-`getMintTransactionParameters` does the same work from a pre-split `label` and `parentName`, and is what `prepareMint` calls internally. Reach for it when you already hold the parts separately:
+`getMintTransactionParameters` does the same work from a pre-split `label` and `parentName`, and `prepareMint` calls it internally. Use it when you already have the parts separately:
 
 ```typescript
 const transaction = await mintClient.getMintTransactionParameters({

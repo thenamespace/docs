@@ -8,7 +8,7 @@ icon: "magnifying-glass"
 `isL1SubnameAvailable` and `isL2SubnameAvailable` report raw registry ownership. Use the method that matches the parent name's listing: `isL1SubnameAvailable` for Ethereum, or `isL2SubnameAvailable` for an L2 chain.
 
 <Warning>
-  Both methods are deprecated in favor of [`checkName`](/developer-guide/sdks/mint-manager/check-name), which reports registry ownership **and** whether the minter is permitted to mint, and derives the chain from the listing. A `true` from these methods can still be followed by a failed mint, because an allowlist, a reservation, or an expired listing is invisible to the registry. Reach for them only when you want ownership alone and have no minter address in hand.
+  Both methods are deprecated in favor of [`checkName`](/developer-guide/sdks/mint-manager/check-name). `checkName` reports registry ownership and whether the minter is permitted to mint, and it takes the chain from the listing. A `true` from these methods can still be followed by a failed mint, because an allowlist, a reservation, or an expired listing is invisible to the registry. Use them only when you want ownership alone and have no minter address in hand.
 </Warning>
 
 ## Check availability on Ethereum

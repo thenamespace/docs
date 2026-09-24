@@ -72,7 +72,7 @@ type NameCheck =
 
 ## Why a mint is refused
 
-The entries in `reasons` are not interchangeable. Two things decide how your app should react: whether the obstacle is the **name** or the **minter**, and whether **trying a different label would help**. Confusing the two is how an app tells someone to pick a new name when the real problem was their wallet.
+The entries in `reasons` are not interchangeable. Your app should check two things. Is the obstacle the name or the minter? Would a different label help? Mixing those up sends someone back to the name field when the problem is their wallet.
 
 | Reason | Obstacle | Another label helps? | What to tell the user |
 | --- | --- | --- | --- |
@@ -86,7 +86,7 @@ The entries in `reasons` are not interchangeable. Two things decide how your app
 Validation stops at the first failure, so `reasons` is a partial list. Clearing one reason can reveal another. Re-run `checkName` after the user acts rather than assuming the rest are unchanged.
 
 <Note>
-  `SUBNAME_RESERVED` is worth reading twice. A reserved name is held back, not minted, so the registry reports it as free. That is why `checkName` consults the registry before it decides between `taken` and `blocked`.
+  A reserved name is held back, not minted, so the registry reports it as free. That is why `checkName` consults the registry before it decides between `taken` and `blocked`.
 </Note>
 
 ## When the registry is consulted

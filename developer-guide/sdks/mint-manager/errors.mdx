@@ -79,6 +79,6 @@ const mintClient = createMintClient({
 
 Three codes cover the signed mint parameters the API returns. The SDK checks that the signature matches the mint you asked for before the transaction reaches a wallet. A mismatched or tampered response throws at this step.
 
-- `MINT_PARAMS_MISMATCH` — the signed label, parent node, or owner disagrees with the request.
-- `PRICE_EXCEEDS_MAX` — the total is above the ceiling you set. See [`maxValue`](/developer-guide/sdks/mint-manager/get-mint-transaction-parameters#cap-the-price-with-maxvalue).
-- `SIGNATURE_EXPIRED` — the authorization aged out between quoting and submitting.
+- `MINT_PARAMS_MISMATCH`. The signed label, parent node, or owner disagrees with the request.
+- `PRICE_EXCEEDS_MAX`. The total is above the ceiling you set. See [`maxValue`](/developer-guide/sdks/mint-manager/get-mint-transaction-parameters#cap-the-price-with-maxvalue).
+- `SIGNATURE_EXPIRED`. The authorization aged out between quoting and submitting.
