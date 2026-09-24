@@ -7,7 +7,7 @@ icon: "text-cursor-input"
 
 Every name and label you pass to the SDK is normalized per [ENSIP-15](https://docs.ens.domains/ensip/15) before it is hashed, sent to the API, or compared.
 
-This matters more than it sounds. Viem's `namehash()` normalizes nothing on its own, so without this step `Alice.eth` and `alice.eth` hash to different nodes, and an availability check can report a registered name as free.
+Viem's `namehash()` does not normalize. Skip this step and `Alice.eth` and `alice.eth` hash to different nodes, so an availability check can report a registered name as free.
 
 ```typescript
 // These refer to the same name, and both are accepted:
