@@ -177,30 +177,47 @@
 }
 
 /* ── FlowExplainer ────────────────────────────────────────────────────────
-   The palette is self-contained and dark in both site themes: this card owns
-   its look rather than inheriting the page theme. The extra resets marked
-   "docs:" undo Mintlify prose styling the diagram never expects. */
+   The card follows the page theme. Light values sit on .fx and the dark ones
+   override them under Mintlify's .dark class, the same flip .rf uses above —
+   so every rule below reads a token and none of them know which theme is on.
+   The extra resets marked "docs:" undo Mintlify prose styling the diagram
+   never expects.
+
+   Two things are not symmetrical between the themes, both on purpose:
+   borders and the group fills. A light-mode hairline is alpha black so it
+   recedes into the surface; the same trick in dark mode glows, so the dark
+   values are alpha white at a lower weight. */
 
 .fx {
-  --fx-ink: #0c0f17;
-  --fx-surface: #151926;
-  --fx-line: rgba(255, 255, 255, 0.11);
-  --fx-text: rgba(255, 255, 255, 0.93);
-  --fx-dim: rgba(255, 255, 255, 0.46);
-  --fx-faint: rgba(255, 255, 255, 0.24);
-  --fx-accent: #5aa9ff;
+  --fx-ink: #f7f9fc;
+  --fx-surface: #ffffff;
+  --fx-line: rgba(16, 24, 40, 0.1);
+  --fx-text: #101828;
+  --fx-dim: #5b6478;
+  --fx-faint: #98a2b3;
+  --fx-muted: #697182;
+  --fx-accent: #3d5beb;
+  --fx-glow: rgba(61, 91, 235, 0.34);
+  --fx-group-fill: rgba(16, 24, 40, 0.018);
+  --fx-group-stroke: rgba(16, 24, 40, 0.14);
+  --fx-tint-a: rgba(69, 103, 243, 0.07);
+  --fx-tint-b: rgba(124, 79, 196, 0.05);
 
   /* One hue per party, all far enough apart to stay separable when two light
      up at once. The accent belongs to motion — edges, chips, packets — so no
-     node borrows it. */
-  --fx-wallet: #7fb2ff;
-  --fx-eth: #f2a54c;
-  --fx-gw: #4fc98a;
-  --fx-chain: #3fd3c6;
-  --fx-api: #bb8ef7;
+     node borrows it. Light-mode tones are darkened, not just reused: the dark
+     palette's tones sit around 75% lightness, which disappears on white. */
+  --fx-wallet: #3b6fd4;
+  --fx-eth: #a86713;
+  --fx-gw: #137954;
+  --fx-chain: #0e756f;
+  --fx-api: #7343bd;
 
   --fx-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --fx-ease-io: cubic-bezier(0.77, 0, 0.175, 1);
+  /* The packet's landing. Travel itself is `linear` — a request in flight is
+     progress-as-time, and easing both ends made it look like it hesitated. */
+  --fx-ease-land: cubic-bezier(0.165, 0.84, 0.44, 1);
 
   /* Never set container-type here. Style containment on this element makes
      Chrome resolve every `fill: var(--fx-*)` inside the SVG to black — the
@@ -210,13 +227,39 @@
   border: 1px solid var(--fx-line);
   border-radius: 20px;
   background:
-    radial-gradient(90% 70% at 85% 0%, rgba(90, 169, 255, 0.1), transparent 62%),
-    radial-gradient(80% 70% at 5% 100%, rgba(187, 142, 247, 0.07), transparent 60%),
+    radial-gradient(90% 70% at 85% 0%, var(--fx-tint-a), transparent 62%),
+    radial-gradient(80% 70% at 5% 100%, var(--fx-tint-b), transparent 60%),
     var(--fx-ink);
   color: var(--fx-text);
   font-family: inherit;
   box-sizing: border-box;
   width: 100%;
+}
+
+/* Dark theme. Same token names, flipped values — matching how .rf switches,
+   and how Mintlify marks the theme (.dark, with the data-theme form kept as
+   the fallback the sibling component already relies on). */
+.dark .fx,
+html[data-theme="dark"] .fx {
+  --fx-ink: #0c0f17;
+  --fx-surface: #151926;
+  --fx-line: rgba(255, 255, 255, 0.11);
+  --fx-text: rgba(255, 255, 255, 0.93);
+  --fx-dim: rgba(255, 255, 255, 0.46);
+  --fx-faint: rgba(255, 255, 255, 0.24);
+  --fx-muted: #8b93a5;
+  --fx-accent: #5aa9ff;
+  --fx-glow: rgba(90, 169, 255, 0.55);
+  --fx-group-fill: rgba(255, 255, 255, 0.018);
+  --fx-group-stroke: rgba(255, 255, 255, 0.16);
+  --fx-tint-a: rgba(90, 169, 255, 0.1);
+  --fx-tint-b: rgba(187, 142, 247, 0.07);
+
+  --fx-wallet: #7fb2ff;
+  --fx-eth: #f2a54c;
+  --fx-gw: #4fc98a;
+  --fx-chain: #3fd3c6;
+  --fx-api: #bb8ef7;
 }
 
 /* Toggles: the parent name on the left, where the records live on the right —
@@ -241,7 +284,7 @@
   font-weight: 600;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--fx-faint);
+  color: var(--fx-muted);
 }
 .fx-toggle-row {
   display: flex;
@@ -260,8 +303,13 @@
   font-weight: 600;
   line-height: 1.4;
   cursor: pointer;
-  transition: color 200ms var(--fx-ease-out), background 200ms var(--fx-ease-out);
+  transition: color 200ms var(--fx-ease-out), background 200ms var(--fx-ease-out),
+              scale 150ms var(--fx-ease-out);
 }
+/* The toggles are the main thing to touch here and had no press feedback at
+   all. `scale` rather than `transform` so it never fights a transform the
+   button picks up elsewhere; 0.96 because anything under 0.95 reads theatrical. */
+.fx-btn:active { scale: 0.96; }
 .fx-btn[data-on="true"] {
   background: color-mix(in srgb, var(--fx-accent) 18%, transparent);
   color: var(--fx-accent);
@@ -287,13 +335,13 @@
 
 /* Layer groups */
 .fx-group rect {
-  fill: rgba(255, 255, 255, 0.018);
-  stroke: rgba(255, 255, 255, 0.16);
+  fill: var(--fx-group-fill);
+  stroke: var(--fx-group-stroke);
   stroke-width: 1;
   stroke-dasharray: 4 5;
 }
 .fx-group text {
-  fill: var(--fx-faint);
+  fill: var(--fx-muted);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.09em;
@@ -304,6 +352,9 @@
 .fx-node {
   transform-box: fill-box;
   transform-origin: center;
+  /* Holds the lit node on the GPU across the scale, which kills the ~1px
+     shift the CPU handoff put on it at each end. */
+  will-change: transform;
   transition: transform 220ms var(--fx-ease-out);
 }
 .fx-node rect {
@@ -349,27 +400,43 @@
   transition: stroke 220ms var(--fx-ease-out);
 }
 .fx-edge[data-on="true"] { stroke: var(--fx-accent); }
+/* Already traversed. Holding the trail instead of resetting it to faint is
+   what makes one full lookup legible as a unit rather than six unrelated
+   flashes; [data-settling] wipes the whole trail at the loop boundary. */
+.fx-edge[data-done="true"] { stroke: color-mix(in srgb, var(--fx-accent) 30%, transparent); }
 .fx-arrow { fill: var(--fx-faint); }
 .fx-arrow-on { fill: var(--fx-accent); }
+.fx-arrow-done { fill: color-mix(in srgb, var(--fx-accent) 30%, transparent); }
+.fx[data-settling="true"] .fx-edge[data-done="true"] {
+  stroke: var(--fx-faint);
+  transition: stroke 400ms var(--fx-ease-out);
+}
+.fx[data-settling="true"] .fx-edge-num[data-done="true"] {
+  fill: var(--fx-muted);
+  transition: fill 400ms var(--fx-ease-out);
+}
 
 .fx-edge-num {
-  fill: var(--fx-faint);
+  fill: var(--fx-muted);
   font-size: 11px;
   font-weight: 600;
   text-anchor: middle;
   transition: fill 220ms var(--fx-ease-out);
 }
 .fx-edge-num[data-on="true"] { fill: var(--fx-accent); }
+.fx-edge-num[data-done="true"] { fill: color-mix(in srgb, var(--fx-accent) 30%, transparent); }
 
 /* Payload chips — one per active edge, remounted with the beat. */
-.fx-chip { animation: fx-chip 320ms var(--fx-ease-out) both; }
+/* 200ms, and the component delays it to just before the packet arrives —
+   the payload label used to appear before the request had left. */
+.fx-chip { animation: fx-chip 200ms var(--fx-ease-out) both; }
 .fx-chip rect {
   fill: color-mix(in srgb, var(--fx-accent) 14%, var(--fx-ink));
   stroke: color-mix(in srgb, var(--fx-accent) 38%, transparent);
   stroke-width: 1;
 }
 .fx-chip text {
-  fill: color-mix(in srgb, var(--fx-accent) 62%, #ffffff);
+  fill: color-mix(in srgb, var(--fx-accent) 62%, var(--fx-text));
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 10px;
   letter-spacing: -0.01em;
@@ -377,19 +444,69 @@
 }
 @keyframes fx-chip { from { opacity: 0; transform: translateY(3px); } }
 
-/* Travelling packet — remounted each beat, so it always starts clean. */
+/* Travelling packet — remounted each beat, so it always starts clean.
+   1080ms = TRAVEL_MS 900 + LAND_MS 180 in flow-explainer.jsx, and the 83.33%
+   stop is that split. Changing one means changing the other.
+
+   `scale` is the independent transform property on purpose: offset-path drives
+   the element through the transform chain, so animating `transform` here would
+   throw the packet back to the origin. Per spec, scale composes ahead of the
+   offset transform and leaves the path intact. */
 .fx-packet {
   fill: var(--fx-accent);
-  filter: drop-shadow(0 0 6px var(--fx-accent));
+  filter: drop-shadow(0 0 6px var(--fx-glow));
   offset-distance: 0%;
   opacity: 0;
-  animation: fx-flow 1500ms var(--fx-ease-io) forwards;
+  will-change: offset-distance, opacity;
+  animation: fx-flow 1080ms linear both;
 }
 @keyframes fx-flow {
-  0%   { offset-distance: 0%;   opacity: 0; }
-  10%  { opacity: 1; }
-  78%  { offset-distance: 100%; opacity: 1; }
-  100% { offset-distance: 100%; opacity: 0; }
+  0%      { offset-distance: 0%;   opacity: 0; scale: 1;
+            animation-timing-function: linear; }
+  6%      { opacity: 1; }
+  83.33%  { offset-distance: 100%; opacity: 1; scale: 1;
+            animation-timing-function: var(--fx-ease-land); }
+  100%    { offset-distance: 100%; opacity: 0; scale: 0.2; }
+}
+
+/* Beat 2, and only beat 2. The resolver does not answer — it reverts with a
+   gateway URL — so the packet leaves, stalls, and comes back in the resolver's
+   own hue before the real request runs. It is the one beat whose path is a
+   refusal, and drawing it like the other five was why readers bounced off it. */
+.fx-packet[data-kind="recoil"] {
+  fill: var(--fx-eth);
+  filter: drop-shadow(0 0 6px var(--fx-eth));
+  animation: fx-recoil 560ms var(--fx-ease-io) both;
+}
+@keyframes fx-recoil {
+  0%   { offset-distance: 0%;  opacity: 0; }
+  12%  { opacity: 1; }
+  46%  { offset-distance: 26%; opacity: 1; }
+  54%  { offset-distance: 26%; opacity: 1; }
+  92%  { offset-distance: 0%;  opacity: 1; }
+  100% { offset-distance: 0%;  opacity: 0; }
+}
+
+/* Arrival ring on the receiving node. A sibling one-shot rather than an
+   animation on the node itself, which would clobber the transform and colour
+   transitions data-on already drives. */
+.fx-land {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 1.25;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: fx-land 180ms var(--fx-ease-land) both;
+}
+.fx-land[data-tone="wallet"] { --tone: var(--fx-wallet); }
+.fx-land[data-tone="eth"]    { --tone: var(--fx-eth); }
+.fx-land[data-tone="gw"]     { --tone: var(--fx-gw); }
+.fx-land[data-tone="chain"]  { --tone: var(--fx-chain); }
+.fx-land[data-tone="api"]    { --tone: var(--fx-api); }
+@keyframes fx-land {
+  from { opacity: 0.75; scale: 1; }
+  to   { opacity: 0;    scale: 1.07; }
 }
 
 /* Caption + rail */
@@ -414,6 +531,9 @@
   animation: fx-caption 260ms var(--fx-ease-out);
 }
 @keyframes fx-caption { from { opacity: 0; transform: translateY(4px); } }
+/* Stepped here on purpose: no fade. A reader clicking through at their own
+   pace is fighting a cross-fade on every press. */
+.fx-caption[data-manual="true"] { animation: none; }
 
 .fx-step {
   flex: 0 0 auto;
@@ -460,8 +580,22 @@
     color: var(--fx-accent);
   }
 }
-.fx-navbtn:active { transform: scale(0.92); }
+.fx-navbtn:active { transform: scale(0.96); }
 .fx-navbtn:focus-visible { outline: 2px solid var(--fx-accent); outline-offset: 3px; }
+/* Hover-to-pause had no acknowledgement of any kind, so the interaction read
+   as dead. */
+.fx-pause {
+  flex: 0 0 auto;
+  width: 14px;
+  margin-right: 2px;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--fx-accent);
+  opacity: 0;
+  transition: opacity 150ms var(--fx-ease-out);
+}
+.fx-pause[data-on="true"] { opacity: 1; }
+
 .fx-count {
   min-width: 40px;
   text-align: center;
@@ -470,8 +604,18 @@
   color: var(--fx-dim);
 }
 
+/* The component also stops advancing on its own under this query — hiding the
+   packet while the timer kept running was the worst of both, mutating the
+   caption under the reader with the cue that explained it removed. The step
+   arrows are then the only control. */
 @media (prefers-reduced-motion: reduce) {
-  .fx-packet { display: none; }
-  .fx-chip, .fx-node, .fx-caption { transition: none; animation: none; transform: none; }
+  .fx-packet, .fx-land { display: none; }
+  .fx-chip, .fx-caption, .fx-node, .fx-node rect, .fx-node-label,
+  .fx-edge, .fx-edge-num, .fx-btn, .fx-navbtn, .fx-pause {
+    transition: none;
+    animation: none;
+  }
   .fx-node[data-on="true"] { transform: none; }
+  .fx-btn:active { scale: none; }
+  .fx-navbtn:active { transform: none; }
 }

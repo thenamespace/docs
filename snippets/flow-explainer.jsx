@@ -20,6 +20,31 @@
  *    store stays on the canvas, muted, so the choice is visible without drawing
  *    a path nobody takes.
  *
+ * MOTION BUDGET. Two kinds of motion live here and they follow different rules.
+ *
+ *  - Narrative motion — the packet crossing a wire, the beat loop. This is
+ *    content: the duration IS the explanation, so it is deliberately far above
+ *    the sub-300ms ceiling that governs interface feedback. Travel is `linear`,
+ *    because a request in flight is progress-as-time; easing it at both ends
+ *    made the request look like it hesitated before leaving and again before
+ *    arriving.
+ *  - Interface motion — toggles, step arrows, the pause cue, chip and caption
+ *    enters. This is feedback and stays under 300ms, transform/opacity only,
+ *    transitions for anything reversible and keyframes only for one-shots that
+ *    always run to completion.
+ *
+ * Three beats-worth of timing detail, since none of it is guessable:
+ *
+ *  1. Each beat is travel + land + dwell, and the dwell scales with caption
+ *     length. A flat beat left ~900ms of dead air after short captions and cut
+ *     the long ones off mid-read.
+ *  2. Beat 2 is the only beat whose path is a rejection — the resolver does not
+ *     answer, it reverts with a gateway URL. It gets a recoil in the resolver's
+ *     own hue before the real request runs, because "the resolver stores no
+ *     answer" is the sentence readers bounce off.
+ *  3. Traversed edges hold at a dim accent instead of resetting, then wipe
+ *     together at the loop boundary, so one full lookup is visible as a unit.
+ *
  * Platform constraints, all forced by Mintlify:
  *
  *  1. Everything lives INSIDE the exported function. Mintlify compiles snippets
@@ -30,7 +55,9 @@
  *  3. CSS modules are unavailable, so the styles live as `.fx-*` classes in
  *     /custom.css. Any .css file in the content dir is auto-loaded site-wide.
  *  4. Named export only; hooks are pre-injected, so there is no import line and
- *     no `React` global.
+ *     no `React` global. Only useState and useEffect are relied on — the
+ *     element handle for the viewport observer is a callback ref held in state
+ *     rather than useRef, which is not guaranteed to be injected.
  *  5. Plain <div>s, never <figure>. Mintlify wraps a <figure> in
  *     react-medium-image-zoom, which forced two bugs: clicking the diagram
  *     lifted the bare <svg> into a modal, losing the caption and dots, and the
@@ -39,12 +66,20 @@
  *     keeps role="img" and its aria-label, which is what actually carries the
  *     diagram to a screen reader.
  *
- * The palette is deliberately self-contained and dark in both site themes, so
- * the card reads identically wherever it is dropped.
+ * The palette follows the page theme. Light values sit on `.fx` and the dark
+ * ones override them under Mintlify's `.dark` class, matching how the older
+ * `.rf` diagram switches. Every rule reads a token, so nothing in here knows
+ * which theme is on.
  */
 
 export const FlowExplainer = () => {
-  const BEAT_MS = 2400
+  /* Narrative timing. TRAVEL and LAND together are one packet animation;
+     custom.css splits fx-flow at TRAVEL / (TRAVEL + LAND). Changing either
+     number here means changing that split too. */
+  const TRAVEL_MS = 900
+  const LAND_MS = 180
+  const RECOIL_MS = 560
+  const SETTLE_MS = 400
 
   const ROUTES = [
     {
@@ -111,6 +146,18 @@ export const FlowExplainer = () => {
   const [paused, setPaused] = useState(false)
   const [routeId, setRouteId] = useState('ens')
   const [storeId, setStoreId] = useState('onchain')
+  /* True while the reader stepped here themselves. A deliberate step gets no
+     caption fade — someone clicking through at their own pace is fighting a
+     260ms cross-fade on every press. */
+  const [manual, setManual] = useState(false)
+  /* The 400ms at the end of the loop where the traversed trail wipes. */
+  const [settling, setSettling] = useState(false)
+  const [reduce, setReduce] = useState(false)
+  /* Nothing autoplays until the card is actually on screen: a loop that starts
+     at mount is animating page-load resting state, and burns frames above the
+     fold where nobody is looking. */
+  const [visible, setVisible] = useState(false)
+  const [rootEl, setRootEl] = useState(null)
 
   const route = ROUTES.find((r) => r.id === routeId)
   const store = STORES.find((s) => s.id === storeId)
@@ -124,8 +171,8 @@ export const FlowExplainer = () => {
     { id: 'api', tone: 'api', x: 754, y: 216, w: 176, h: 54, label: 'Offchain records', sub: 'your API or database' },
   ]
 
-  /* `beat` is the step an edge carries its packet on; `delay` staggers edges
-     that share one. `chip` is the payload shown while that beat plays. */
+  /* `beat` is the step an edge carries its packet on. `chip` is the payload
+     shown while that beat plays. */
   const EDGES = [
     {
       id: 'query',
@@ -200,25 +247,94 @@ export const FlowExplainer = () => {
     },
   ]
 
+  const step = BEATS[beat]
+  /* Beat 2 spends RECOIL_MS bouncing off the resolver before the real request
+     leaves, so everything timed off the packet shifts by the same lead. */
+  const lead = beat === 1 ? RECOIL_MS : 0
+  /* Dwell scales with how much there is to read, clamped so a one-line caption
+     still holds long enough to land and a long one never stalls the loop. */
+  const dwellMs = Math.min(1600, Math.max(700, step.caption.length * 22))
+  const beatMs = lead + TRAVEL_MS + LAND_MS + dwellMs
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const sync = () => setReduce(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
+
+  useEffect(() => {
+    if (!rootEl || typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0.35 },
+    )
+    io.observe(rootEl)
+    return () => io.disconnect()
+  }, [rootEl])
+
+  /* Fail open. MDX compiles every tag through its own component table, so the
+     callback ref above is not guaranteed to reach a DOM node — and a diagram
+     that silently never plays is far worse than one that plays off screen.
+     Refs attach before effects flush, so a null here means forwarding really
+     did fail rather than that we looked too early. */
+  useEffect(() => {
+    if (rootEl && typeof IntersectionObserver !== 'undefined') return
+    setVisible(true)
+  }, [rootEl])
+
   /* Keyed on `beat` as well as `paused`, so stepping with the arrows restarts
      the clock instead of leaving a half-spent interval to fire under the
-     reader — the whole point of a manual step is getting a full beat to look. */
+     reader — the whole point of a manual step is getting a full beat to look.
+     Under reduced motion nothing advances on its own at all: hiding the packet
+     but leaving the timer running is the worst of both, mutating the caption
+     under the reader with the cue that explained it removed. The arrows are
+     then the only control, which is what they are there for. */
   useEffect(() => {
-    if (paused) return
-    const id = setTimeout(() => setBeat((b) => (b + 1) % BEATS.length), BEAT_MS)
-    return () => clearTimeout(id)
-  }, [paused, beat])
+    if (paused || reduce || !visible) return
+    const last = beat === BEATS.length - 1
+    const wipe = setTimeout(() => {
+      if (last) setSettling(true)
+    }, beatMs)
+    const next = setTimeout(() => {
+      setSettling(false)
+      setManual(false)
+      setBeat((b) => (b + 1) % BEATS.length)
+    }, beatMs + (last ? SETTLE_MS : 0))
+    return () => {
+      clearTimeout(wipe)
+      clearTimeout(next)
+    }
+  }, [paused, beat, reduce, visible, beatMs])
 
-  const go = (delta) => setBeat((b) => (b + delta + BEATS.length) % BEATS.length)
+  const go = (delta) => {
+    setManual(true)
+    setSettling(false)
+    setBeat((b) => (b + delta + BEATS.length) % BEATS.length)
+  }
 
-  const step = BEATS[beat]
+  /* A toggle changes what is being asked for, so the run restarts. Flipping
+     store at beat 4 otherwise left a payload on screen for a request that was
+     never made. */
+  const retarget = (fn) => (value) => {
+    fn(value)
+    setManual(true)
+    setSettling(false)
+    setBeat(0)
+  }
+
   const isOn = (id) => step.active.includes(id)
+  /* Source then target, in every beat — the ring lands on the receiver. */
+  const arriving = step.active[1]
 
   return (
     <div
       className="fx"
+      data-settling={settling}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      ref={setRootEl}
     >
       <div className="fx-controls">
         <div aria-label="Parent name" className="fx-toggle" role="group">
@@ -230,7 +346,7 @@ export const FlowExplainer = () => {
                 className="fx-btn"
                 data-on={r.id === routeId}
                 key={r.id}
-                onClick={() => setRouteId(r.id)}
+                onClick={() => retarget(setRouteId)(r.id)}
                 type="button"
               >
                 {r.label}
@@ -248,7 +364,7 @@ export const FlowExplainer = () => {
                 className="fx-btn"
                 data-on={s.id === storeId}
                 key={s.id}
-                onClick={() => setStoreId(s.id)}
+                onClick={() => retarget(setStoreId)(s.id)}
                 type="button"
               >
                 {s.label}
@@ -273,6 +389,9 @@ export const FlowExplainer = () => {
             <marker id="fx-head-on" markerHeight="6" markerWidth="6" orient="auto" refX="5" refY="3">
               <path className="fx-arrow-on" d="M0,0 L6,3 L0,6 Z" />
             </marker>
+            <marker id="fx-head-done" markerHeight="6" markerWidth="6" orient="auto" refX="5" refY="3">
+              <path className="fx-arrow-done" d="M0,0 L6,3 L0,6 Z" />
+            </marker>
           </defs>
 
           {/* Every group label sits 8px above its own box, and every box keeps
@@ -286,19 +405,25 @@ export const FlowExplainer = () => {
             <text x="500" y="8">Resolution infrastructure</text>
           </g>
 
-          {EDGES.map((e) => (
-            <path
-              className="fx-edge"
-              d={e.d}
-              data-on={e.beat === beat}
-              key={e.id}
-              markerEnd={e.beat === beat ? 'url(#fx-head-on)' : 'url(#fx-head)'}
-            />
-          ))}
+          {EDGES.map((e) => {
+            const on = e.beat === beat
+            const done = !on && e.beat < beat
+            return (
+              <path
+                className="fx-edge"
+                d={e.d}
+                data-done={done}
+                data-on={on}
+                key={e.id}
+                markerEnd={on ? 'url(#fx-head-on)' : done ? 'url(#fx-head-done)' : 'url(#fx-head)'}
+              />
+            )
+          })}
 
           {EDGES.filter((e) => e.num).map((e) => (
             <text
               className="fx-edge-num"
+              data-done={e.beat < beat}
               data-on={e.beat === beat}
               key={`n-${e.id}`}
               x={e.nx}
@@ -311,7 +436,13 @@ export const FlowExplainer = () => {
           {EDGES.filter((e) => e.beat === beat && e.chip).map((e) => {
             const w = chipW(e.chip.text)
             return (
-              <g className="fx-chip" key={`${beat}-c-${e.id}`}>
+              <g
+                className="fx-chip"
+                key={`${beat}-c-${e.id}`}
+                /* Lands with the packet rather than ahead of it: the payload
+                   label used to appear before the request had left. */
+                style={{ animationDelay: `${lead + TRAVEL_MS * 0.55}ms` }}
+              >
                 <rect
                   height={CHIP_H}
                   rx="6"
@@ -324,12 +455,24 @@ export const FlowExplainer = () => {
             )
           })}
 
+          {/* The resolver's refusal, in the resolver's own hue: out a quarter of
+              the way and straight back, before the real request runs. */}
+          {EDGES.filter((e) => e.beat === beat && beat === 1).map((e) => (
+            <circle
+              className="fx-packet"
+              data-kind="recoil"
+              key={`${beat}-r-${e.id}`}
+              r="4.5"
+              style={{ offsetPath: `path("${e.d}")` }}
+            />
+          ))}
+
           {EDGES.filter((e) => e.beat === beat).map((e) => (
             <circle
               className="fx-packet"
               key={`${beat}-${e.id}`}
               r="4.5"
-              style={{ offsetPath: `path("${e.d}")`, animationDelay: `${e.delay ?? 0}ms` }}
+              style={{ offsetPath: `path("${e.d}")`, animationDelay: `${lead}ms` }}
             />
           ))}
 
@@ -356,15 +499,35 @@ export const FlowExplainer = () => {
               ) : null}
             </g>
           ))}
+
+          {/* Arrival ring. A sibling one-shot rather than an animation on the
+              node itself, which would clobber the transform and colour
+              transitions data-on is already driving. */}
+          {NODES.filter((n) => n.id === arriving).map((n) => (
+            <rect
+              className="fx-land"
+              data-tone={n.tone}
+              height={n.h}
+              key={`${beat}-l-${n.id}`}
+              rx="12"
+              style={{ animationDelay: `${lead + TRAVEL_MS}ms` }}
+              width={n.w}
+              x={n.x}
+              y={n.y}
+            />
+          ))}
         </svg>
       </div>
 
       <div className="fx-footer">
-        <p className="fx-caption" key={`${routeId}-${storeId}-${beat}`}>
+        <p className="fx-caption" data-manual={manual} key={`${routeId}-${storeId}-${beat}`}>
           <span className="fx-step">{beat + 1}</span>
           {step.caption}
         </p>
         <div className="fx-nav">
+          <span aria-hidden="true" className="fx-pause" data-on={paused && !reduce}>
+            ❙❙
+          </span>
           <button
             aria-label="Previous step"
             className="fx-navbtn"
