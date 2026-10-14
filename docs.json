@@ -510,7 +510,7 @@
   },
   {
     "source": "/dev-docs/infrastructure/namespace-l2-subnames",
-    "destination": "/developer-guide/architecture/onchain-subnames"
+    "destination": "/overview/subnames"
   },
   {
     "source": "/dev-docs/subpages",
@@ -550,7 +550,7 @@
   },
   {
     "source": "/overview/namespace-onchain-subnames",
-    "destination": "/developer-guide/architecture/onchain-subnames"
+    "destination": "/overview/subnames"
   },
   {
     "source": "/overview/integration/waas",
@@ -662,7 +662,11 @@
   },
   {
     "source": "/overview/namespace-l2-subname-infrastructure",
-    "destination": "/developer-guide/architecture/onchain-subnames"
+    "destination": "/overview/subnames"
+  },
+  {
+    "source": "/developer-guide/architecture/onchain-subnames",
+    "destination": "/overview/subnames"
   },
   {
     "source": "/how-to/guide",

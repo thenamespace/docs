@@ -1,106 +1,133 @@
 ---
 title: "Offchain subnames"
-description: "No-code offchain subnames, records, and API keys."
+description: "Create and manage offchain ENS subnames in the Namespace App."
 sidebarTitle: "Offchain subnames"
 icon: "cloud"
 ---
 
-Use the [Offchain section of the Namespace App](https://app.namespace.ninja/offchain) to create and manage gasless ENS subnames through the interface, Offchain Manager SDK, or API.
+Create ENS subnames under a name you own in the [Namespace App](https://app.namespace.ninja/offchain). Namespace stores these subnames and their records offchain. They are not minted as onchain NFTs. ENS clients resolve their records through CCIP Read.
 
-Offchain subnames are application-managed records resolved through CCIP Read. They are not minted as NFTs and do not require a blockchain transaction for each creation or update.
+Creating, editing, and deleting offchain subnames and their records is free. These actions require no blockchain transactions or gas fees.
 
 ## What you can do
 
-- Configure a parent ENS name to use the Namespace Hybrid Resolver.
-- Create, update, and delete offchain subnames without code.
-- Manage address, text, and content hash records.
-- Generate API keys for server-side SDK or API integrations.
+- Create, edit, and delete subnames under your ENS name.
+- Set EVM and non-EVM addresses, profile and social text records, and a content hash.
+- Index subnames by their optional owner address.
+- Manage subnames in the app or automate through the SDK and API.
 
-![Offchain section of the Namespace App with subname and configuration tools](/assets/dev-app.png)
-
-## Before you begin
-
-- Connect the wallet that owns the parent ENS name.
-- Select the parent name you want to configure.
-- Use a CCIP Read-compatible ENS client when testing resolution.
+![Namespace Developer Portal introduction with subname, record, and API-key management tools](/assets/dev-app.png)
 
 ## Configure the resolver
 
-The parent name must use the Namespace Hybrid Resolver before compatible ENS clients can resolve its offchain subnames.
+Set the parent ENS name to use the Namespace Hybrid Resolver. This initial setup requires an onchain transaction and gas fees. Skip this section if resolution is already configured.
 
 <Steps>
-  <Step title="Open the Offchain section">
-    Visit [app.namespace.ninja/offchain](https://app.namespace.ninja/offchain), connect the owner wallet, and select the parent ENS name.
+  <Step title="Select your parent name">
+    Connect the wallet that owns the ENS name. In **Offchain**, select the name and open **Resolution**.
   </Step>
 
   <Step title="Update the resolver">
-    Find the resolver configuration, click **Update**, and confirm the transaction in your wallet. The app points the parent name to the Namespace Hybrid Resolver.
+    Click **Update resolver** and confirm in your wallet. Skip this step if it shows **Updated**.
 
-    <img src="/assets/update-resolver.png" alt="Resolver configuration with the Update button in the Namespace App" />
+    <Frame>
+      <img src="/assets/offchain/update-resolver.webp" alt="Resolution tab with Update resolver and Configure buttons for the selected parent name" />
+    </Frame>
   </Step>
 
-  <Step title="Confirm resolution">
-    After the transaction confirms, create a test subname and verify that its records resolve in a CCIP Read-compatible client.
+  <Step title="Configure offchain resolution">
+    Click **Configure** and complete the wallet prompts. Check that the status reads **Configured**.
+
+    <Frame>
+      <img src="/assets/offchain/resolver-configured.webp" alt="Resolution setup completed with Updated and Configured statuses" />
+    </Frame>
   </Step>
 </Steps>
 
 ## Create and manage subnames
 
 <Steps>
-  <Step title="Open the Subnames tab">
-    Select the configured parent ENS name, then open **Subnames** to view its issued names.
+  <Step title="Open the creation form">
+    Select the parent name in **Subnames**, then click **Mint subname**.
 
-    <img src="/assets/create-offchain-subnames-1.png" alt="Subnames tab for a selected parent ENS name" width="563" />
+    <Frame>
+      <img src="/assets/offchain/subnames.webp" alt="Subnames tab with a parent ENS name selected and the Mint subname button" />
+    </Frame>
   </Step>
 
   <Step title="Create a subname">
-    Enter the label you want to issue and add the required ENS records. You can store EVM and non-EVM addresses, text records, and a content hash.
+    Enter a label, such as `happy`, and check availability.
+
+    **Owner Address** is optional and can be used for indexing subnames by owner.
+
+    Add records through **Complete your profile**, or add them later. Click **Create**.
+
+    <Frame>
+      <img src="/assets/offchain/create-subname.webp" alt="Create subname dialog with an available label, optional owner address, Complete your profile, and Create button" />
+    </Frame>
   </Step>
 
-  <Step title="Save and manage records">
-    Save the subname, then use its record controls to update or remove data later. Offchain updates do not require a blockchain transaction.
+  <Step title="Edit the subname's records">
+    Click the subname's pencil icon. Edit its address, text, or content hash records, then click **Save**.
 
-    <CardGroup cols={2}>
-      <Card>
-        <img src="/assets/create-offchain-subnames-2.png" alt="Text record editor for an offchain subname" />
-      </Card>
-      <Card>
-        <img src="/assets/create-offchain-subnames-3.png" alt="Address record editor for an offchain subname" />
-      </Card>
-    </CardGroup>
+    <Frame>
+      <img src="/assets/offchain/address-records.webp" alt="Addresses editor with Ethereum and Base records, additional chain options, and the Save button" />
+    </Frame>
   </Step>
 </Steps>
 
+To delete a subname, click its trash icon.
+
 ## Create an API key
 
-You need an API key only when creating or managing offchain subnames from server-side SDK or API code. Keep the key out of client-side code and public repositories.
+API keys are required for SDK and API access, not for using the app.
 
-<Card title="Generate an API key" icon="key" horizontal href="https://app.namespace.ninja/offchain?activeTab=apiKeys">
-  Open the API Keys tab in the Namespace App.
+<Card title="Create an API key" icon="key" horizontal href="https://app.namespace.ninja/offchain?activeTab=apiKeys">
+  Open API Keys in the Namespace App.
 </Card>
 
-Choose the key scope that matches your integration:
+<Steps>
+  <Step title="Open API Keys">
+    Select the parent name, open **API Keys**, and click **Create new key**.
 
-| Key type | Scope | Best for |
-| --- | --- | --- |
-| Address-based | Every ENS name owned by one wallet | Managing several parent names with one integration |
-| Domain-based | One parent ENS name | Separating environments or delegating access to one name |
+    <Frame>
+      <img src="/assets/offchain/api-keys.webp" alt="API Keys tab with the Create new key button and a reminder to save keys securely" />
+    </Frame>
+  </Step>
 
-Set an expiry date when you create the key. You can revoke or replace keys from the same screen.
+  <Step title="Set the key's expiry and scope">
+    Enter a key name, set an expiry date, and choose a scope:
 
-![API key generation options in the Namespace App](/assets/api-keys.png)
+    | Scope | Access | Best used for |
+    | --- | --- | --- |
+    | Address based | All ENS names owned by the connected wallet | Managing multiple parent names |
+    | Domain based | Only the selected parent name | Restricting an integration to one parent name |
+
+    Email is optional. Click **Create**.
+
+    <Frame>
+      <img src="/assets/offchain/api-key-scope.webp" alt="Complete API key screen with key name, expiry, scope options, optional email field, and Create and Cancel buttons" />
+    </Frame>
+  </Step>
+
+  <Step title="Copy and store the key">
+    Store the key in a server-side environment variable or secret store. Never expose it in browser code or public repositories.
+
+    Copy it before it disappears from the browser after about 24 hours. The key remains valid until its expiry date or revocation.
+  </Step>
+</Steps>
 
 <Note>
-  New accounts have an issuance limit of **2,000 offchain subnames**. Contact Namespace through the [Builders group on Telegram](https://t.me/+5FAwyiKOTeswNTIy) before launch if your integration needs a different limit.
+  Limit: 2,000 subnames per parent name. For a higher limit, contact the [Builders group](https://t.me/+5FAwyiKOTeswNTIy).
 </Note>
 
 ## Next steps
 
 <CardGroup cols={2}>
   <Card title="Integrate offchain subnames" icon="code" href="/developer-guide/guide/create-offchain-subnames">
-    Create a subname, attach records, and query it with the Offchain Manager SDK.
+    Create and query subnames with the SDK.
   </Card>
   <Card title="Troubleshoot resolution" icon="screwdriver-wrench" href="/developer-guide/troubleshooting">
-    Diagnose resolver, API key, record, and client compatibility problems.
+    Fix name and record lookup failures.
   </Card>
 </CardGroup>
