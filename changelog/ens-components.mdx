@@ -18,7 +18,7 @@ To move from 2.x to 3.x, follow [Upgrade to the latest version](/developer-guide
     - **`NameRenewForm`**: renews a `.eth` name in one step, paid in USDC or DAI. Anyone can renew any name, and the owner keeps it.
     - **`SubnameRenewForm`**: renews a subname at the price set by the parent's owner, and warns when the subname would outlive its parent.
     - **`TransactionProgress` and `TransactionModal`**: the progress screen every form uses, exported for your own transactions.
-    - **ENSv2 subname minting** in `SubnameMintForm`, through Namespace's ENSv2 activation contracts. The user picks ETH, USDC, or DAI on mainnet, or ETH or USDC on Sepolia.
+    - **ENSv2 subname minting** in `SubnameMintForm`, through Namespace's ENSv2 activation contracts. The user pays in USDC or DAI.
     - **`resolver` prop** on `SubnameMintForm` for activations that don't set a resolver.
     - **`priceCurrency`** on the `SubnameMintForm` `onSuccess` payload.
     - ENSv2 helpers: `getEnsV2RegistrationDeployment`, `isEnsV2NameAvailable`, `getEnsV2Deployment`, `quoteEnsV2Mint`, `quoteEnsV2Payment`, `getEnsV2RenewalDeployment`, `getEnsV2RenewalTarget`, `getEnsV2RenewPrice`, and `quoteEnsV2Renewal`.

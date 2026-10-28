@@ -14,7 +14,7 @@ Version 3 moves every onchain flow to ENSv2. Most apps only need to bump the pac
 | `.eth` registration | ENSv1 registrar controller, paid in ETH. Records go to the ENS public resolver. | ENSv2 registrar, paid in USDC or DAI. Each owner gets a PermissionedResolver, deployed on their first registration. |
 | `.eth` renewal | No component. | New `NameRenewForm`, paid in USDC or DAI. |
 | Record editing | Resolver read from the ENSv1 registry. | Resolver found through the ENSv2 Universal Resolver. Writes to standard resolvers, PermissionedResolvers, and Namespace's SimplifiedResolver. |
-| Onchain subname minting | Namespace listings through the Mint Manager, on Ethereum, Base, or Optimism, paid in ETH. | Namespace ENSv2 activations on Ethereum, paid in ETH, USDC, or DAI. Old listings need `version={1}`. |
+| Onchain subname minting | Namespace listings through the Mint Manager, on Ethereum, Base, or Optimism, paid in ETH. | Namespace ENSv2 activations on Ethereum, paid in USDC or DAI. Old listings need `version={1}`. |
 | Onchain subname renewal | No component. | New `SubnameRenewForm`, for ENSv2 subnames. |
 | Offchain subnames | `OffchainSubnameForm` with your save callbacks. | No change. |
 | Transaction screens | `TransactionPendingScreen`, with a `message` prop and a required `hash`. | One shared screen in every form, exported as `TransactionProgress` and `TransactionModal`. `TransactionPendingScreen` no longer takes `message`. |

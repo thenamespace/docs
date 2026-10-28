@@ -32,7 +32,7 @@ export function MintSubname({ onConnect }: { onConnect: () => void }) {
 }
 ```
 
-On mainnet the user pays in ETH, USDC, or DAI, from the tokens the activation accepts. On Sepolia the options are ETH or USDC. Network fees are always in ETH.
+The user pays in USDC or DAI and picks the token in the form. Network fees are always in ETH.
 
 ## Props
 
@@ -62,7 +62,7 @@ interface MintSuccessData {
   parentName: string;
   txHash: string;
   price: string;
-  priceCurrency?: string; // 'ETH', 'USDC', or 'DAI'
+  priceCurrency?: string; // 'USDC' or 'DAI'. Unset on version={1} mints, which are paid in ETH.
   transactionFees: string; // ETH
   records: EnsRecords;
 }

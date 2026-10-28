@@ -49,7 +49,7 @@ export function RegisterName() {
 These rules apply to registration, renewal, subname minting, and subname renewal.
 
 - **Networks:** Ethereum mainnet by default, or Sepolia when you pass `isTestnet`.
-- **Payment:** `.eth` registration and renewal are paid in USDC or DAI. Subname mints and renewals are paid in a token the parent's activation accepts: ETH, USDC, or DAI on mainnet, and ETH or USDC on Sepolia. The user picks the token inside the form. Network fees are always paid in ETH.
+- **Payment:** `.eth` registration and renewal, and subname mints and renewals, are paid in USDC or DAI. The user picks the token inside the form. Network fees are always paid in ETH.
 - **Wallet prompts:** Wallets that support EIP-5792 atomic batching confirm each step in one prompt. Other wallets get one prompt per call, for example a token approval before the payment. The forms handle approvals, so don't add your own.
 - **Balances:** When the wallet holds too little of the chosen token, or too little ETH for gas, the form shows "Insufficient funds" and blocks the transaction.
 
