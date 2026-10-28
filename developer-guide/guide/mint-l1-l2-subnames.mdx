@@ -1,11 +1,16 @@
 ---
-title: "Mint Onchain Subnames on Ethereum or L2"
-description: "Mint ENS subnames on Ethereum or L2 chains."
-sidebarTitle: "Mint Onchain Subnames"
+title: "Mint onchain subnames under an ENSv1 listing"
+description: "Mint subnames under existing ENSv1 listings."
+sidebarTitle: "Mint onchain subnames (ENSv1)"
 icon: "coins"
+tag: "ENSv1"
 ---
 
-This guide shows how to mint an onchain subname under an ENS name activated in the Namespace App. The Mint Manager SDK selects the correct mint contract for Ethereum or the parent listing's L2 chain; your Viem clients submit the resulting transaction on that chain.
+import Ensv1Deprecated from '/snippets/ensv1-deprecated.mdx';
+
+<Ensv1Deprecated />
+
+This guide shows how to mint an onchain subname under an ENSv1 name that already has an onchain listing in the Namespace App. The Mint Manager SDK selects the correct mint contract for Ethereum or the parent listing's L2 chain; your Viem clients submit the resulting transaction on that chain.
 
 The complete example uses Base. The SDK derives the chain from the parent listing, so the same code mints an Ethereum listing without change.
 
@@ -13,7 +18,7 @@ The complete example uses Base. The SDK derives the chain from the parent listin
 
 - Node.js 22 and npm
 - TypeScript experience
-- An ENS name activated and listed in the [Namespace App](/user-guide/app#activate-your-ens-name)
+- An ENSv1 name with an existing onchain listing in the [Namespace App](/user-guide/app)
 - A wallet with enough native currency for the mint price and gas
 - An RPC endpoint for the chain on which you will mint
 

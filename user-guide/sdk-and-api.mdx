@@ -4,7 +4,7 @@ description: "Build with Namespace SDKs and APIs."
 icon: "code"
 ---
 
-Namespace provides TypeScript SDKs and hosted APIs for creating, minting, querying, and resolving ENS subnames. Choose the interface that fits your runtime and how much infrastructure you want to manage.
+Namespace provides TypeScript SDKs and hosted APIs for creating, querying, and resolving ENS subnames. Choose the interface that fits your runtime and how much infrastructure you want to manage.
 
 ## Choose an interface
 
@@ -22,16 +22,15 @@ Namespace provides TypeScript SDKs and hosted APIs for creating, minting, queryi
 | Tool | Use it to |
 | --- | --- |
 | Offchain Manager | Create, update, delete, and query gasless offchain subnames and records |
-| Mint Manager | Check eligibility and generate mint transaction parameters for Ethereum Mainnet or L2 chains |
-| Indexer Manager | Query indexed registries and subnames from L2 chains |
 | Offchain API | Manage offchain subnames over HTTP |
-| Mint API | Estimate and generate mint parameters over HTTP |
 | Resolvio API | Resolve ENS names, profiles, addresses, text records, and content hashes |
+
+[Mint Manager](/developer-guide/sdks/mint-manager), [Indexer Manager](/developer-guide/sdks/indexer-manager), and the [Mint API](/api-reference/mint-manager/estimate-mint-params) are deprecated. They keep working for onchain listings created on ENSv1 names.
 
 ## Before you integrate
 
 - Keep Namespace API keys in server-side environment variables.
-- Decide whether your product needs operator-managed offchain records or onchain subnames on Ethereum or L2 chains.
+- Decide whether your product needs operator-managed offchain records or onchain subnames on Ethereum.
 - Use a testnet configuration during development.
 - Handle unavailable labels, authentication failures, rate limiting, and resolver errors explicitly.
 - Pin supported package versions and review the changelog before upgrading.

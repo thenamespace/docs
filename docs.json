@@ -149,30 +149,6 @@
                     ]
                   },
                   {
-                    "group": "Mint Manager",
-                    "icon": "gauge",
-                    "pages": [
-                      "developer-guide/sdks/mint-manager",
-                      "developer-guide/sdks/mint-manager/installation",
-                      "developer-guide/sdks/mint-manager/check-name",
-                      "developer-guide/sdks/mint-manager/get-mint-transaction-parameters",
-                      "developer-guide/sdks/mint-manager/normalization",
-                      "developer-guide/sdks/mint-manager/errors",
-                      "developer-guide/sdks/mint-manager/is-subname-available",
-                      "developer-guide/sdks/mint-manager/get-mint-details"
-                    ]
-                  },
-                  {
-                    "group": "Indexer Manager",
-                    "icon": "database",
-                    "pages": [
-                      "developer-guide/sdks/indexer-manager",
-                      "developer-guide/sdks/indexer-manager/installation",
-                      "developer-guide/sdks/indexer-manager/fetch-l2-subnames",
-                      "developer-guide/sdks/indexer-manager/fetch-l2-registries"
-                    ]
-                  },
-                  {
                     "group": "Avatar",
                     "icon": "image",
                     "pages": [
@@ -189,6 +165,38 @@
                     "icon": "puzzle-piece",
                     "pages": [
                       "developer-guide/sdks/ens-components"
+                    ]
+                  },
+                  {
+                    "group": "Legacy (ENSv1)",
+                    "icon": "box-archive",
+                    "pages": [
+                      {
+                        "group": "Mint Manager",
+                        "tag": "Deprecated",
+                        "icon": "gauge",
+                        "pages": [
+                          "developer-guide/sdks/mint-manager",
+                          "developer-guide/sdks/mint-manager/installation",
+                          "developer-guide/sdks/mint-manager/check-name",
+                          "developer-guide/sdks/mint-manager/get-mint-transaction-parameters",
+                          "developer-guide/sdks/mint-manager/normalization",
+                          "developer-guide/sdks/mint-manager/errors",
+                          "developer-guide/sdks/mint-manager/is-subname-available",
+                          "developer-guide/sdks/mint-manager/get-mint-details"
+                        ]
+                      },
+                      {
+                        "group": "Indexer Manager",
+                        "tag": "Deprecated",
+                        "icon": "database",
+                        "pages": [
+                          "developer-guide/sdks/indexer-manager",
+                          "developer-guide/sdks/indexer-manager/installation",
+                          "developer-guide/sdks/indexer-manager/fetch-l2-subnames",
+                          "developer-guide/sdks/indexer-manager/fetch-l2-registries"
+                        ]
+                      }
                     ]
                   }
                 ]
@@ -209,14 +217,6 @@
                     ]
                   },
                   {
-                    "group": "Mint API",
-                    "icon": "gauge",
-                    "pages": [
-                      "api-reference/mint-manager/estimate-mint-params",
-                      "api-reference/mint-manager/generate-mint-params"
-                    ]
-                  },
-                  {
                     "group": "Resolvio API",
                     "icon": "magnifying-glass",
                     "pages": [
@@ -230,6 +230,21 @@
                       "api-reference/resolvio/get-ens-texts",
                       "api-reference/resolvio/get-ens-contenthash",
                       "api-reference/resolvio/clear-ens-cache"
+                    ]
+                  },
+                  {
+                    "group": "Legacy (ENSv1)",
+                    "icon": "box-archive",
+                    "pages": [
+                      {
+                        "group": "Mint API",
+                        "tag": "Deprecated",
+                        "icon": "gauge",
+                        "pages": [
+                          "api-reference/mint-manager/estimate-mint-params",
+                          "api-reference/mint-manager/generate-mint-params"
+                        ]
+                      }
                     ]
                   }
                 ]

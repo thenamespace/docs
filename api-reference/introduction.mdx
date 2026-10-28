@@ -5,6 +5,8 @@ sidebarTitle: "Overview"
 icon: "book-bookmark"
 ---
 
+import Ensv1Deprecated from '/snippets/ensv1-deprecated.mdx';
+
 ## Offchain Manager API
 
 The Offchain Manager API allows you to create, update, delete, and retrieve offchain ENS subnames and their associated records by using the Namespace.
@@ -49,27 +51,6 @@ x-auth-token: YOUR_API_KEY
     arrow="true"
   >
     Remove subnames from the system (requires API key).
-  </Card>
-</CardGroup>
-
-## Mint Manager API
-
-<CardGroup cols={2}>
-  <Card
-    title="Estimate Mint Parameters"
-    icon="calculator"
-    href="/api-reference/mint-manager/estimate-mint-params"
-    arrow="true"
-  >
-    Get estimated price, fee, and validation status for a requested subname.
-  </Card>
-  <Card
-    title="Generate Mint Parameters"
-    icon="key"
-    href="/api-reference/mint-manager/generate-mint-params"
-    arrow="true"
-  >
-    Generate signed mint parameters ready to be used on-chain.
   </Card>
 </CardGroup>
 
@@ -159,5 +140,28 @@ Base URL: `https://api.resolvio.xyz/`
     arrow="true"
   >
     Invalidate cached resolver data before your next read.
+  </Card>
+</CardGroup>
+
+## Mint Manager API (deprecated)
+
+<Ensv1Deprecated />
+
+<CardGroup cols={2}>
+  <Card
+    title="Estimate Mint Parameters"
+    icon="calculator"
+    href="/api-reference/mint-manager/estimate-mint-params"
+    arrow="true"
+  >
+    Get estimated price, fee, and validation status for a requested subname.
+  </Card>
+  <Card
+    title="Generate Mint Parameters"
+    icon="key"
+    href="/api-reference/mint-manager/generate-mint-params"
+    arrow="true"
+  >
+    Generate signed mint parameters ready to be used on-chain.
   </Card>
 </CardGroup>

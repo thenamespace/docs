@@ -67,6 +67,8 @@ If your product intentionally updates existing subnames, call `updateSubname` ex
 
 ## Minting errors
 
+These errors come from the deprecated Mint Manager SDK, which supports onchain listings created on ENSv1 names.
+
 ### `canMint` is false
 
 Inspect `validationErrors` from `getMintDetails`. Common causes include an unavailable label, a missing whitelist entry, a reserved name, or a wallet that does not meet the listing rules.

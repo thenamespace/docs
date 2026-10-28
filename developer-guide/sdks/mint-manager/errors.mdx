@@ -5,6 +5,10 @@ sidebarTitle: "Error handling"
 icon: "circle-alert"
 ---
 
+import Ensv1Deprecated from '/snippets/ensv1-deprecated.mdx';
+
+<Ensv1Deprecated />
+
 Every failure the SDK raises is a `MintManagerError` carrying a stable `code`. Branch on `code`; the `message` is written for a human reading a log and may change between releases.
 
 ```typescript
