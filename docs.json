@@ -17,6 +17,10 @@
     }
   },
   "favicon": "/favicon.ico",
+  "banner": {
+    "content": "ENSv2 is live. Offchain subnames work with ENSv1 and ENSv2 names. [See what changes for you](/overview/ensv2)",
+    "dismissible": true
+  },
   "integrations": {
     "posthog": {
       "apiKey": "phc_m34ZAW7cLSFC3o4eipnrMG3GONeV40GXARnD3bJCap7"
@@ -34,6 +38,7 @@
             "group": "Start here",
             "pages": [
               "getting-started",
+              "overview/ensv2",
               "learn-more",
               "overview/subnames"
             ]

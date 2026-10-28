@@ -1,6 +1,6 @@
 ---
 title: "Learn about Subnames"
-description: "Learn more about Subnames and how to choose between offchain, L1, and L2."
+description: "Learn more about Subnames and how to choose between offchain and L1."
 sidebarTitle: "Learn about Subnames"
 icon: "question"
 ---
@@ -43,7 +43,7 @@ See [Use cases](/overview/use-cases) for examples across wallets, payments, AI a
 
 ## L1 subnames
 
-L1 subnames are created through ENS contracts on Ethereum. Their guarantees depend on the parent name's fuse configuration and the minting contract used.
+L1 subnames are created through ENS contracts on Ethereum. On ENSv1 names, their guarantees depend on the parent name's fuse configuration and the minting contract used.
 
 
 When a name is activated through the [Namespace App](/user-guide/app#activate-your-ens-name), the activation flow configures the parent and its minting rules before users register subnames. Review the confirmation transaction carefully because fuse changes may be irreversible.
@@ -62,18 +62,7 @@ L1 issuance usually has the highest transaction cost, so it best fits lower-volu
 
 ## L2 subnames
 
-L2 subnames are minted through registry contracts on a supported Layer 2. They offer onchain ownership with lower transaction costs than Ethereum mainnet, although the exact cost and trust assumptions depend on the selected L2.
-
-The Namespace App supports configured L2 listings, including Base and Optimism. Developers can use the [Mint Manager guide](/developer-guide/guide/mint-l1-l2-subnames) to prepare and submit a transaction for the chain specified by the parent listing.
-
-<CardGroup cols={2}>
-  <Card title="Enable L2 subname minting—no code" icon="desktop" href="/user-guide/app#activate-your-ens-name">
-    Activate your ENS name, configure an L2 listing, and let users mint through Namespace.
-  </Card>
-  <Card title="Integrate L2 minting into your app" icon="code" href="/developer-guide/guide/mint-l1-l2-subnames">
-    Use the Mint Manager SDK to add L2 availability checks and mint transactions to your app.
-  </Card>
-</CardGroup>
+New L2 listings aren't available in the Namespace App. L2 subnames already minted on Base and Optimism keep resolving, and their owners don't need to do anything.
 
 ## Offchain subnames
 
@@ -93,7 +82,6 @@ Offchain subnames are not minted as NFTs. The parent-name operator controls issu
 ## Choose a model
 
 - Choose **offchain** for gasless issuance, high volume, and application-managed identities.
-- Choose **L2** for lower-cost onchain ownership on a supported L2.
 - Choose **L1** when Ethereum-native ownership outweighs transaction cost.
 
 See [Getting started](/getting-started) for the no-code and developer paths for each model.
