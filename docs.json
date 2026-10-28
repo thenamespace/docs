@@ -263,11 +263,11 @@
         "tab": "Changelog",
         "pages": [
           "changelog/offchain-sdk",
-          "changelog/address-sdk",
-          "changelog/indexer-sdk",
-          "changelog/mint-sdk",
           "changelog/avatar-sdk",
-          "changelog/ens-components"
+          "changelog/ens-components",
+          "changelog/address-sdk",
+          "changelog/mint-sdk",
+          "changelog/indexer-sdk"
         ]
       }
     ],
