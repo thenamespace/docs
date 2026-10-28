@@ -62,6 +62,7 @@
                 "icon": "desktop",
                 "pages": [
                   "user-guide/app",
+                  "user-guide/app/ensv1",
                   "user-guide/app/search-register",
                   "user-guide/dev-portal",
                   "user-guide/ens-widget",
