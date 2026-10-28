@@ -1,0 +1,131 @@
+---
+title: "Create offchain subnames"
+description: "Issue gasless subnames with OffchainSubnameForm."
+sidebarTitle: "Offchain subnames"
+icon: "cloud"
+---
+
+`OffchainSubnameForm` lets users claim or update a gasless offchain subname under your parent name. The form checks availability, collects records, and, if the subname already exists, switches to update mode with its records prefilled.
+
+The form only reads from Namespace. It never creates or updates a subname itself. The subname exists once your `onSubnameCreated` or `onSubnameUpdated` callback saves it through your server. Without those callbacks, the form shows success and nothing is created.
+
+## Before you start
+
+- The parent name, a `.eth` name or a DNS name imported into ENS, must use the Namespace resolver. See [Configure the resolver](/user-guide/dev-portal#configure-the-resolver).
+- Get an API key for the parent. See [Generate an API key](/developer-guide/sdks/offchain-manager/generate-api-key).
+- Install the Offchain Manager SDK: `npm install @thenamespace/offchain-manager`.
+
+<Warning>
+  Keep the API key on your server. It grants write access to every subname under the parent, so it must not ship in client code.
+</Warning>
+
+## Render the form
+
+In the browser, a client without an API key is enough for the form's reads. Each callback sends the subname to your server, and the form shows an error if the callback throws.
+
+```tsx
+'use client';
+
+import {
+  OffchainSubnameForm,
+  type OffchainSubnameCreatedData,
+} from '@thenamespace/ens-components';
+import { createOffchainClient } from '@thenamespace/offchain-manager';
+
+// Use mode: 'sepolia' for testnet.
+const offchainManager = createOffchainClient({ mode: 'mainnet' });
+
+async function saveSubname(subname: OffchainSubnameCreatedData) {
+  const response = await fetch('/api/subnames', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(subname),
+  });
+  if (!response.ok) throw new Error(await response.text());
+}
+
+export function ClaimSubname() {
+  return (
+    <OffchainSubnameForm
+      name="yourname.eth"
+      offchainManager={offchainManager}
+      avatarUploadDomain="app.example.com"
+      onSubnameCreated={saveSubname}
+      onSubnameUpdated={saveSubname}
+    />
+  );
+}
+```
+
+## Save the subname on your server
+
+Check that the request is allowed, such as who may claim or edit which label, then write with a client that holds the API key:
+
+```ts app/api/subnames/route.ts
+import { createOffchainClient } from '@thenamespace/offchain-manager';
+
+const apiKey = process.env.NAMESPACE_API_KEY;
+if (!apiKey) throw new Error('NAMESPACE_API_KEY is not set');
+
+const offchain = createOffchainClient({
+  mode: 'mainnet',
+  domainApiKeys: { 'yourname.eth': apiKey },
+});
+
+export async function POST(request: Request) {
+  const subname = await request.json();
+  // Authorize the request here before writing.
+
+  const existing = await offchain.getSingleSubname(subname.fullSubname);
+  if (existing) {
+    await offchain.updateSubname(subname.fullSubname, {
+      addresses: subname.addresses,
+      texts: subname.texts,
+    });
+  } else {
+    await offchain.createSubname({
+      parentName: subname.parentName,
+      label: subname.label,
+      addresses: subname.addresses,
+      texts: subname.texts,
+      owner: subname.owner,
+    });
+  }
+
+  return Response.json({ ok: true });
+}
+```
+
+For the full SDK, see [Offchain Manager](/developer-guide/sdks/offchain-manager).
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `name` | `string` | Required. The parent name. |
+| `offchainManager` | `OffchainClient` | Required. A client from `createOffchainClient()`. |
+| `label` | `string` | Prefills and locks the subname label. |
+| `isTestnet` | `boolean` | Uses Sepolia for avatar uploads. Set the client's `mode` to match. |
+| `avatarUploadDomain` | `string` | Hostname used in the avatar upload sign-in message. |
+| `title` | `string` | Replaces the form title. |
+| `subtitle` | `string` | Replaces the form subtitle. |
+| `hideTitle` | `boolean` | Hides the title and subtitle. |
+| `noBorder` | `boolean` | Removes the card border. |
+| `onSubnameCreated` | `(data: OffchainSubnameCreatedData) => Promise<void> \| void` | Called when the user submits a new subname. Save it here. |
+| `onSubnameUpdated` | `(data: OffchainSubnameCreatedData) => Promise<void> \| void` | Called when the user submits changes to an existing subname. Save them here. |
+| `onCancel` | `() => void` | Called when the user cancels. |
+
+## Callback data
+
+```ts
+interface OffchainSubnameCreatedData {
+  label: string;
+  parentName: string;
+  fullSubname: string;
+  addresses: { chain: ChainName; value: string }[];
+  texts: { key: string; value: string }[];
+  owner?: string;
+}
+```
+
+`ChainName` comes from `@thenamespace/offchain-manager`, so the data matches what `createSubname` and `updateSubname` expect.

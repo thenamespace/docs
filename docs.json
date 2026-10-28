@@ -164,7 +164,18 @@
                     "group": "ENS Components",
                     "icon": "puzzle-piece",
                     "pages": [
-                      "developer-guide/sdks/ens-components"
+                      "developer-guide/sdks/ens-components",
+                      "developer-guide/sdks/ens-components/installation",
+                      "developer-guide/sdks/ens-components/register-names",
+                      "developer-guide/sdks/ens-components/renew-names",
+                      "developer-guide/sdks/ens-components/edit-records",
+                      "developer-guide/sdks/ens-components/mint-subnames",
+                      "developer-guide/sdks/ens-components/renew-subnames",
+                      "developer-guide/sdks/ens-components/offchain-subnames",
+                      "developer-guide/sdks/ens-components/transaction-progress",
+                      "developer-guide/sdks/ens-components/hooks",
+                      "developer-guide/sdks/ens-components/theming",
+                      "developer-guide/sdks/ens-components/upgrade"
                     ]
                   },
                   {

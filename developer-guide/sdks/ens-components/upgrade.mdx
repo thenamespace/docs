@@ -1,0 +1,109 @@
+---
+title: "Upgrade to the latest version"
+description: "Move from ENS Components 2.x to 3.x."
+sidebarTitle: "Upgrade guide"
+icon: "arrow-up"
+---
+
+Version 3 moves every onchain flow to ENSv2. Most apps only need to bump the package, but three cases need code changes: minting under an old Namespace listing, showing the registration price from the success callback, and passing `message` to `TransactionPendingScreen`.
+
+## What changed from 2.x to 3.x
+
+| Flow | 2.x | 3.x |
+| --- | --- | --- |
+| `.eth` registration | ENSv1 registrar controller, paid in ETH. Records go to the ENS public resolver. | ENSv2 registrar, paid in USDC or DAI. Each owner gets a PermissionedResolver, deployed on their first registration. |
+| `.eth` renewal | No component. | New `NameRenewForm`, paid in USDC or DAI. |
+| Record editing | Resolver read from the ENSv1 registry. | Resolver found through the ENSv2 Universal Resolver. Writes to standard resolvers, PermissionedResolvers, and Namespace's SimplifiedResolver. |
+| Onchain subname minting | Namespace listings through the Mint Manager, on Ethereum, Base, or Optimism, paid in ETH. | Namespace ENSv2 activations on Ethereum, paid in ETH, USDC, or DAI. Old listings need `version={1}`. |
+| Onchain subname renewal | No component. | New `SubnameRenewForm`, for ENSv2 subnames. |
+| Offchain subnames | `OffchainSubnameForm` with your save callbacks. | No change. |
+| Transaction screens | `TransactionPendingScreen`, with a `message` prop and a required `hash`. | One shared screen in every form, exported as `TransactionProgress` and `TransactionModal`. `TransactionPendingScreen` no longer takes `message`. |
+| Wallet prompts | One transaction per step. | One prompt per step for wallets with EIP-5792 batching. Others get one prompt per call. |
+
+The new `version` prop on `EnsNameRegistrationForm`, `NameRenewForm`, `EnsRecordsForm`, and `SubnameMintForm`, and on the `useENSResolver` hook, defaults to `2`. ENSv1 registration and renewal are retired, so the only reason to pass `version={1}` is to mint under an old Namespace listing.
+
+Peer dependencies are unchanged: React 19 or later, wagmi `^2.19.5`, and viem `^2.46.3`.
+
+## Upgrade checklist
+
+<Steps>
+  <Step title="Update the package">
+    ```bash
+    npm install @thenamespace/ens-components@3
+    ```
+  </Step>
+
+  <Step title="Pass version={1} for old Namespace listings">
+    In 3.x, `SubnameMintForm` looks for an ENSv2 activation on the parent. If the parent has a listing created before ENSv2, keep it on ENSv1:
+
+    ```tsx
+    // 2.x
+    <SubnameMintForm parentName="oldlisting.eth" />
+
+    // 3.x
+    <SubnameMintForm version={1} parentName="oldlisting.eth" />
+    ```
+
+    Parents that the owner activates on ENSv2 in the [Namespace App](/user-guide/app#activate-your-ens-name) need no `version` prop. If a listing mints on Base or Optimism, keep those chains in your wagmi config.
+  </Step>
+
+  <Step title="Read the registration price from registrationCost">
+    Registration is now paid in USDC or DAI. In `onRegistrationSuccess`, `registrationCost` is the token amount. `transactionFees` and `total` are both the ETH network fees, so `total` no longer includes the price.
+
+    ```tsx
+    // 2.x: total was the ETH price plus fees
+    onRegistrationSuccess={(result) => showReceipt(`${result.total} ETH`)}
+
+    // 3.x: registrationCost is the stablecoin price, total is the ETH fee
+    onRegistrationSuccess={(result) =>
+      showReceipt(`${result.registrationCost} + ${result.transactionFees} ETH in fees`)
+    }
+    ```
+
+    Update copy that tells users they'll pay in ETH. Users need USDC or DAI to register, and ETH for gas.
+  </Step>
+
+  <Step title="Drop message from TransactionPendingScreen">
+    ```tsx
+    // 2.x
+    <TransactionPendingScreen hash={hash} isCompleted={done} message="Setting your records" />
+
+    // 3.x
+    <TransactionProgress
+      status={done ? 'success' : 'pending'}
+      hash={hash}
+      description="Setting your records"
+    />
+    ```
+
+    `TransactionPendingScreen` still works without `message`, and its `hash` is now optional. `TransactionProgress` replaces it. See [Transaction progress](/developer-guide/sdks/ens-components/transaction-progress).
+  </Step>
+
+  <Step title="Remove your own approval and balance steps">
+    The forms now approve the payment token, batch calls when the wallet supports it, and block the transaction with "Insufficient funds" when the wallet can't pay. Remove any approval or balance check you added around the forms.
+  </Step>
+
+  <Step title="Check the networks in your wagmi config">
+    ENSv2 runs on Ethereum mainnet, and on Sepolia with `isTestnet`. Make sure your wagmi config includes the chains you use.
+  </Step>
+
+  <Step title="Add the new renewal forms, if you need them">
+    `NameRenewForm` and `SubnameRenewForm` are new and optional. See [Renew names](/developer-guide/sdks/ens-components/renew-names) and [Renew subnames](/developer-guide/sdks/ens-components/renew-subnames).
+  </Step>
+</Steps>
+
+## Upgrade from 1.x to 2.x
+
+Version 2.0.0 was a visual redesign. Props, hooks, and exports didn't change.
+
+- The accent changed from blue to near-black, set by `--ns-ink`, and corners changed from square to 10 px, set by `--ns-radius`.
+- Fonts changed from Satoshi to DM Sans and DM Mono.
+- The stylesheet no longer sets a background on your page's `html` element. Add `background: var(--ns-bg)` to your page if you relied on it.
+- Older `--ns-color-*` and `--ns-blue-*` variables still resolve. Move overrides to the new tokens. See [Theming](/developer-guide/sdks/ens-components/theming).
+
+If you are on 1.1.0 or 1.1.1, two later 1.x releases also changed the API:
+
+- **1.1.2:** `OffchainSubnameForm` takes an `offchainManager` client instead of `apiKeyOrToken`, and `onSubnameCreated` and `onSubnameUpdated` replace `onSuccess`. The form no longer saves subnames, so your callbacks must. See [Offchain subnames](/developer-guide/sdks/ens-components/offchain-subnames).
+- **1.3.0:** `onRegistrationSuccess` returns `durationLabel` instead of `expiryInYears`.
+
+See the [changelog](/changelog/ens-components) for every release.

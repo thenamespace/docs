@@ -1,0 +1,63 @@
+---
+title: "Renew .eth names"
+description: "Extend a .eth name with NameRenewForm."
+sidebarTitle: "Renew names"
+icon: "rotate"
+---
+
+`NameRenewForm` renews a `.eth` name in one step on ENSv2, paid in USDC or DAI. Anyone can renew any name, and the owner keeps it, so don't limit the form to the name's owner.
+
+## Example
+
+```tsx
+'use client';
+
+import { NameRenewForm, type RenewalSuccessData } from '@thenamespace/ens-components';
+
+export function RenewName({ onConnect }: { onConnect: () => void }) {
+  const handleSuccess = (data: RenewalSuccessData) => {
+    console.log(`${data.fullName} now expires ${data.newExpiry}`);
+  };
+
+  return (
+    <NameRenewForm
+      name="alice.eth"
+      onConnectWallet={onConnect}
+      onRenewalSuccess={handleSuccess}
+    />
+  );
+}
+```
+
+Leave out `name` to let the user type the name to renew.
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `name` | `string` | The name to renew, as `alice` or `alice.eth`. Leave empty to let the user type one. |
+| `isTestnet` | `boolean` | Uses Sepolia instead of Ethereum mainnet. |
+| `referrer` | `Address` | Referrer recorded with the renewal. Defaults to Namespace's referrer. |
+| `title` | `string` | Replaces the form title. |
+| `subtitle` | `string` | Replaces the form subtitle. |
+| `noBorder` | `boolean` | Removes the card border. |
+| `className` | `string` | Class added to the form container. |
+| `version` | `1 \| 2` | Defaults to `2` (ENSv2). ENSv1 renewal is retired, so leave this unset. |
+| `onRenewalSuccess` | `(data: RenewalSuccessData) => void` | Called after the renewal confirms. |
+| `onConnectWallet` | `() => void` | Called when the user needs to connect a wallet. |
+| `onCancel` | `() => void` | Called when the user cancels. |
+
+## Success data
+
+`RenewalSuccessData` is shared with [`SubnameRenewForm`](/developer-guide/sdks/ens-components/renew-subnames).
+
+```ts
+interface RenewalSuccessData {
+  fullName: string;
+  txHash: string;
+  price: string;
+  priceCurrency: string; // 'ETH', 'USDC', or 'DAI'
+  transactionFees: string; // ETH
+  newExpiry: string;
+}
+```
