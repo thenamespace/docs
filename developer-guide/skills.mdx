@@ -24,7 +24,7 @@ Once installed, your AI agent can:
 
 ### ENS components skill
 
-The `ens-components` skill helps your agent build ENS flows in React with `@thenamespace/ens-components`. It covers name registration, record management, subname minting, avatar uploads, and theming.
+The `ens-components` skill helps your agent build ENS flows in React with `@thenamespace/ens-components`. It covers name registration and renewal, record management, onchain and offchain subname minting and renewal, transaction progress screens, avatar uploads, and theming. The skill sets the ENSv2 default and reserves `version={1}` for parents on old Namespace listings.
 
 **Install in your project:**
 
@@ -33,8 +33,9 @@ npx skills add thenamespace/skills -s ens-components
 ```
 
 Once installed, your AI agent can:
-- Scaffold React flows for name registration, record management, and subname minting
-- Choose the right component for the job, including `EnsNameRegistrationForm`, `EnsRecordsForm`, `SelectRecordsForm`, `SubnameMintForm`, and `OffchainSubnameForm`
+- Scaffold React flows for name registration, renewal, record management, and subname minting
+- Choose the right component for the job, including `EnsNameRegistrationForm`, `NameRenewForm`, `EnsRecordsForm`, `SubnameMintForm`, `SubnameRenewForm`, and `OffchainSubnameForm`
+- Keep onchain flows on ENSv2 and reach for `version={1}` only for parents on old Namespace listings
 
 ### Resolvio ENS resolution skill
 

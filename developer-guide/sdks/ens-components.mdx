@@ -5,7 +5,9 @@ sidebarTitle: "Overview"
 icon: "puzzle-piece"
 ---
 
-`@thenamespace/ens-components` provides React components for `.eth` registration, ENS record editing, and onchain or offchain subname issuance. The components use wagmi and Viem for wallet and chain interactions.
+`@thenamespace/ens-components` provides React components for `.eth` registration and renewal, ENS record editing, subname minting and renewal, offchain subname issuance, and reusable transaction progress screens. The components use wagmi and Viem for wallet and chain interactions.
+
+Onchain flows run on ENSv2 by default, on mainnet or Sepolia. One ENSv1 flow remains: minting under a parent on an old Namespace listing, which uses `version={1}` on `SubnameMintForm`.
 
 ## Install
 
@@ -37,11 +39,21 @@ export function RegisterName() {
 
 Set `isTestnet` to `true` to use Sepolia instead of Ethereum mainnet.
 
+## Upgrading to 3.0
+
+- `version` on `EnsNameRegistrationForm`, `NameRenewForm`, `EnsRecordsForm`, and `SubnameMintForm` now defaults to `2` (ENSv2).
+- If you mint under a parent on an old Namespace listing, pass `version={1}` to `SubnameMintForm`. Those parents can also be DNS names imported into ENS.
+- `TransactionPendingScreen` no longer takes a `message` prop.
+- Registration and renewal are paid in USDC or DAI. `SubnameMintForm` accepts ETH, USDC, or DAI on mainnet.
+
 ## Available components
 
 <CardGroup cols={2}>
   <Card title="ENS name registration" icon="signature">
     `EnsNameRegistrationForm` handles the search, commit, wait, and register flow for `.eth` names.
+  </Card>
+  <Card title="ENS name renewal" icon="rotate">
+    `NameRenewForm` renews a `.eth` name in one step, paid in USDC or DAI. Anyone can renew any name; the owner keeps it.
   </Card>
   <Card title="ENS records" icon="list">
     `EnsRecordsForm` edits addresses, text records, contenthash, avatar, and header records.
@@ -50,12 +62,20 @@ Set `isTestnet` to `true` to use Sepolia instead of Ethereum mainnet.
     `SelectRecordsForm` collects ENS records without requiring a wallet or transaction.
   </Card>
   <Card title="Onchain subnames" icon="link">
-    `SubnameMintForm` handles price lookup, record selection, and onchain minting from a Namespace listing.
+    `SubnameMintForm` mints under an activated parent on ENSv2, or under an old Namespace listing with `version={1}`.
+  </Card>
+  <Card title="Onchain subname renewal" icon="rotate">
+    `SubnameRenewForm` renews a subname at the parent's price and warns when the subname would outlive its parent.
   </Card>
   <Card title="Offchain subnames" icon="cloud">
     `OffchainSubnameForm` creates and updates gasless subnames through the Namespace API.
   </Card>
+  <Card title="Transaction progress" icon="hourglass">
+    `TransactionProgress` and `TransactionModal` show the confirmation screen the forms use, for your own transactions.
+  </Card>
 </CardGroup>
+
+The package also exports hooks (`useRegisterENS`, `useENSResolver`, `useMintSubname`, `useOffchainManager`, `useWaitTransaction`, `useAvatarClient`) and shared types such as `RenewalSuccessData`.
 
 ## Resources
 

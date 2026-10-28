@@ -5,7 +5,9 @@ sidebarTitle: "ENS Components"
 icon: "puzzle-piece"
 ---
 
-[ENS Components](https://enscomponents.com/) is an open-source React UI library for ENS name registration, record editing, and subname issuance, including Namespace onchain and offchain subnames.
+[ENS Components](https://enscomponents.com/) is an open-source React UI library for ENS name registration and renewal, record editing, subname minting and renewal, and offchain subnames.
+
+Onchain flows run on ENSv2 by default. Minting under a parent on an old Namespace listing uses `version={1}` on `SubnameMintForm`.
 
 <CardGroup cols={3}>
   <Card title="Website" icon="globe" href="https://enscomponents.com/">
@@ -22,16 +24,20 @@ icon: "puzzle-piece"
 ## Core components
 
 - **`EnsNameRegistrationForm`:** full commit/register flow for `.eth` names
+- **`NameRenewForm`:** one-step `.eth` renewal, paid in USDC or DAI
 - **`EnsRecordsForm`:** edit text records, addresses, avatar, and contenthash
 - **`SelectRecordsForm`:** standalone record composer, no wallet required
 - **`OffchainSubnameForm`:** gasless subnames via the Namespace API
-- **`SubnameMintForm`:** onchain subname minting with L2 resolver support
+- **`SubnameMintForm`:** onchain subname minting, on ENSv2 by default and on old listings with `version={1}`
+- **`SubnameRenewForm`:** onchain subname renewal at the parent owner's price
+- **`TransactionProgress` and `TransactionModal`:** confirmation screens for your own transactions
 
 ## Features
 
 - Drop-in ENS UX
-- `.eth` name registration
-- Onchain or offchain subname registration
+- `.eth` name registration and renewal
+- Onchain or offchain subname registration and renewal
+- Payment in USDC or DAI, with ETH also accepted for mints
 - Customizable templates
 - Open-source, MIT-licensed
 

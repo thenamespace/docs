@@ -5,6 +5,20 @@ sidebarTitle: "ENS Components"
 icon: "puzzle-piece"
 ---
 
+<Update label="October 28, 2026" description="v3.0.0">
+  - Breaking:
+    - **Onchain flows run on ENSv2.** `version` on `EnsNameRegistrationForm`, `NameRenewForm`, `EnsRecordsForm`, and `SubnameMintForm` defaults to `2`. Pass `version={1}` to `SubnameMintForm` for parents on an old Namespace listing.
+    - **`TransactionPendingScreen` no longer takes a `message` prop.**
+  - Added:
+    - **`NameRenewForm`**: renew a `.eth` name in one step, paid in USDC or DAI.
+    - **`SubnameRenewForm`**: renew a subname at the parent's price, with a warning when the subname would outlive its parent.
+    - **`TransactionProgress` and `TransactionModal`**: the confirmation screen, exported for your own transactions.
+  - Changed:
+    - Registration and renewal re-send the `referrer`, defaulting to Namespace's.
+    - `SubnameMintForm` accepts ETH, USDC, or DAI on mainnet.
+    - The mint fee estimate uses the effective gas price.
+</Update>
+
 <Update label="July 27, 2026" description="v1.5.0">
   - Changed:
     - Updated avatar and header record support to use `@thenamespace/avatar` v2.
