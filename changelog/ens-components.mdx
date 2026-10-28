@@ -5,43 +5,195 @@ sidebarTitle: "ENS Components"
 icon: "puzzle-piece"
 ---
 
+Release notes for [`@thenamespace/ens-components`](https://www.npmjs.com/package/@thenamespace/ens-components). Dates are npm publish dates. Prereleases on the `alpha` tag aren't listed separately; their changes are listed under the stable release that shipped them.
+
+To move from 2.x to 3.x, follow [Upgrade to the latest version](/developer-guide/sdks/ens-components/upgrade).
+
 <Update label="October 28, 2026" description="v3.0.0">
   - Breaking:
-    - **Onchain flows run on ENSv2.** `version` on `EnsNameRegistrationForm`, `NameRenewForm`, `EnsRecordsForm`, and `SubnameMintForm` defaults to `2`. Pass `version={1}` to `SubnameMintForm` for parents on an old Namespace listing.
-    - **`TransactionPendingScreen` no longer takes a `message` prop.**
+    - **Onchain flows default to ENSv2.** `version` on `EnsNameRegistrationForm`, `NameRenewForm`, `EnsRecordsForm`, `SubnameMintForm`, and the `useENSResolver` hook defaults to `2`. Pass `version={1}` to `SubnameMintForm` for parents on an old Namespace listing. ENSv1 registration and renewal are retired.
+    - **`.eth` registration is paid in USDC or DAI.** In `onRegistrationSuccess`, `registrationCost` is the token amount, and `transactionFees` and `total` are both the ETH network fees.
+    - **`TransactionPendingScreen` no longer takes a `message` prop.** `hash` is now optional, and a new `details` prop takes label and value rows.
   - Added:
-    - **`NameRenewForm`**: renew a `.eth` name in one step, paid in USDC or DAI.
-    - **`SubnameRenewForm`**: renew a subname at the parent's price, with a warning when the subname would outlive its parent.
-    - **`TransactionProgress` and `TransactionModal`**: the confirmation screen, exported for your own transactions.
+    - **`NameRenewForm`**: renews a `.eth` name in one step, paid in USDC or DAI. Anyone can renew any name, and the owner keeps it.
+    - **`SubnameRenewForm`**: renews a subname at the price set by the parent's owner, and warns when the subname would outlive its parent.
+    - **`TransactionProgress` and `TransactionModal`**: the progress screen every form uses, exported for your own transactions.
+    - **ENSv2 subname minting** in `SubnameMintForm`, through Namespace's ENSv2 activation contracts. The user picks ETH, USDC, or DAI on mainnet, or ETH or USDC on Sepolia.
+    - **`resolver` prop** on `SubnameMintForm` for activations that don't set a resolver.
+    - **`priceCurrency`** on the `SubnameMintForm` `onSuccess` payload.
+    - ENSv2 helpers: `getEnsV2RegistrationDeployment`, `isEnsV2NameAvailable`, `getEnsV2Deployment`, `quoteEnsV2Mint`, `quoteEnsV2Payment`, `getEnsV2RenewalDeployment`, `getEnsV2RenewalTarget`, `getEnsV2RenewPrice`, and `quoteEnsV2Renewal`.
   - Changed:
-    - Registration and renewal re-send the `referrer`, defaulting to Namespace's.
-    - `SubnameMintForm` accepts ETH, USDC, or DAI on mainnet.
-    - The mint fee estimate uses the effective gas price.
+    - ENSv2 runs on mainnet and Sepolia. Contract addresses come from `@thenamespace/addresses` 1.2.0.
+    - ENSv2 registration gives each owner a PermissionedResolver, deployed with the name's records. Commitments resume after a page reload.
+    - `EnsRecordsForm` finds the resolver through the ENSv2 Universal Resolver and writes to standard resolvers, PermissionedResolvers, and Namespace's SimplifiedResolver.
+    - Registration and renewal send the `referrer` prop, falling back to Namespace's referrer address.
+    - Wallets with EIP-5792 atomic batching confirm each step in one prompt. Other wallets get one transaction per call.
+    - Forms show "Insufficient funds" and block the transaction when the wallet can't cover the token price or gas.
+    - The subname mint fee estimate uses the effective gas price.
+    - The package ships CommonJS bundles for `require` entries.
+</Update>
+
+<Update label="October 5, 2026" description="v2.2.0">
+  - Added:
+    - A **Custom** section in the records editor for arbitrary key and value text records.
+  - Changed:
+    - Every top-level form card is 500 px wide, set by `--ns-frame-width`.
+    - Registration, subname minting, and offchain subname forms share one layout and no longer depend on host Bootstrap margins.
+    - Visible hover states on buttons, and alerts without the left accent bar.
+</Update>
+
+<Update label="September 23, 2026" description="v2.1.0">
+  - Fixed:
+    - `SubnameMintForm` estimates the network fee when the wallet can't cover price and fee, then shows "Insufficient funds" and disables **Mint** instead of showing N/A.
+    - `EnsNameRegistrationForm` checks `.eth` availability with the registrar instead of the registry, so expired names past their grace period show as available.
+</Update>
+
+<Update label="September 11, 2026" description="v2.0.0">
+  - Breaking:
+    - **New visual design.** Components adopt the Namespace Flows design system: a near-black accent derived from `--ns-ink` instead of blue, 10 px corners from `--ns-radius` instead of square ones, and DM Sans and DM Mono instead of Satoshi. Props, hooks, and exports are unchanged.
+  - Added:
+    - A token layer (`--ns-` variables). Older `--ns-color-*`, `--ns-blue-*`, and `--ns-alert-*` names still resolve as aliases.
+    - `Tag` and `Identicon` atoms.
+    - One availability status line for every name state in registration, subname minting, and offchain subname forms.
+    - A "No records found" state with a clear-filter action in the records editor search.
+  - Changed:
+    - The stylesheet no longer forces a background on the host page's `html` element.
+    - Forms use container queries, so they adapt inside narrow modals on desktop screens.
+    - The records editor is 600 px wide.
+</Update>
+
+<Update label="August 23, 2026" description="v1.5.2">
+  - Changed:
+    - Updated `@thenamespace/avatar` to 2.0.2.
+</Update>
+
+<Update label="July 29, 2026" description="v1.5.1">
+  - Changed:
+    - Documented DNS names imported into ENS as supported parents in `SubnameMintForm` and `OffchainSubnameForm`, and as names in `EnsRecordsForm`.
+    - Updated `@thenamespace/avatar` to 2.0.1.
 </Update>
 
 <Update label="July 27, 2026" description="v1.5.0">
   - Changed:
-    - Updated avatar and header record support to use `@thenamespace/avatar` v2.
-    - Externalized the Avatar SDK from the browser bundle.
+    - Avatar and header uploads use `@thenamespace/avatar` v2.
+    - The Avatar SDK is no longer bundled into the package, which keeps the build browser-safe.
 </Update>
 
 <Update label="July 11, 2026" description="v1.4.0">
+  - Changed:
+    - Amounts below the display threshold read `<0.0001`.
   - Fixed:
-    - Populated ENS registration fees when the registration form opens.
-    - Preserved the displayed registration fees when no wallet is connected.
+    - Registration fees load when the registration form opens.
+    - Registration fees stay visible when no wallet is connected.
 </Update>
 
 <Update label="April 30, 2026" description="v1.3.1">
   - Fixed:
-    - Stabilized ENS registration fee estimation.
-    - Added an RPC fallback for fee estimation.
-    - Displayed estimated fees with consistent precision.
+    - Registration shows a real network fee estimate for the commit and register transactions instead of a fixed placeholder.
+    - Fee estimation falls back to a heuristic when the RPC can't simulate the registration, and marks the value with `~`.
+    - Network fees and totals display with four decimals.
 </Update>
 
 <Update label="April 28, 2026" description="v1.3.0">
+  - Breaking:
+    - **`onRegistrationSuccess` returns `durationLabel` instead of `expiryInYears`.**
   - Added:
-    - Calendar-based duration selection for ENS registration and onchain subname minting.
-    - Agent instructions and quick-start resources for ENS Components integrations.
+    - A duration picker for registration and subname minting that switches between years and a calendar date.
   - Changed:
-    - Updated duration handling to use seconds across registration and minting flows.
+    - Registration and minting track duration in seconds.
+</Update>
+
+<Update label="April 27, 2026" description="v1.2.1">
+  - Fixed:
+    - `EnsNameRegistrationForm` passes the `referrer` prop to the commit and register transactions. Before, both used Namespace's default referrer.
+</Update>
+
+<Update label="April 1, 2026" description="v1.2.0">
+  - Added:
+    - USD estimates next to ETH totals, using `useEthDollarValue`.
+  - Changed:
+    - The mint client uses the RPC URLs from your wagmi config for mainnet, Sepolia, Base, Base Sepolia, and Optimism.
+  - Fixed:
+    - Subname mint fee estimation.
+</Update>
+
+<Update label="March 10, 2026" description="v1.1.6">
+  - Fixed:
+    - Chain switching to Sepolia, and other testnet issues.
+</Update>
+
+<Update label="March 9, 2026" description="v1.1.5">
+  - Fixed:
+    - The email text record.
+</Update>
+
+<Update label="March 9, 2026" description="v1.1.4">
+  - Changed:
+    - Maintenance release with no changes to the components.
+</Update>
+
+<Update label="March 6, 2026" description="v1.1.3">
+  - Added:
+    - Custom text records in the records editor.
+    - `title` and `subtitle` props on `SubnameMintForm`.
+</Update>
+
+<Update label="March 4, 2026" description="v1.1.2">
+  - Breaking:
+    - **`OffchainSubnameForm` no longer writes subnames.** It takes an `offchainManager` client instead of `apiKeyOrToken`, and replaces `onSuccess` with `onSubnameCreated` and `onSubnameUpdated`. Your callbacks save the subname.
+    - **Peer dependencies raised** to `viem` ^2.46.3 and `wagmi` ^2.19.5.
+  - Added:
+    - `title` and `subtitle` props on `OffchainSubnameForm`.
+</Update>
+
+<Update label="February 26, 2026" description="v1.1.1">
+  - Added:
+    - `avatarUploadDomain` prop on `EnsNameRegistrationForm` and `SubnameMintForm`, used as the domain in the avatar upload sign-in message.
+</Update>
+
+<Update label="February 24, 2026" description="v1.1.0">
+  - Added:
+    - First 1.x release. Version 1.0.0 was never published.
+    - Avatar and header image upload in the records editor, with cropping. GIF and SVG files skip the crop step.
+    - A drawer presentation for modals on small screens.
+</Update>
+
+<Update label="February 10, 2026" description="v0.26.0 to v0.37.0">
+  - Added:
+    - `SubnameMintForm` for onchain subnames under a Namespace listing (0.27.0).
+    - `OffchainSubnameForm` for gasless subnames (0.29.0), with Sepolia support (0.30.0).
+    - `txConfirmations` option (0.33.0), also on `EnsRecordsForm` (0.34.0).
+  - Changed:
+    - `EnsRecordsForm` callbacks (0.26.0) and transaction wait handling (0.32.0).
+  - Fixed:
+    - Removing text records (0.31.0).
+    - Minting on Sepolia, including L2 listings (0.35.0, 0.36.0).
+    - `SubnameMintForm` passes `isTestnet` to the mint client (0.37.0).
+</Update>
+
+<Update label="December 29, 2025" description="v0.20.0 to v0.25.0">
+  - Breaking:
+    - **Reworked component set.** `ENSNameCard`, `ProfileCard`, `NavbarProfileCard`, `SubnameOnChainRegistrarModal`, `SubnameOffChainRegistrarModal`, and `ENSNamesRegistrarComponent` were removed (0.20.0), and `PendingTransaction` followed (0.25.0).
+    - **React 19 required.** Peer dependencies are `react` and `react-dom` 19 or later, `viem`, and `wagmi` (0.20.0).
+  - Added:
+    - `EnsNameRegistrationForm` with the commit, wait, and register flow and a progress bar (0.20.0).
+    - `EnsRecordsForm` with a summary of record changes (0.25.0).
+  - Fixed:
+    - Registration with records (0.21.0), form styles (0.22.0, 0.23.0), and registration fixes (0.24.0).
+</Update>
+
+<Update label="December 16, 2025" description="v0.10.0 to v0.19.0">
+  - Added:
+    - ENS name registration and onchain registration integration (0.10.0, 0.11.0).
+    - Profile and ENS records components (0.13.0, 0.14.0).
+  - Fixed:
+    - Build and bundling issues, including the viem export and a `process is not defined` error (0.15.0 to 0.19.0).
+</Update>
+
+<Update label="November 21, 2025" description="v0.1.0 to v0.9.0">
+  - Added:
+    - First releases: `SelectRecordsForm`, ENS name and profile cards, and first versions of the ENS registration and onchain and offchain subname modals.
+    - Contenthash record support and record selector improvements (0.3.0, 0.4.0).
+  - Fixed:
+    - The avatar record button (0.5.0).
 </Update>
