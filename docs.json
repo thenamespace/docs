@@ -18,7 +18,7 @@
   },
   "favicon": "/favicon.ico",
   "banner": {
-    "content": "ENSv2 is live. Offchain subnames work with ENSv1 and ENSv2 names. [See what changes for you](/overview/ensv2)",
+    "content": "ENSv2 is live. [Read the migration guide](/overview/ensv2)",
     "dismissible": true
   },
   "integrations": {
