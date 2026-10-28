@@ -62,7 +62,6 @@
                 "icon": "desktop",
                 "pages": [
                   "user-guide/app",
-                  "user-guide/app/ensv1",
                   "user-guide/app/search-register",
                   "user-guide/dev-portal",
                   "user-guide/ens-widget",
@@ -563,6 +562,10 @@
   {
     "source": "/user-guide/overview",
     "destination": "/getting-started"
+  },
+  {
+    "source": "/user-guide/app/ensv1",
+    "destination": "/user-guide/app"
   },
   {
     "source": "/user-guide/app/wizard",

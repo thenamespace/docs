@@ -7,217 +7,339 @@ icon: "coins"
 
 Activate an ENS name in the [Namespace App](https://app.namespace.ninja) and people can mint subnames under it on Ethereum (L1). Each subname is minted onchain and held by the wallet that mints it. You set the price, the rules, and who can mint before you activate, then confirm everything in a single wallet request.
 
+Pick the tab below that matches your name. The App sidebar splits **Onchain subnames** the same way, into **ENSv2** and **ENSv1**. New activations use ENSv2. Listings created on ENSv1 names keep working and you can still edit them, but they stay on ENSv1 and don't migrate to ENSv2.
+
 <Note>
-  New activations need an ENSv2 name on Ethereum. Subnames already minted on Base and Optimism keep resolving. Listings created on ENSv1 names stay on ENSv1; see [ENSv1 onchain subnames](/user-guide/app/ensv1). For more, read [Namespace ENSv2 migration](/overview/ensv2).
+  New activations need an ENSv2 name on Ethereum. Subnames already minted on Base and Optimism keep resolving. For more, read [Namespace ENSv2 migration](/overview/ensv2).
 </Note>
 
-## Before you begin
+<Tabs>
+  <Tab title="ENSv2">
+    ## Before you begin
 
-- Connect the wallet that owns the parent ENS name.
-- Use an ENSv2 name. The name picker tags each name as `v1` or `v2`, and ENSv1 names are greyed out.
-- Keep some ETH in the wallet to pay network fees for the activation transaction.
-- Decide on a base price and how payouts should be split.
+    - Connect the wallet that owns the parent ENS name.
+    - Use an ENSv2 name. The name picker tags each name as `v1` or `v2`, and ENSv1 names are greyed out.
+    - Keep some ETH in the wallet to pay network fees for the activation transaction.
+    - Decide on a base price and how payouts should be split.
 
-## Activate your ENS name
+    ## Activate your ENS name
 
-<Steps>
-  <Step title="Select your name">
-    In the sidebar, open **Onchain subnames** and then **ENSv2**. Pick the name from **Search your names**.
+    <Steps>
+      <Step title="Select your name">
+        In the sidebar, open **Onchain subnames** and then **ENSv2**. Pick the name from **Search your names**.
 
-    <Frame>
-      <img src="/assets/onchain/activate-select-name.png" alt="Onchain subnames page with the name picker open, listing an ENSv1 name tagged v1 and onchin.eth tagged v2" />
-    </Frame>
-  </Step>
+        <Frame>
+          <img src="/assets/onchain/activate-select-name.png" alt="Onchain subnames page with the name picker open, listing an ENSv1 name tagged v1 and onchin.eth tagged v2" />
+        </Frame>
+      </Step>
 
-  <Step title="Start the activation">
-    The page shows **Name not activated** for a name without a listing. Click **Activate**.
+      <Step title="Start the activation">
+        The page shows **Name not activated** for a name without a listing. Click **Activate**.
 
-    <Frame>
-      <img src="/assets/onchain/activate-name-not-activated.png" alt="onchin.eth selected with a Name not activated message and the Activate button" />
-    </Frame>
-  </Step>
+        <Frame>
+          <img src="/assets/onchain/activate-name-not-activated.png" alt="onchin.eth selected with a Name not activated message and the Activate button" />
+        </Frame>
+      </Step>
 
-  <Step title="Choose Mainnet subnames">
-    Select **Mainnet subnames**, which places subnames on Ethereum in the ENSv2 registry. Click **Next**.
+      <Step title="Choose Mainnet subnames">
+        Select **Mainnet subnames**, which places subnames on Ethereum in the ENSv2 registry. Click **Next**.
 
-    <Frame>
-      <img src="/assets/onchain/activate-choose-mainnet.png" alt="Where should subnames of onchin.eth live, with Mainnet subnames selected and the Next button" />
-    </Frame>
-  </Step>
+        <Frame>
+          <img src="/assets/onchain/activate-choose-mainnet.png" alt="Where should subnames of onchin.eth live, with Mainnet subnames selected and the Next button" />
+        </Frame>
+      </Step>
 
-  <Step title="Set up expiration, base price, and payout">
-    On the **Setup** tab, choose an expiration mode:
+      <Step title="Set up expiration, base price, and payout">
+        On the **Setup** tab, choose an expiration mode:
 
-    - **Permanent**: subnames are paid for once.
-    - **Expirable**: subnames are rented for a chosen duration and renewed to keep. The base price is charged per year.
+        - **Permanent**: subnames are paid for once.
+        - **Expirable**: subnames are rented for a chosen duration and renewed to keep. The base price is charged per year.
 
-    Enter the **Base price** in dollars. It applies when no other price rule matches. Minters pay in USDC or DAI. Under **Payout**, keep **100% to owner** or choose **Split payment**.
+        Enter the **Base price** in dollars. It applies when no other price rule matches. Minters pay in USDC or DAI. Under **Payout**, keep **100% to owner** or choose **Split payment**.
 
-    Type a label into **Price check** on the right to see what it would cost under your current rules.
+        Type a label into **Price check** on the right to see what it would cost under your current rules.
 
-    <Frame>
-      <img src="/assets/onchain/configure-setup.png" alt="Setup tab with Expirable selected, a base price of 1 dollar per year, 100% to owner payout, and the Price check panel showing 1 dollar per year for alice" />
-    </Frame>
-  </Step>
+        <Frame>
+          <img src="/assets/onchain/configure-setup.png" alt="Setup tab with Expirable selected, a base price of 1 dollar per year, 100% to owner payout, and the Price check panel showing 1 dollar per year for alice" />
+        </Frame>
+      </Step>
 
-  <Step title="Add optional rules">
-    Use the **Prices**, **Reservations**, **Mint window**, **Whitelist**, **Token gated**, and **Other** tabs to add pricing tiers and minting restrictions. See [Configure pricing and rules](#configure-pricing-and-rules) for what each one does. Tabs you skip stay marked **OFF**.
-  </Step>
+      <Step title="Add optional rules">
+        Use the **Prices**, **Reservations**, **Mint window**, **Whitelist**, **Token gated**, and **Other** tabs to add pricing tiers and minting restrictions. See [Configure pricing and rules](#configure-pricing-and-rules) for what each one does. Tabs you skip stay marked **OFF**.
+      </Step>
 
-  <Step title="Review the listing">
-    Click **Review**. The summary lists each section with its settings. Click a section to change it, then click **Deploy**.
+      <Step title="Review the listing">
+        Click **Review**. The summary lists each section with its settings. Click a section to change it, then click **Deploy**.
 
-    <Frame>
-      <img src="/assets/onchain/activate-review.png" alt="Review screen summarizing Setup, Prices, Reservations, Mint window, Whitelist, Token gated, and Other, each marked OK, with the Deploy button" />
-    </Frame>
-  </Step>
+        <Frame>
+          <img src="/assets/onchain/activate-review.png" alt="Review screen summarizing Setup, Prices, Reservations, Mint window, Whitelist, Token gated, and Other, each marked OK, with the Deploy button" />
+        </Frame>
+      </Step>
 
-  <Step title="Activate and confirm in your wallet">
-    The app lists the steps it bundles into one wallet request:
+      <Step title="Activate and confirm in your wallet">
+        The app lists the steps it bundles into one wallet request:
 
-    1. **Set up subname registry** deploys the registry that holds your name's subnames. You own it.
-    2. **Allow Namespace to mint subnames** lets Namespace's subname issuer register and renew subnames in that registry.
-    3. **Save activation** saves your pricing, rules, and payment settings.
+        1. **Set up subname registry** deploys the registry that holds your name's subnames. You own it.
+        2. **Allow Namespace to mint subnames** lets Namespace's subname issuer register and renew subnames in that registry.
+        3. **Save activation** saves your pricing, rules, and payment settings.
 
-    Click **Activate** and confirm the request in your wallet.
+        Click **Activate** and confirm the request in your wallet.
 
-    <Frame>
-      <img src="/assets/onchain/activate-confirm-steps.png" alt="Activation steps Set up subname registry, Allow Namespace to mint subnames, and Save activation, each marked Bundled, with the Activate button" />
-    </Frame>
-  </Step>
+        <Frame>
+          <img src="/assets/onchain/activate-confirm-steps.png" alt="Activation steps Set up subname registry, Allow Namespace to mint subnames, and Save activation, each marked Bundled, with the Activate button" />
+        </Frame>
+      </Step>
 
-  <Step title="Finish the activation">
-    When all three steps show **Confirmed**, the app shows that your name is activated. Click **Done**. People can now mint subnames of your name.
+      <Step title="Finish the activation">
+        When all three steps show **Confirmed**, the app shows that your name is activated. Click **Done**. People can now mint subnames of your name.
 
-    <Frame>
-      <img src="/assets/onchain/activate-success.png" alt="Confirmation dialog saying onchin.eth is activated and people can start minting subnames, with all three steps marked Confirmed" />
-    </Frame>
-  </Step>
-</Steps>
+        <Frame>
+          <img src="/assets/onchain/activate-success.png" alt="Confirmation dialog saying onchin.eth is activated and people can start minting subnames, with all three steps marked Confirmed" />
+        </Frame>
+      </Step>
+    </Steps>
 
-## Configure pricing and rules
+    ## Configure pricing and rules
 
-Every tab after **Setup** is optional. Turn a rule on with the toggle at the top of its tab. The **Price check** panel updates as you change rules.
+    Every tab after **Setup** is optional. Turn a rule on with the toggle at the top of its tab. The **Price check** panel updates as you change rules.
 
-### Prices
+    ### Prices
 
-The **Prices** tab has two optional rule types. Each has its own toggle.
+    The **Prices** tab has two optional rule types. Each has its own toggle.
 
-**Label length pricing** sets a yearly price for labels of a specific length. Click **Add length tier**, enter the number of characters, then enter the price. Short labels are scarce, so you might charge $50 for one character, $20 for two, and $10 for three.
+    **Label length pricing** sets a yearly price for labels of a specific length. Click **Add length tier**, enter the number of characters, then enter the price. Short labels are scarce, so you might charge $50 for one character, $20 for two, and $10 for three.
 
-**Character-class pricing** sets a price for labels made only of letters (**Letters only**) or only of numbers (**Numbers only**). For example, letter-only labels could cost $5 and number-only labels $2. Labels that mix letters and numbers match neither class.
+    **Character-class pricing** sets a price for labels made only of letters (**Letters only**) or only of numbers (**Numbers only**). For example, letter-only labels could cost $5 and number-only labels $2. Labels that mix letters and numbers match neither class.
 
-Check a label in the **Price check** panel to see which rule applies to it.
-
-<Frame>
-  <img src="/assets/onchain/configure-prices.png" alt="Prices tab with label length pricing at 50, 20, and 10 dollars per year for one, two, and three characters, and character-class pricing at 5 dollars for letters only and 2 dollars for numbers only" />
-</Frame>
-
-### Reservations
-
-Reservations block labels or give them a custom price, and they override every other rule. Add a label, then choose **Blocked** so nobody can mint it, or **Priced** and enter its price.
-
-<Frame>
-  <img src="/assets/onchain/configure-reservations.png" alt="Reservations tab with admin and token blocked and degen priced at 100 dollars" />
-</Frame>
-
-### Mint window
-
-Allow minting only between two dates. Set **Opens at** and **Closes at**, or leave one side empty for an open start or end.
-
-<Frame>
-  <img src="/assets/onchain/configure-mint-window.png" alt="Mint window tab with opening and closing dates set three days apart" />
-</Frame>
-
-### Whitelist
-
-Add wallet addresses under **Allowed addresses**, then pick a mode:
-
-- **Gate**: only listed wallets can mint.
-- **Free mint**: anyone can mint, and listed wallets pay nothing.
-
-<Frame>
-  <img src="/assets/onchain/configure-whitelist.png" alt="Whitelist tab in Free mint mode with three allowed addresses" />
-</Frame>
-
-### Token gated
-
-Turn on **Token-gated access** to let only wallets that hold specific tokens mint. For each token, pick the **Standard** (ERC721, ERC1155, or ERC20), paste the token **Contract** address, and set **Min. held**, the minimum balance a minter needs. Click **Add token** to add another.
-
-With more than one token, choose how to combine them under **Combine with**:
-
-- **All of them**: the minter must hold every listed token.
-- **Any one**: holding one of the listed tokens is enough.
-
-<Frame>
-  <img src="/assets/onchain/configure-token-gated.png" alt="Token gated tab with Any one selected, an ERC20 token requiring at least 200 held, an ERC721 token requiring at least 1, and the Add token button" />
-</Frame>
-
-### Other settings
-
-**Use a custom resolver** registers every subname with the resolver you set, whatever resolver the minting app asks for.
-
-**Owner permissions** controls what a subname's owner can do after minting. **Default** lets owners set a resolver, create subnames under their subname, and transfer it. **Renew** and **Unregister** are off by default. Choose **Custom** to change these. Unregister permanently destroys the subname and frees the label for anyone to mint, so it's usually left off.
-
-<Frame>
-  <img src="/assets/onchain/configure-other-settings.png" alt="Other settings tab with the custom resolver off and default owner permissions: set resolver, create subnames, and transfer on; renew and unregister off" />
-</Frame>
-
-## Mint a subname
-
-After activation, anyone can mint a subname from your name's page in the Namespace App or through [Namespace search](/user-guide/app/search-register). Minting one yourself is a quick way to check the listing.
-
-<Steps>
-  <Step title="Search for a label">
-    On the name's page, type a label under **Find your perfect subname**. The app shows whether the subname is available and its price. Click **Mint**.
+    Check a label in the **Price check** panel to see which rule applies to it.
 
     <Frame>
-      <img src="/assets/onchain/mint-search-subname.png" alt="Find your perfect subname search showing happy.onchin.eth is available for free on Ethereum, with the Mint button" />
+      <img src="/assets/onchain/configure-prices.png" alt="Prices tab with label length pricing at 50, 20, and 10 dollars per year for one, two, and three characters, and character-class pricing at 5 dollars for letters only and 2 dollars for numbers only" />
     </Frame>
-  </Step>
 
-  <Step title="Choose a duration and review the total">
-    For an expirable listing, set the duration in years. The dialog shows the price, estimated network fees, and the total.
+    ### Reservations
+
+    Reservations block labels or give them a custom price, and they override every other rule. Add a label, then choose **Blocked** so nobody can mint it, or **Priced** and enter its price.
 
     <Frame>
-      <img src="/assets/onchain/mint-subname-dialog.png" alt="Mint dialog for happy.onchin.eth with a 1 year duration, a free price, estimated network fees in ETH, and Mint and Cancel buttons" />
+      <img src="/assets/onchain/configure-reservations.png" alt="Reservations tab with admin and token blocked and degen priced at 100 dollars" />
     </Frame>
-  </Step>
 
-  <Step title="Add profile records">
-    Optionally, open **Complete your profile** to add an avatar, nickname, short bio, social accounts, addresses, a website, or custom records. Click **Save**, then click **Mint** and confirm in your wallet.
+    ### Mint window
+
+    Allow minting only between two dates. Set **Opens at** and **Closes at**, or leave one side empty for an open start or end.
 
     <Frame>
-      <img src="/assets/onchain/mint-complete-profile.png" alt="Profile editor with an uploaded avatar, nickname, and short bio on the General tab, plus Social, Addresses, Website, and Custom tabs" />
+      <img src="/assets/onchain/configure-mint-window.png" alt="Mint window tab with opening and closing dates set three days apart" />
     </Frame>
-  </Step>
 
-  <Step title="Confirm the mint">
-    When the transaction confirms, the dialog shows the minted subname, mint price, and transaction fees, with a link to Etherscan.
+    ### Whitelist
+
+    Add wallet addresses under **Allowed addresses**, then pick a mode:
+
+    - **Gate**: only listed wallets can mint.
+    - **Free mint**: anyone can mint, and listed wallets pay nothing.
 
     <Frame>
-      <img src="/assets/onchain/mint-success.png" alt="Minted confirmation for happy.onchin.eth with mint price, transaction fees, total, View Name, and Mint Another" />
+      <img src="/assets/onchain/configure-whitelist.png" alt="Whitelist tab in Free mint mode with three allowed addresses" />
     </Frame>
-  </Step>
-</Steps>
 
-The subname resolves like any other ENS name, with the owner, expiry, and records you set.
+    ### Token gated
 
-<Frame>
-  <img src="/assets/onchain/verify-ens-app.png" alt="happy.onchin.eth in the ENS app with its owner, expiry date, avatar, nickname, bio, Ethereum address, and X account" />
-</Frame>
+    Turn on **Token-gated access** to let only wallets that hold specific tokens mint. For each token, pick the **Standard** (ERC721, ERC1155, or ERC20), paste the token **Contract** address, and set **Min. held**, the minimum balance a minter needs. Click **Add token** to add another.
 
-## Manage onchain subnames
+    With more than one token, choose how to combine them under **Combine with**:
 
-The name's page lists every minted subname with its expiry date. Search the list or switch between grid and list views. Labels that are already minted show as taken in the search.
+    - **All of them**: the minter must hold every listed token.
+    - **Any one**: holding one of the listed tokens is enough.
 
-<Frame>
-  <img src="/assets/onchain/manage-subnames-list.png" alt="onchin.eth page with one minted subname, happy.onchin.eth, its expiry date, and the search showing happy.onchin.eth is already taken" />
-</Frame>
+    <Frame>
+      <img src="/assets/onchain/configure-token-gated.png" alt="Token gated tab with Any one selected, an ERC20 token requiring at least 200 held, an ERC721 token requiring at least 1, and the Add token button" />
+    </Frame>
 
-### Listings on ENSv1 names
+    ### Other settings
 
-This flow works only with ENSv2 names. Onchain listings created on ENSv1 names keep working, and you can still edit them under **Onchain subnames** > **ENSv1** in the sidebar. These listings and their subnames stay on ENSv1 and don't migrate to ENSv2. See [ENSv1 onchain subnames](/user-guide/app/ensv1) for how they work and how to edit them.
+    **Use a custom resolver** registers every subname with the resolver you set, whatever resolver the minting app asks for.
+
+    **Owner permissions** controls what a subname's owner can do after minting. **Default** lets owners set a resolver, create subnames under their subname, and transfer it. **Renew** and **Unregister** are off by default. Choose **Custom** to change these. Unregister permanently destroys the subname and frees the label for anyone to mint, so it's usually left off.
+
+    <Frame>
+      <img src="/assets/onchain/configure-other-settings.png" alt="Other settings tab with the custom resolver off and default owner permissions: set resolver, create subnames, and transfer on; renew and unregister off" />
+    </Frame>
+
+    ## Mint a subname
+
+    After activation, anyone can mint a subname from your name's page in the Namespace App or through [Namespace search](/user-guide/app/search-register). Minting one yourself is a quick way to check the listing.
+
+    <Steps>
+      <Step title="Search for a label">
+        On the name's page, type a label under **Find your perfect subname**. The app shows whether the subname is available and its price. Click **Mint**.
+
+        <Frame>
+          <img src="/assets/onchain/mint-search-subname.png" alt="Find your perfect subname search showing happy.onchin.eth is available for free on Ethereum, with the Mint button" />
+        </Frame>
+      </Step>
+
+      <Step title="Choose a duration and review the total">
+        For an expirable listing, set the duration in years. The dialog shows the price, estimated network fees, and the total.
+
+        <Frame>
+          <img src="/assets/onchain/mint-subname-dialog.png" alt="Mint dialog for happy.onchin.eth with a 1 year duration, a free price, estimated network fees in ETH, and Mint and Cancel buttons" />
+        </Frame>
+      </Step>
+
+      <Step title="Add profile records">
+        Optionally, open **Complete your profile** to add an avatar, nickname, short bio, social accounts, addresses, a website, or custom records. Click **Save**, then click **Mint** and confirm in your wallet.
+
+        <Frame>
+          <img src="/assets/onchain/mint-complete-profile.png" alt="Profile editor with an uploaded avatar, nickname, and short bio on the General tab, plus Social, Addresses, Website, and Custom tabs" />
+        </Frame>
+      </Step>
+
+      <Step title="Confirm the mint">
+        When the transaction confirms, the dialog shows the minted subname, mint price, and transaction fees, with a link to Etherscan.
+
+        <Frame>
+          <img src="/assets/onchain/mint-success.png" alt="Minted confirmation for happy.onchin.eth with mint price, transaction fees, total, View Name, and Mint Another" />
+        </Frame>
+      </Step>
+    </Steps>
+
+    The subname resolves like any other ENS name, with the owner, expiry, and records you set.
+
+    <Frame>
+      <img src="/assets/onchain/verify-ens-app.png" alt="happy.onchin.eth in the ENS app with its owner, expiry date, avatar, nickname, bio, Ethereum address, and X account" />
+    </Frame>
+
+    ## Manage onchain subnames
+
+    The name's page lists every minted subname with its expiry date. Search the list or switch between grid and list views. Labels that are already minted show as taken in the search.
+
+    <Frame>
+      <img src="/assets/onchain/manage-subnames-list.png" alt="onchin.eth page with one minted subname, happy.onchin.eth, its expiry date, and the search showing happy.onchin.eth is already taken" />
+    </Frame>
+  </Tab>
+  <Tab title="ENSv1 (deprecated)">
+    <Warning>
+      The ENSv1 onchain flow is deprecated. Existing ENSv1 listings keep working, and you can still edit them. To activate a new name, use an ENSv2 name and follow the **ENSv2** tab.
+    </Warning>
+
+    ENSv1 listings live under **Onchain subnames** > **ENSv1** in the App sidebar. See [Onchain subnames stay on ENSv1](/overview/ensv2#onchain-subnames-stay-on-ensv1).
+
+    ## How ENSv1 listings work
+
+    ENSv1 listings issue subnames on Ethereum (L1) or on an L2 network such as Base or Optimism. Subnames already minted on Base and Optimism keep resolving.
+
+    | Model | Issuance cost | Ownership |
+    | --- | --- | --- |
+    | L1 | Ethereum transaction and mint price | The minted subname is held by its owner |
+    | L2 | L2 transaction and mint price | The minted subname is held by its owner |
+
+    ## Edit an ENSv1 listing
+
+    <Steps>
+      <Step title="Open the listing">
+        Open **Onchain subnames** > **ENSv1**, connect the owner wallet, and select the activated name.
+      </Step>
+
+      <Step title="Click Edit Activation">
+        Click **Edit Activation** to change pricing, reservations, deadlines, allowlists, or token-gating rules. Each tab has an **Update** button that saves that tab's changes.
+
+        <Frame>
+          <img src="/assets/activate-ens-name-4.png" alt="Prices tab of an ENSv1 listing with a base price in ETH and prices by label length for three- and four-character labels" />
+        </Frame>
+      </Step>
+
+      <Step title="Confirm the transaction">
+        Confirm the update in your wallet.
+      </Step>
+    </Steps>
+
+    <Tip>
+      Review every transaction carefully. Some ENS fuse changes on wrapped names can't be undone.
+    </Tip>
+
+    ### Listing settings
+
+    - **Setup**: currency, treasury address, collection name and symbol, and whether subnames can be burned or rented.
+    - **Prices**: the base mint price, prices by label length, and special-name pricing.
+    - **Reservations**: block names or give them a custom price.
+    - **Deadline**: stop minting after a date.
+    - **Whitelist**: let only listed wallets mint, or let them mint for free.
+    - **Token Gated**: require minters to hold an ERC-20 or ERC-721 token.
+
+    <Frame>
+      <img src="/assets/activate-ens-name-6.png" alt="Deadline tab with Use Deadline on and minting set to end in three months" />
+    </Frame>
+
+    <Frame>
+      <img src="/assets/activate-ens-name-7.png" alt="Whitelisting tab with Can mint only if whitelisted on and two allowed wallet addresses" />
+    </Frame>
+
+    <Frame>
+      <img src="/assets/activate-ens-name-8.png" alt="Token Gated Listing tab requiring at least one ERC721 token from a given contract on Ethereum" />
+    </Frame>
+
+    ## How ENSv1 listings were activated
+
+    For reference, these are the steps owners followed to activate an ENSv1 name.
+
+    <Steps>
+      <Step title="Open the Onchain section">
+        The owner connected their wallet, selected the ENS name, and clicked **Activate Name**.
+
+        <Frame>
+          <img src="/assets/activate-ens-name-1.png" alt="Onchain section with an ENS name selected and the Activate Name button" />
+        </Frame>
+      </Step>
+
+      <Step title="Choose L1 or L2 issuance">
+        **L1 ENS Subnames** issued subnames on Ethereum Mainnet. **L2 ENS Subnames** issued them on a supported L2 picked from a dropdown.
+
+        <Frame>
+          <img src="/assets/activate-ens-name-2.png" alt="Listing type selection for L1 and L2 subnames" />
+        </Frame>
+      </Step>
+
+      <Step title="Configure the listing">
+        The owner set the currency, treasury address, collection name and symbol, and whether subnames could be burned or rented. Then they set the base mint price and any length-based or special-name pricing.
+
+        <Frame>
+          <img src="/assets/activate-ens-name-3.png" alt="Listing setup fields for currency, treasury, collection metadata, burning, and renting" />
+        </Frame>
+      </Step>
+
+      <Step title="Add optional minting rules">
+        Reservations blocked names or gave them a custom price. Owners could also add a deadline, restrict minting with an allowlist, or require an ERC-20 or ERC-721 token.
+
+        <Frame>
+          <img src="/assets/activate-ens-name-5.png" alt="Reservation settings for blocking names or assigning custom prices" />
+        </Frame>
+      </Step>
+
+      <Step title="Activate the listing">
+        The owner reviewed the configuration, clicked **Activate**, and confirmed the transaction. On Ethereum Mainnet this could require wrapping the ENS name. L2 listings also needed a registry contract and the Namespace Hybrid Resolver.
+      </Step>
+
+      <Step title="Finish the activation">
+        After any remaining registry or resolver transactions, the owner clicked **Finish Activation**. The name then showed an **Activated** badge.
+
+        <Frame>
+          <img src="/assets/activate-ens-name-11.png" alt="Activated ENS name with its minted subnames" />
+        </Frame>
+      </Step>
+    </Steps>
+
+    ## How users mint
+
+    Users mint subnames of an ENSv1 listing through:
+
+    - The name's page at `app.namespace.ninja/<name>.eth`.
+    - [Namespace search](/user-guide/app/search-register).
+
+    ENSv1 listings also work with the deprecated [ENS Widget](/user-guide/ens-widget), [Subpages](/user-guide/subpages), and [Mint Manager](/developer-guide/guide/mint-l1-l2-subnames).
+  </Tab>
+</Tabs>
 
 ## Next steps
 
