@@ -8,14 +8,14 @@ icon: "coins"
 Activate an ENS name in the [Namespace App](https://app.namespace.ninja) and people can mint subnames under it on Ethereum (L1). Each subname is minted onchain and held by the wallet that mints it. You set the price, the rules, and who can mint before you activate, then confirm everything in a single wallet request.
 
 <Note>
-  New activations use ENSv2 names on Ethereum. Subnames already minted on Base and Optimism keep resolving. Listings created on ENSv1 names stay on ENSv1. See [Namespace ENSv2 migration](/overview/ensv2) for details.
+  New activations need an ENSv2 name on Ethereum. Subnames already minted on Base and Optimism keep resolving. Listings created on ENSv1 names stay on ENSv1; see [ENSv1 onchain subnames](/user-guide/app/ensv1). For more, read [Namespace ENSv2 migration](/overview/ensv2).
 </Note>
 
 ## Before you begin
 
 - Connect the wallet that owns the parent ENS name.
-- Use an ENSv2 name. The name picker tags each name as `v1` or `v2`.
-- Keep some ETH in the wallet for the activation transaction.
+- Use an ENSv2 name. The name picker tags each name as `v1` or `v2`, and ENSv1 names are greyed out.
+- Keep some ETH in the wallet to pay network fees for the activation transaction.
 - Decide on a base price and how payouts should be split.
 
 ## Activate your ENS name
@@ -51,7 +51,7 @@ Activate an ENS name in the [Namespace App](https://app.namespace.ninja) and peo
     - **Permanent**: subnames are paid for once.
     - **Expirable**: subnames are rented for a chosen duration and renewed to keep. The base price is charged per year.
 
-    Enter the **Base price** in dollars. It applies when no other price rule matches. Under **Payout**, keep **100% to owner** or choose **Split payment**.
+    Enter the **Base price** in dollars. It applies when no other price rule matches. Minters pay in USDC or DAI. Under **Payout**, keep **100% to owner** or choose **Split payment**.
 
     Type a label into **Price check** on the right to see what it would cost under your current rules.
 
@@ -101,12 +101,16 @@ Every tab after **Setup** is optional. Turn a rule on with the toggle at the top
 
 ### Prices
 
-**Label length pricing** sets a price for labels of a specific length. Click **Add length tier** to add a length and its yearly price. For example, charge more for one-, two-, and three-character labels.
+The **Prices** tab has two optional rule types. Each has its own toggle.
 
-**Character-class pricing** prices labels made only of letters or only of numbers.
+**Label length pricing** sets a yearly price for labels of a specific length. Click **Add length tier**, enter the number of characters, then enter the price. Short labels are scarce, so you might charge $50 for one character, $20 for two, and $10 for three.
+
+**Character-class pricing** sets a price for labels made only of letters (**Letters only**) or only of numbers (**Numbers only**). For example, letter-only labels could cost $5 and number-only labels $2. Labels that mix letters and numbers match neither class.
+
+Check a label in the **Price check** panel to see which rule applies to it.
 
 <Frame>
-  <img src="/assets/onchain/configure-prices.png" alt="Prices tab with label length pricing on: 1 character at 50 dollars, 2 characters at 20 dollars, and 3 characters at 10 dollars per year" />
+  <img src="/assets/onchain/configure-prices.png" alt="Prices tab with label length pricing at 50, 20, and 10 dollars per year for one, two, and three characters, and character-class pricing at 5 dollars for letters only and 2 dollars for numbers only" />
 </Frame>
 
 ### Reservations
@@ -138,7 +142,16 @@ Add wallet addresses under **Allowed addresses**, then pick a mode:
 
 ### Token gated
 
-Turn on **Token-gated access** to require minters to hold specific tokens.
+Turn on **Token-gated access** to let only wallets that hold specific tokens mint. For each token, pick the **Standard** (ERC721, ERC1155, or ERC20), paste the token **Contract** address, and set **Min. held**, the minimum balance a minter needs. Click **Add token** to add another.
+
+With more than one token, choose how to combine them under **Combine with**:
+
+- **All of them**: the minter must hold every listed token.
+- **Any one**: holding one of the listed tokens is enough.
+
+<Frame>
+  <img src="/assets/onchain/configure-token-gated.png" alt="Token gated tab with Any one selected, an ERC20 token requiring at least 200 held, an ERC721 token requiring at least 1, and the Add token button" />
+</Frame>
 
 ### Other settings
 
@@ -204,7 +217,7 @@ The name's page lists every minted subname with its expiry date. Search the list
 
 ### Listings on ENSv1 names
 
-Onchain listings created on ENSv1 names keep working, and you can still edit them. Open **Onchain subnames** and then **ENSv1** in the sidebar. These listings and their subnames stay on ENSv1 and don't migrate to ENSv2. See [Onchain subnames stay on ENSv1](/overview/ensv2#onchain-subnames-stay-on-ensv1).
+This flow works only with ENSv2 names. Onchain listings created on ENSv1 names keep working, and you can still edit them under **Onchain subnames** > **ENSv1** in the sidebar. These listings and their subnames stay on ENSv1 and don't migrate to ENSv2. See [ENSv1 onchain subnames](/user-guide/app/ensv1) for how they work and how to edit them.
 
 ## Next steps
 
