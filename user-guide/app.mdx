@@ -9,16 +9,12 @@ Activate your ENS name in the [Namespace App](https://app.namespace.ninja) to le
 
 New activations need an ENSv2 name. Listings on ENSv1 names keep working and can still be edited, but they stay on ENSv1. Pick the tab that matches your name.
 
-<Note>
-  Subnames already minted on Base and Optimism keep resolving. See [Namespace ENSv2 migration](/overview/ensv2).
-</Note>
-
 <Tabs>
   <Tab title="ENSv2">
     ## Before you begin
 
     - Connect the wallet that owns the parent ENS name.
-    - Use an ENSv2 name. The name picker tags each name as `v1` or `v2`, and ENSv1 names are greyed out.
+    - Pick a name tagged `v2`. The name picker greys out ENSv1 names.
     - Keep some ETH in the wallet to pay network fees for the activation transaction.
     - Decide on a base price and how payouts should be split.
 
@@ -65,7 +61,7 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
       </Step>
 
       <Step title="Add optional rules">
-        Use the **Prices**, **Reservations**, **Mint window**, **Whitelist**, **Token gated**, and **Other** tabs to add pricing tiers and minting restrictions. See [Configure pricing and rules](#configure-pricing-and-rules) for what each one does. Tabs you skip stay marked **OFF**.
+        Add pricing tiers and minting restrictions on the other tabs, or skip them. See [Configure pricing and rules](#configure-pricing-and-rules).
       </Step>
 
       <Step title="Review the listing">
@@ -77,13 +73,13 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
       </Step>
 
       <Step title="Activate and confirm in your wallet">
-        The app lists the steps it bundles into one wallet request:
+        The app lists the activation steps:
 
         1. **Set up subname registry** deploys the registry that holds your name's subnames. You own it.
         2. **Allow Namespace to mint subnames** lets Namespace's subname issuer register and renew subnames in that registry.
         3. **Save activation** saves your pricing, rules, and payment settings.
 
-        Click **Activate** and confirm the request in your wallet.
+        Click **Activate** and confirm in your wallet.
 
         <Frame>
           <img src="/assets/onchain/activate-confirm-steps.png" alt="Activation steps Set up subname registry, Allow Namespace to mint subnames, and Save activation, each marked Bundled, with the Activate button" />
@@ -101,7 +97,7 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
 
     ## Configure pricing and rules
 
-    Every tab after **Setup** is optional. Turn a rule on with the toggle at the top of its tab. The **Price check** panel updates as you change rules.
+    Every tab after **Setup** is optional, and tabs you skip stay marked **OFF**. Turn a rule on with the toggle at the top of its tab. The **Price check** panel shows which rule applies to a label as you change them.
 
     ### Prices
 
@@ -110,8 +106,6 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
     **Label length pricing** sets a yearly price for labels of a specific length. Click **Add length tier**, enter the number of characters, then enter the price. Short labels are scarce, so you might charge $50 for one character, $20 for two, and $10 for three.
 
     **Character-class pricing** sets a price for labels made only of letters (**Letters only**) or only of numbers (**Numbers only**). For example, letter-only labels could cost $5 and number-only labels $2. Labels that mix letters and numbers match neither class.
-
-    Check a label in the **Price check** panel to see which rule applies to it.
 
     <Frame>
       <img src="/assets/onchain/configure-prices.png" alt="Prices tab with label length pricing at 50, 20, and 10 dollars per year for one, two, and three characters, and character-class pricing at 5 dollars for letters only and 2 dollars for numbers only" />
@@ -221,10 +215,8 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
   </Tab>
   <Tab title="ENSv1 (deprecated)">
     <Warning>
-      The ENSv1 onchain flow is deprecated. Existing ENSv1 listings keep working, and you can still edit them. To activate a new name, use an ENSv2 name and follow the **ENSv2** tab.
+      The ENSv1 onchain flow is deprecated. Use this tab only to manage an existing ENSv1 listing. To activate a new name, use the **ENSv2** tab.
     </Warning>
-
-    ENSv1 listings live under **Onchain subnames** > **ENSv1** in the App sidebar. See [Onchain subnames stay on ENSv1](/overview/ensv2#onchain-subnames-stay-on-ensv1).
 
     ## How ENSv1 listings work
 
@@ -350,7 +342,7 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
   <Card title="Issue offchain subnames" icon="cloud" href="/user-guide/dev-portal">
     Create gasless subnames under the same name.
   </Card>
-  <Card title="ENSv2 and Namespace" icon="bolt" href="/overview/ensv2">
+  <Card title="Namespace ENSv2 migration" icon="bolt" href="/overview/ensv2">
     Check what works with your ENSv1 or ENSv2 name.
   </Card>
 </CardGroup>
