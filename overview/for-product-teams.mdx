@@ -20,9 +20,8 @@ See [Use cases](/overview/use-cases) for more examples.
 
 | Model | Choose it when | Main tradeoff |
 | --- | --- | --- |
-| Offchain | You need gasless, high-volume issuance and application-managed records | The parent-name operator retains administrative control |
-| L2 | Users should hold subname NFTs and lower transaction cost matters | Requires a supported L2 transaction |
-| L1 | Ethereum-native ownership is required for a lower-volume flow | Higher transaction cost than L2 |
+| Offchain | You need gasless, high-volume issuance and application-managed records | Namespace stores the subnames, and the parent-name owner keeps control of them |
+| L1 | Users should hold their subnames as onchain assets | Each subname requires an Ethereum transaction |
 
 Read [Learn about Subnames](/overview/subnames) for the architecture and ownership differences.
 
@@ -32,11 +31,11 @@ Read [Learn about Subnames](/overview/subnames) for the architecture and ownersh
   <Card title="Offchain SDK guide" icon="cloud" href="/developer-guide/guide/create-offchain-subnames">
     Create gasless subnames and manage their records with TypeScript.
   </Card>
-  <Card title="L1 and L2 minting guide" icon="coins" href="/developer-guide/guide/mint-l1-l2-subnames">
-    Prepare and submit onchain mint transactions.
+  <Card title="Onchain subnames in the App" icon="coins" href="/user-guide/app">
+    Activate your name and issue L1 subnames without code.
   </Card>
   <Card title="API reference" icon="book" href="/api-reference/introduction">
-    Integrate the hosted Offchain, Mint, or Resolvio APIs.
+    Integrate the hosted Offchain or Resolvio APIs.
   </Card>
   <Card title="Starter integrations" icon="folder-open" href="/developer-guide/integrations">
     Start from RainbowKit, Privy, or Openfort examples.

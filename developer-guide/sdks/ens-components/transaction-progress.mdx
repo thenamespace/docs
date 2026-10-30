@@ -1,0 +1,71 @@
+---
+title: "Show transaction progress"
+description: "Reuse the forms' progress screen for your own transactions."
+sidebarTitle: "Transaction progress"
+icon: "hourglass"
+---
+
+Every form shows the same progress screen while a transaction confirms: a progress bar, optional detail rows, and a block explorer link. `TransactionProgress` and `TransactionModal` export that screen for transactions your own code sends, so your flows match the forms.
+
+You don't need these components with the forms. Each form already shows its own progress.
+
+## Example
+
+```tsx
+'use client';
+
+import { TransactionModal, type TransactionProgressStatus } from '@thenamespace/ens-components';
+import type { Hash } from 'viem';
+
+interface Props {
+  isOpen: boolean;
+  status: TransactionProgressStatus;
+  hash?: Hash;
+  onClose: () => void;
+}
+
+export function SetPrimaryNameProgress({ isOpen, status, hash, onClose }: Props) {
+  return (
+    <TransactionModal
+      isOpen={isOpen}
+      onClose={onClose}
+      status={status}
+      hash={hash}
+      details={[
+        { label: 'Name', value: 'alice.eth' },
+        { label: 'Action', value: 'Set primary name' },
+      ]}
+    />
+  );
+}
+```
+
+Render `TransactionProgress` with the same props, minus `isOpen`, `onClose`, and `footer`, to show the screen inline instead of in a modal.
+
+## TransactionProgress props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `status` | `'pending' \| 'success' \| 'failed'` | Required. The transaction state. |
+| `hash` | `Hash` | Transaction hash, used for the explorer link. |
+| `chainId` | `number` | Chain for the explorer link. |
+| `isTestnet` | `boolean` | Uses the Sepolia explorer when `chainId` isn't set. |
+| `title` | `ReactNode` | Replaces the default title for the current status. |
+| `description` | `ReactNode` | Replaces the default description for the current status. |
+| `details` | `{ label: ReactNode; value: ReactNode }[]` | Rows shown in a card under the progress bar. |
+| `duration` | `number` | Milliseconds the bar takes to reach 90% while pending. Defaults to `10000`. |
+| `className` | `string` | Class added to the container. |
+
+## TransactionModal props
+
+`TransactionModal` takes every `TransactionProgress` prop, plus:
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `isOpen` | `boolean` | Required. Shows the modal. |
+| `onClose` | `() => void` | Required. Called when the user closes the modal. |
+| `footer` | `ReactNode` | Replaces the default **Close** button. |
+
+## TransactionPendingScreen
+
+`TransactionPendingScreen` is still exported for existing code. It wraps `TransactionProgress` and takes `hash`, `isCompleted`, `isTestnet`, `chainId`, and `details`. Since 3.0 it no longer accepts `message`. For new code, use `TransactionProgress`.

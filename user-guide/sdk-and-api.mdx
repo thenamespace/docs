@@ -4,7 +4,7 @@ description: "Build with Namespace SDKs and APIs."
 icon: "code"
 ---
 
-Namespace provides TypeScript SDKs and hosted APIs for creating, minting, querying, and resolving ENS subnames. Choose the interface that fits your runtime and how much infrastructure you want to manage.
+Namespace provides TypeScript SDKs and hosted APIs for creating, querying, and resolving ENS subnames. Choose the interface that fits your runtime and how much infrastructure you want to manage.
 
 ## Choose an interface
 
@@ -22,16 +22,25 @@ Namespace provides TypeScript SDKs and hosted APIs for creating, minting, queryi
 | Tool | Use it to |
 | --- | --- |
 | Offchain Manager | Create, update, delete, and query gasless offchain subnames and records |
-| Mint Manager | Check eligibility and generate mint transaction parameters for Ethereum Mainnet or L2 chains |
-| Indexer Manager | Query indexed registries and subnames from L2 chains |
+| [Avatar SDK](/developer-guide/sdks/avatar) | Upload avatar and header images for ENS names and subnames |
+| [ENS Components](/developer-guide/sdks/ens-components) | Add ready-made React interfaces for registration, minting, and record editing |
 | Offchain API | Manage offchain subnames over HTTP |
-| Mint API | Estimate and generate mint parameters over HTTP |
 | Resolvio API | Resolve ENS names, profiles, addresses, text records, and content hashes |
+
+## Deprecated tools
+
+These tools still work for onchain listings on ENSv1 names. Don't use them for new integrations.
+
+| Tool | Reference |
+| --- | --- |
+| Mint Manager SDK | [Mint Manager](/developer-guide/sdks/mint-manager) |
+| Indexer Manager SDK | [Indexer Manager](/developer-guide/sdks/indexer-manager) |
+| Mint API | [Mint API reference](/api-reference/mint-manager/estimate-mint-params) |
 
 ## Before you integrate
 
 - Keep Namespace API keys in server-side environment variables.
-- Decide whether your product needs operator-managed offchain records or onchain subnames on Ethereum or L2 chains.
+- Decide whether your product needs offchain subnames, which Namespace stores, or onchain subnames on Ethereum.
 - Use a testnet configuration during development.
 - Handle unavailable labels, authentication failures, rate limiting, and resolver errors explicitly.
 - Pin supported package versions and review the changelog before upgrading.

@@ -1,11 +1,18 @@
 ---
 title: "Register name or subname"
-description: "Discover names available through Namespace."
+description: "Find and register a name in the Namespace App."
 sidebarTitle: "Register name or subname"
 icon: "user-magnifying-glass"
 ---
 
-Use [Namespace search](https://app.namespace.ninja/search) to find and register an ENS name such as `example.eth` or an available onchain subname such as `alice.brand.eth`.
+Use [Namespace search](https://app.namespace.ninja/search) to register an ENS name such as `example.eth` or an available onchain subname such as `alice.brand.eth`. A `.eth` name takes two wallet transactions with a short wait between them. You can set up the name's profile during registration.
+
+New `.eth` names you register through Namespace are ENSv2 names.
+
+## Before you start
+
+- A wallet connected to the [Namespace App](https://app.namespace.ninja).
+- Enough of the payment token for the registration fee, plus ETH for network fees.
 
 ## What you can register
 
@@ -14,49 +21,99 @@ Use [Namespace search](https://app.namespace.ninja/search) to find and register 
 | ENS name | A second-level `.eth` name | Registration period and price follow ENS rules |
 | Onchain subname | A name beneath an activated parent ENS name | Price, network, ownership, and expiry follow the parent's listing rules |
 
-## Search for a name
+## Register an ENS name
 
 <Steps>
-  <Step title="Open Namespace search">
-    Visit [app.namespace.ninja/search](https://app.namespace.ninja/search), connect your wallet, and enter the name you want.
+  <Step title="Search for a name">
+    Open **Search and register** in the sidebar, or go to [app.namespace.ninja/search](https://app.namespace.ninja/search). Type the name you want in the search box.
+
+    <Frame>
+      <img src="/assets/register/search-name.png" alt="Register your Web3 identity page with an empty Search for a name to register field" />
+    </Frame>
   </Step>
 
-  <Step title="Choose a result">
-    Search results can include the exact `.eth` name and matching subnames from parent names activated on Namespace. Each subname shows its price or a **Free Mint** label.
+  <Step title="Check availability">
+    The results list the `.eth` name first. An **AVAILABLE** status means you can register it. Below it, the list shows matching subnames from parent names activated on Namespace, each with its price and a **MINT** button.
 
-    <img src="/assets/search-results.png" alt="Namespace search results with an ENS name and matching available subnames" width="563" />
+    Select the `.eth` name to start registering it.
+
+    <Frame>
+      <img src="/assets/register/search-results.png" alt="Search results for onchin with onchin.eth marked Available and matching onchain subnames listed with prices and Mint buttons" />
+    </Frame>
   </Step>
 
-  <Step title="Review the registration">
-    Select the result you want and check the full name, owner, network, registration or mint price, estimated network fee, and total before continuing.
+  <Step title="Choose the duration and payment token">
+    The **Claim your Web3 identity** dialog shows the name and its expiry date. To change how long you register the name, pick a date with the calendar button or select **PICK BY YEARS**.
+
+    Check the **Registration Fee**, **Est. network fees**, and **Total**. Use the token menu next to the total to choose what you pay with. The dialog also shows the approximate USD value.
+
+    <Frame>
+      <img src="/assets/register/registration-details.png" alt="Claim your Web3 identity dialog for onchin.eth with an expiry date, registration fee in USDC, estimated network fees in ETH, total with a token menu, Complete your profile, and Next" />
+    </Frame>
   </Step>
 
-  <Step title="Confirm in your wallet">
-    Continue from the registration dialog and approve the required wallet transaction. Wait for the transaction to confirm before using the name.
+  <Step title="Set up your profile">
+    To add profile records to the name as part of registration, select **Complete your profile** before you continue. You can skip this and edit records after the name is registered.
+
+    <Frame>
+      <img src="/assets/register/complete-profile.png" alt="Complete your profile card with the text Make your ENS more discoverable and an arrow button" />
+    </Frame>
+
+    When you're ready, select **Next**.
+  </Step>
+
+  <Step title="Send the commitment transaction">
+    The **ENS Registration Process** dialog lists three steps: **Commitment**, **Timer Started**, and **Complete Registration**. Under **Commitment**, select **Open Wallet** and approve the transaction in your wallet.
+
+    After you approve it, the dialog shows **Transaction Sent** with a **View on Etherscan** link. Wait for the transaction to confirm.
+
+    <Frame>
+      <img src="/assets/register/commit-transaction.png" alt="ENS Registration Process dialog with the Commitment step open and an Open Wallet button" />
+    </Frame>
+  </Step>
+
+  <Step title="Wait for the timer">
+    Once the commitment confirms, a countdown starts. The wait helps protect your registration from front-running. Keep the dialog open until the timer finishes.
+
+    <Frame>
+      <img src="/assets/register/wait-timer.png" alt="Timer Started step showing a countdown with Commitment marked complete" />
+    </Frame>
+  </Step>
+
+  <Step title="Complete the registration">
+    Under **Complete Registration**, select **Open Wallet** and approve the second transaction. The name isn't registered until this transaction confirms. The dialog shows how many hours you have left to complete it.
+
+    <Frame>
+      <img src="/assets/register/complete-registration.png" alt="Complete Registration step with the Register Name message, time remaining to finish, and an Open Wallet button" />
+    </Frame>
+  </Step>
+
+  <Step title="Confirm the name is registered">
+    When the transaction confirms, the dialog marks the name **REGISTERED**. It shows the registration length and fee, the transaction fees, and when the name expires.
+
+    Select **View Name** to open the name, **Register another** to search again, or **Great!** to close the dialog.
+
+    <Frame>
+      <img src="/assets/register/registered.png" alt="Registration complete dialog for onchin.eth marked Registered, with registration length, fee, transaction fees, expiry date, and Register another, View Name, and Great buttons" />
+    </Frame>
   </Step>
 </Steps>
 
 ## Register an onchain subname
 
-The registration dialog shows the parent name's configured mint price, estimated network fee, and total. Free listings show a **Free Mint** label.
+Select **MINT** next to a subname in the search results. The registration dialog shows the parent name's configured mint price, estimated network fee, and total. Free listings show **Free** instead of a price.
 
 <img src="/assets/register-subname.png" alt="Onchain subname registration dialog with the owner, price, network fee, and total" width="500" />
 
-Onchain subname ownership and expiry on Ethereum Mainnet depend on the parent name's ENS fuse and listing configuration. On L2 chains, subnames can also use a registration period when the parent-name owner enables renting.
-
-## Register an ENS name
-
-For an available `.eth` name, choose the registration period and review the registration fee, estimated network fee, and total. Continue through the wallet prompts shown by the app.
-
-<img src="/assets/register-name.png" alt="ENS name registration dialog with the registration period, fee, and total" width="500" />
+The wallet that mints an onchain subname owns it. Whether it expires depends on the parent name's listing: permanent subnames are paid for once, and expirable ones are renewed to keep.
 
 ## Next steps
 
 <CardGroup cols={2}>
   <Card title="Enable subname minting" icon="coins" href="/user-guide/app#activate-your-ens-name">
-    Activate a parent ENS name and configure its listing rules on Ethereum Mainnet or an L2 chain.
+    Activate a parent ENS name and configure its listing rules on Ethereum Mainnet.
   </Card>
-  <Card title="Add registration to your website" icon="puzzle-piece" href="/user-guide/ens-widget">
-    Create and embed a no-code ENS Widget.
+  <Card title="Issue offchain subnames" icon="cloud" href="/user-guide/dev-portal">
+    Create gasless subnames under your new name.
   </Card>
 </CardGroup>

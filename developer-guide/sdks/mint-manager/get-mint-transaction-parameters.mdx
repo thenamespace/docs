@@ -5,6 +5,10 @@ sidebarTitle: "Transaction parameters"
 icon: "list-check"
 ---
 
+import MintManagerDeprecated from '/snippets/mint-manager-deprecated.mdx';
+
+<MintManagerDeprecated />
+
 `prepareMint` returns the contract address, ABI, arguments, and value required to mint a subname. Submit the result with viem, ethers, or wagmi; the SDK never holds a key and never sends a transaction.
 
 ### Usage

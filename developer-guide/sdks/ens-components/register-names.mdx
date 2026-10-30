@@ -1,0 +1,78 @@
+---
+title: "Register .eth names"
+description: "Add .eth registration with EnsNameRegistrationForm."
+sidebarTitle: "Register names"
+icon: "signature"
+---
+
+`EnsNameRegistrationForm` registers a `.eth` name on ENSv2. The user searches for a name, picks a duration, optionally sets profile records, and confirms the commit and register transactions. Registration is paid in USDC or DAI.
+
+## Example
+
+```tsx
+'use client';
+
+import { EnsNameRegistrationForm } from '@thenamespace/ens-components';
+
+export function RegisterName({ onConnect }: { onConnect: () => void }) {
+  return (
+    <EnsNameRegistrationForm
+      name="alice"
+      avatarUploadDomain="app.example.com"
+      onConnectWallet={onConnect}
+      onRegistrationSuccess={(result) => {
+        // registrationCost is the USDC or DAI price. total covers only ETH network fees.
+        console.log(result.registrationCost, result.expiryDate);
+      }}
+    />
+  );
+}
+```
+
+## How the flow works
+
+1. The user types a label. The form checks availability with the ENSv2 registrar and shows the price.
+2. The user picks a duration in years or with a calendar date. The minimum is 28 days.
+3. The user can add records, an avatar, and a header image before registering.
+4. The form sends the commit transaction, waits the registrar's minimum commitment age, then sends the register transaction. If the page reloads during the wait, the commitment resumes.
+5. Each owner gets their own PermissionedResolver. On the owner's first registration it's deployed as an extra step in the same flow, and records set during registration are written to it.
+
+The `referrer` is part of the registration. It defaults to Namespace's referrer address.
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `name` | `string` | Prefills the label. Accepts `alice` or `alice.eth`. |
+| `isTestnet` | `boolean` | Uses Sepolia instead of Ethereum mainnet. |
+| `referrer` | `Address` | Referrer recorded with the registration. Defaults to Namespace's referrer. |
+| `avatarUploadDomain` | `string` | Hostname used in the avatar upload sign-in message. Defaults to `window.location.hostname`. |
+| `title` | `string` | Replaces the form title. |
+| `subtitle` | `string` | Replaces the form subtitle. |
+| `bannerImage` | `string` | Image URL for the banner. |
+| `bannerWidth` | `number` | Banner width in pixels. |
+| `hideBanner` | `boolean` | Hides the banner. |
+| `noBorder` | `boolean` | Removes the card border. |
+| `className` | `string` | Class added to the form container. |
+| `version` | `1 \| 2` | Defaults to `2` (ENSv2). ENSv1 registration is retired, so leave this unset. |
+| `onRegistrationStart` | `(name: string) => void` | Called when the first transaction is sent, with the full name. |
+| `onRegistrationSuccess` | `(result: RegistrationSuccessData) => void` | Called after the register transaction confirms. |
+| `onClose` | `(isSuccess: boolean) => void` | Called when the user closes the success screen. |
+| `onConnectWallet` | `() => void` | Called when the user needs to connect a wallet. |
+
+## Success data
+
+`onRegistrationSuccess` receives an object with these string fields:
+
+| Field | Description |
+| --- | --- |
+| `durationLabel` | The registration length, for example `1 year`. |
+| `expiryDate` | The formatted expiry date. |
+| `registrationCost` | The price paid, in USDC or DAI. |
+| `transactionFees` | Network fees paid, in ETH. |
+| `total` | The same ETH network fees as `transactionFees`. Don't show it as the price. |
+
+## Related
+
+- Let users extend a name with [`NameRenewForm`](/developer-guide/sdks/ens-components/renew-names).
+- Edit records after registration with [`EnsRecordsForm`](/developer-guide/sdks/ens-components/edit-records).

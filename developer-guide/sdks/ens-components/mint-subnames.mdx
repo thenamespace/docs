@@ -1,0 +1,100 @@
+---
+title: "Mint onchain subnames"
+description: "Sell or give away subnames with SubnameMintForm."
+sidebarTitle: "Mint subnames"
+icon: "link"
+---
+
+`SubnameMintForm` mints an onchain subname under a parent name. The user picks a label, a duration, and a payment token, optionally sets records, and confirms the mint. By default it mints on ENSv2.
+
+## Before you start
+
+The parent must be a `.eth` name with a Namespace ENSv2 activation. The owner sets one up in the [Namespace App](/user-guide/app#activate-your-ens-name). The activation sets the price, the accepted payment tokens, the whitelist, and reserved labels. The form reads all of these and fetches whitelist and reservation proofs itself.
+
+## Example
+
+```tsx
+'use client';
+
+import { SubnameMintForm } from '@thenamespace/ens-components';
+
+export function MintSubname({ onConnect }: { onConnect: () => void }) {
+  return (
+    <SubnameMintForm
+      parentName="yourname.eth"
+      avatarUploadDomain="app.example.com"
+      onConnectWallet={onConnect}
+      onSuccess={(data) => {
+        console.log(`Minted ${data.fullName} for ${data.price} ${data.priceCurrency ?? 'ETH'}`);
+      }}
+    />
+  );
+}
+```
+
+The user pays in USDC or DAI and picks the token in the form. Network fees are always in ETH.
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `parentName` | `string` | Required. The activated parent, such as `yourname.eth`. |
+| `label` | `string` | Prefills the subname label. |
+| `isTestnet` | `boolean` | Uses Sepolia instead of Ethereum mainnet. |
+| `resolver` | `Address` | Resolver for the new subname when the activation doesn't set one. Defaults to Namespace's shared resolver. Ignored with `version={1}`. |
+| `version` | `1 \| 2` | Defaults to `2` (ENSv2). Pass `1` for a parent on an old Namespace listing. |
+| `avatarUploadDomain` | `string` | Hostname used in the avatar upload sign-in message. |
+| `title` | `string` | Replaces the form title. |
+| `subtitle` | `string` | Replaces the form subtitle. |
+| `txConfirmations` | `number` | Confirmations to wait for, on the `version={1}` flow. |
+| `noBorder` | `boolean` | Removes the card border. |
+| `onSuccess` | `(data: MintSuccessData) => void` | Called after the mint confirms. |
+| `onSubnameMinted` | `(data: SubnameMintedData) => void` | Also called after the mint confirms, with owner and chain details. |
+| `onConnectWallet` | `() => void` | Called when the user needs to connect a wallet. |
+| `onCancel` | `() => void` | Called when the user cancels. |
+
+## Success data
+
+```ts
+interface MintSuccessData {
+  fullName: string;
+  label: string;
+  parentName: string;
+  txHash: string;
+  price: string;
+  priceCurrency?: string; // 'USDC' or 'DAI'. Unset on version={1} mints, which are paid in ETH.
+  transactionFees: string; // ETH
+  records: EnsRecords;
+}
+
+interface SubnameMintedData {
+  label: string;
+  parentName: string;
+  fullSubname: string;
+  records: EnsRecords;
+  price: string;
+  transactionFees: string;
+  ownerAddress: string;
+  txHash: string;
+  chainId: number;
+}
+```
+
+## Mint under an old Namespace listing
+
+Parents listed in the Namespace App before ENSv2 have an ENSv1 listing. Onchain subnames don't migrate to ENSv2, so those listings keep minting on ENSv1. Pass `version={1}` for them:
+
+```tsx
+<SubnameMintForm version={1} parentName="oldlisting.eth" />
+```
+
+- The parent can be a `.eth` name or a DNS name imported into ENS.
+- The mint is paid in ETH.
+- Some listings mint on Base or Optimism. Add those chains to your wagmi config. The form asks the user to switch chains.
+
+See [ENSv2 and Namespace](/overview/ensv2) for which names use which version.
+
+## Related
+
+- Let holders extend their subnames with [`SubnameRenewForm`](/developer-guide/sdks/ens-components/renew-subnames).
+- Issue gasless subnames instead with [`OffchainSubnameForm`](/developer-guide/sdks/ens-components/offchain-subnames).

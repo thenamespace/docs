@@ -3,7 +3,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 
 const root = process.cwd();
-const ignoredDirectories = new Set(['.git', 'node_modules']);
+// Snippets are partials imported into pages, not pages themselves.
+const ignoredDirectories = new Set(['.git', 'node_modules', 'snippets']);
 
 const mintignorePath = join(root, '.mintignore');
 const ignoredRoutes = new Set(

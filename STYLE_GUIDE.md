@@ -24,6 +24,7 @@ Use these forms consistently:
 | npm | Npm |
 | mainnet, testnet | Mainnet, Testnet unless part of a proper name |
 | API key | API Key in body copy |
+| ENSv2, ENSv1 | ENS v2, ENS V2, ENSV2, or a bare v2 in headings |
 
 Keep official product names capitalized: Namespace App, Offchain Manager, Mint Manager, Indexer Manager, ENS Components, ENS Widget, and Resolvio.
 

@@ -5,38 +5,53 @@ sidebarTitle: "ENS Components"
 icon: "puzzle-piece"
 ---
 
-[ENS Components](https://enscomponents.com/) is an open-source React UI library for ENS name registration, record editing, and subname issuance, including Namespace onchain and offchain subnames.
+[ENS Components](https://enscomponents.com/) is an open-source React library from Namespace with complete ENS flows you can put in your own app. Your users can register names, claim subnames, and edit their profiles inside your product, and your team skips building the ENS contract calls and pricing.
+
+Each flow is one component. A developer renders it, and it handles the screens, validation, pricing, wallet prompts, and confirmation.
 
 <CardGroup cols={3}>
   <Card title="Website" icon="globe" href="https://enscomponents.com/">
-    enscomponents.com
+    Try every component live
   </Card>
   <Card title="GitHub" icon="github" href="https://github.com/thenamespace/ens-components">
     thenamespace/ens-components
   </Card>
-  <Card title="Skill.md" icon="robot" href="https://enscomponents.com/Skill.md">
-    Agent-ready component instructions
+  <Card title="Developer docs" icon="code" href="/developer-guide/sdks/ens-components">
+    Install and integrate
   </Card>
 </CardGroup>
 
-## Core components
+## Flows it covers
 
-- **`EnsNameRegistrationForm`:** full commit/register flow for `.eth` names
-- **`EnsRecordsForm`:** edit text records, addresses, avatar, and contenthash
-- **`SelectRecordsForm`:** standalone record composer, no wallet required
-- **`OffchainSubnameForm`:** gasless subnames via the Namespace API
-- **`SubnameMintForm`:** onchain subname minting with L2 resolver support
+| Flow | What your users can do |
+| --- | --- |
+| Name registration | Search for a `.eth` name and register it. |
+| Name renewal | Extend any `.eth` name. Anyone can pay, and the owner keeps the name. |
+| Profile records | Edit addresses, social and text records, website contenthash, avatar, and header image. |
+| Onchain subnames | Mint a subname under your name, at the price and rules you set in the Namespace App. |
+| Subname renewal | Extend an onchain subname at your price. |
+| Offchain subnames | Claim a gasless subname under your name, such as `alice.yourbrand.eth`, saved through your server. |
 
-## Features
+The library also includes a transaction progress screen your team can reuse in its own flows, so everything looks consistent.
 
-- Drop-in ENS UX
-- `.eth` name registration
-- Onchain or offchain subname registration
-- Customizable templates
-- Open-source, MIT-licensed
+## ENSv2 by default
 
-## Use it
+The onchain flows run on [ENSv2](/overview/ensv2), on Ethereum mainnet or the Sepolia testnet.
 
-- **Source and install:** [github.com/thenamespace/ens-components](https://github.com/thenamespace/ens-components)
-- **Skill.md:** Give an AI agent the official [ENS Components instructions](https://enscomponents.com/Skill.md) directly.
-- **Installable skill:** Add the [ENS components skill](/developer-guide/skills#ens-components-skill) to your project.
+- `.eth` registration and renewal are paid in USDC or DAI.
+- Onchain subnames under an [activated name](/user-guide/app#activate-your-ens-name) are paid in USDC or DAI.
+- Network fees are paid in ETH.
+
+If you created an onchain listing in the Namespace App before ENSv2, it keeps working. Your developers add one setting to the subname form to mint under it. Offchain subnames work with both ENSv1 and ENSv2 names.
+
+## When to use it
+
+Use it when you want ENS names or subnames in your product without building the flows yourself. It fits well if you issue subnames to a community or customers: pair the subname forms with an onchain activation or offchain subnames from the [Namespace App](/user-guide/app). You can change colors, corners, fonts, and copy to match your brand. See [Theming](/developer-guide/sdks/ens-components/theming).
+
+ENS Components is for React apps that use wagmi for wallet connections. It's open source, so your team can read and audit the code.
+
+## Get started
+
+- **Developers:** Start with the [ENS Components developer guide](/developer-guide/sdks/ens-components).
+- **AI agents:** Install the [ENS Components skill](/developer-guide/skills#ens-components-skill), or give your agent [Skill.md](https://enscomponents.com/Skill.md).
+- **Release notes:** See the [ENS Components changelog](/changelog/ens-components).
