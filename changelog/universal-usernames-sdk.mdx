@@ -1,0 +1,16 @@
+---
+title: "Universal Usernames SDK"
+description: "Changelog for the Universal Usernames SDK."
+sidebarTitle: "Universal Usernames SDK"
+icon: "globe"
+---
+
+<Update label="Unreleased" description="v0.1.0">
+  - Added:
+    - **Profile schema v1**: `USERNAME_PROFILE_SCHEMA_V1`, `PROFILE_LIMITS`, and the `UsernameProfileV1` type for the JSON your username endpoint returns.
+    - **Validator**: `validateUsernameProfile` and `parseUsernameProfile` report every issue with a stable code, a kind (`envelope`, `record`, or `transport`), and a JSON Pointer path. Duplicate keys are caught on the raw body.
+    - **Record resolution**: `resolveText`, `resolveAddress` with the ENSIP-19 default EVM rules, and `resolveContenthash` for `ipfs://`, `ipns://`, `bzz://`, and `ar://`.
+    - **Endpoint helpers**: `createUsernameHandler` serves profiles as a Fetch API handler with an optional constant-time bearer check, and `defineUsernameProfile` accepts chain names as address keys.
+    - **Validator CLI**: `universal-usernames validate <endpointUrl> --username <label> [--token <bearer>]` exits with `0` when the profile is valid.
+    - **Fixtures**: valid and invalid profiles with their expected issue codes, for your own tests.
+</Update>

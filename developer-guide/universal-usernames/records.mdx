@@ -1,0 +1,128 @@
+---
+title: "Records"
+description: "Text keys, coin types, and contenthash formats for profiles."
+sidebarTitle: "Records"
+icon: "list-check"
+---
+
+A profile carries three kinds of ENS records: text records in `texts`, addresses in `addresses`, and an optional `contenthash`. This page covers the format of each and what Namespace rejects. The shape of the whole response is in the [endpoint reference](/developer-guide/universal-usernames/endpoint-reference#schema-v1).
+
+## Text records
+
+`texts` maps a key to a string value. Keys are open: use the standard keys wallets already read, plus any custom keys you need.
+
+| Key | Holds |
+| --- | --- |
+| `name` | Display name |
+| `description` | Short bio |
+| `avatar` | Avatar image: an `https://` or `ipfs://` URL, or an NFT reference as described in [ENSIP-12](https://docs.ens.domains/ensip/12) |
+| `header` | Banner image, in the same formats as `avatar` |
+| `url` | Website |
+| `location` | Free-text location |
+| `email` | Email address |
+| `com.github` | GitHub username |
+| `com.twitter` | X username |
+
+Prefix custom keys with a domain you control, such as `com.brand.role`, so they don't collide with keys other apps define.
+
+Values are plain text. Apps must never render them as HTML, and you shouldn't put markup in them.
+
+| Rule | Issue code when broken |
+| --- | --- |
+| A key is 1 to 256 characters | `TEXT_KEY_INVALID` |
+| A value is a string | `TEXT_VALUE_INVALID` |
+| A value is at most 4,096 characters | `TEXT_VALUE_TOO_LONG` |
+| At most 128 keys | `TOO_MANY_TEXTS` (fails the whole profile) |
+
+## Address records
+
+`addresses` maps an ENS coin type to an address. Coin types come from [ENSIP-9](https://docs.ens.domains/ensip/9) for non-EVM chains and [ENSIP-11](https://docs.ens.domains/ensip/11) for EVM chains, where the coin type is `0x80000000 | chainId`. Ethereum mainnet keeps the older coin type `60`.
+
+<Warning>
+Coin types aren't chain IDs. Base is `2147492101`, not `8453`, and Polygon is `2147483785`, not `137`. Coin type `137` is Rootstock, so a Polygon address under `"137"` answers lookups for a different chain.
+</Warning>
+
+| Chain | Coin type |
+| --- | --- |
+| Bitcoin | `0` |
+| Litecoin | `2` |
+| Dogecoin | `3` |
+| Ethereum | `60` |
+| Polkadot | `354` |
+| Solana | `501` |
+| Vara | `913` |
+| Default EVM address | `2147483648` |
+| OP Mainnet | `2147483658` |
+| BNB Smart Chain | `2147483704` |
+| Gnosis | `2147483748` |
+| Polygon | `2147483785` |
+| zkSync Era | `2147483972` |
+| Base | `2147492101` |
+| Arbitrum One | `2147525809` |
+| Celo | `2147525868` |
+| Avalanche C-Chain | `2147526762` |
+| Linea | `2147542792` |
+| Scroll | `2148018000` |
+
+Namespace converts addresses to bytes with [`@ensdomains/address-encoder`](https://github.com/ensdomains/address-encoder) 2.0.1, which covers about 150 coins. Any coin it has a coder for works, not only the ones above.
+
+### Address format
+
+Send addresses the way users see them:
+
+- EVM chains: `0x` followed by 40 hex characters, either checksummed or all lowercase. A mixed-case address with a wrong checksum is invalid.
+- Bitcoin: a legacy or bech32 address, such as `bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq`.
+- Solana: the base58 public key.
+
+| Rule | Issue code when broken |
+| --- | --- |
+| The key is a decimal integer from `0` to `4294967295`, with no leading zeros, sign, or hex | `COIN_TYPE_INVALID` |
+| Namespace has a coder for the coin type | `COIN_TYPE_UNSUPPORTED` |
+| The value is a valid address for that coin, 1 to 1,024 characters | `ADDRESS_INVALID` |
+| At most 128 addresses | `TOO_MANY_ADDRESSES` (fails the whole profile) |
+
+### Default EVM address
+
+Coin type `2147483648` is the default EVM address from [ENSIP-19](https://docs.ens.domains/ensip/19). Use it when a user has the same address on every EVM chain. Namespace follows ENSIP-19 exactly:
+
+- An explicit chain record wins. If the profile has `2147492101`, Base lookups return that address.
+- An EVM chain with no record of its own returns the default address. That includes Ethereum: ENSIP-19 defines `chainFromCoinType(60)` as chain `1`, so a profile without `60` answers Ethereum lookups with the default address.
+- An invalid explicit record fails the lookup. It doesn't fall back to the default.
+- Non-EVM coins, such as Bitcoin and Solana, never use the default.
+
+```json Default address with a Base override
+{
+  "version": 1,
+  "username": "happy",
+  "texts": {},
+  "addresses": {
+    "2147483648": "0x1111111111111111111111111111111111111111",
+    "2147492101": "0x2222222222222222222222222222222222222222",
+    "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq"
+  }
+}
+```
+
+With this profile, Ethereum, OP Mainnet, and Arbitrum lookups return `0x1111…1111`, Base returns `0x2222…2222`, Bitcoin returns the bech32 address, and Solana returns an empty value.
+
+## Contenthash
+
+`contenthash` takes a URI and is encoded to [ENSIP-7](https://docs.ens.domains/ensip/7) bytes with the `content-hash` library.
+
+| Protocol | Example |
+| --- | --- |
+| IPFS | `ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA` or `ipfs://bafy…` |
+| IPNS | `ipns://k51qzi5uqu5dlvj2baxnqndepeb86cbk3ng7n3i46uzyxzyqj2xjonzllnv0v8` |
+| Swarm | `bzz://d1de9994b4d039f6548d191eb26786769f580809256b4685ef316805265ea162` |
+| Arweave | `ar://ys32Pt8uC7TrVxHdOLByOspfPEq2LO63wREHQIM9SJQ` |
+
+Namespace never guesses the protocol. A bare CID without `ipfs://` or an `https://` URL is rejected with `CONTENTHASH_UNSUPPORTED`, and a known protocol with a malformed value is rejected with `CONTENTHASH_INVALID`.
+
+## Missing records
+
+When a profile doesn't have the record a wallet asks for, the wallet gets a signed empty value: the zero address for `addr(node)`, `0x` for `addr(node, coinType)`, `""` for a text record, and empty bytes for the contenthash. Leave missing records out of the response. `null` isn't an empty value; it's an invalid record.
+
+## Related pages
+
+- [Endpoint reference](/developer-guide/universal-usernames/endpoint-reference)
+- [Troubleshooting](/developer-guide/universal-usernames/troubleshooting)

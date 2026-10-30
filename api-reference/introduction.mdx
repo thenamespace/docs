@@ -52,6 +52,73 @@ x-auth-token: YOUR_API_KEY
   </Card>
 </CardGroup>
 
+## Universal usernames API
+
+These routes connect a `.eth` name to a [username endpoint](/developer-guide/universal-usernames/endpoint-reference) your brand hosts. They use the same base URLs as the Offchain Manager API, but they don't accept API keys. Only the current exact owner of the parent name can call them, and the wallet signs every request.
+
+### Authenticate as the owner
+
+Both kinds of credential go in the `x-auth-token` header as `siwe:<base64(message)>.<base64(signature)>`, where the message is an [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361) sign-in message and the signature is the wallet's hex signature string.
+
+- Reads, such as getting the connection or validating an endpoint, take an unexpired sign-in session signed by the owner.
+- Each change takes its own operation signature: a fresh message with a nonce from [`GET /api/v1/auth/nonce`](/api-reference/offchain-manager/universal-usernames/get-nonce), the statement `Authorize <action> for Universal Usernames on <parentName>`, an expiry at most 10 minutes after it was issued, and exactly one resource, `urn:namespace:uun:<parentNode>:<action>:<expectedRevision>`.
+
+The actions are `save`, `activate`, `rotate-credential`, `pause`, `resume`, and `disconnect`. `chainId` is `1` on the production API and `11155111` on staging. A nonce expires 60 seconds after you request it and works once.
+
+```ts
+const message = createSiweMessage({
+  domain: 'app.namespace.ninja',
+  uri: 'https://app.namespace.ninja',
+  address: owner.address,
+  statement: `Authorize pause for Universal Usernames on ${parentName}`,
+  version: '1',
+  chainId: 1,
+  nonce, // from GET /api/v1/auth/nonce
+  issuedAt,
+  expirationTime: new Date(issuedAt.getTime() + 5 * 60 * 1000),
+  resources: [`urn:namespace:uun:${namehash(parentName)}:pause:${revision}`],
+});
+const signature = await owner.signMessage({ message });
+const token = `siwe:${btoa(message)}.${btoa(signature)}`;
+```
+
+The [Offchain Manager SDK](/developer-guide/sdks/offchain-manager/universal-usernames) builds and signs these messages for you.
+
+<CardGroup cols={2}>
+  <Card
+    title="Get a username connection"
+    icon="link"
+    href="/api-reference/offchain-manager/universal-usernames/get-connection"
+    arrow="true"
+  >
+    Read the status, revisions, and last validation for a parent name.
+  </Card>
+  <Card
+    title="Validate an endpoint"
+    icon="list-check"
+    href="/api-reference/offchain-manager/universal-usernames/validate-endpoint"
+    arrow="true"
+  >
+    Dry-run your endpoint for one username without saving anything.
+  </Card>
+  <Card
+    title="Save a username connection"
+    icon="floppy-disk"
+    href="/api-reference/offchain-manager/universal-usernames/save-connection"
+    arrow="true"
+  >
+    Store endpoint settings as a new revision and validate them.
+  </Card>
+  <Card
+    title="Activate a username connection"
+    icon="power-off"
+    href="/api-reference/offchain-manager/universal-usernames/activate-connection"
+    arrow="true"
+  >
+    Verify a live lookup and start serving usernames.
+  </Card>
+</CardGroup>
+
 ## Mint Manager API
 
 <CardGroup cols={2}>

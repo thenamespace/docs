@@ -215,6 +215,2298 @@
         "summary": "Query subnames",
         "tags": ["Subnames"]
       }
+    },
+    "/api/v1/universal-usernames/{parentName}": {
+      "get": {
+        "description": "Returns the connection for a parent name: status, the active and latest revisions, the last validation report and the owner snapshot. Never returns the bearer credential. Signed in as the current exact owner of the parent.",
+        "operationId": "UniversalUsernamesController_getConnection",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "path",
+            "description": "The normalized parent name, URL-encoded. A .eth name directly below .eth, such as brand.eth.",
+            "schema": {
+              "type": "string",
+              "example": "brand.eth"
+            }
+          }
+        ],
+        "summary": "Get a username connection",
+        "tags": [
+          "Universal usernames"
+        ],
+        "security": [
+          {
+            "uun-session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The connection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnection"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Connection",
+                    "value": {
+                      "parentName": "brand.eth",
+                      "parentNode": "0x2b5c7025998f88550ef2ece8bf87935f542b3c1f2b0d6e6d0b2c9a3e4f5a6b7c",
+                      "chain": "mainnet",
+                      "status": "active",
+                      "revision": 3,
+                      "activeRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "active",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "latestRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "active",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "owner": {
+                        "address": "0x1234567890abcdef1234567890abcdef12345678",
+                        "source": "v1-wrapped",
+                        "checkedAt": "2026-10-30T12:00:00.000Z"
+                      },
+                      "storedSubnamesAcknowledged": false,
+                      "suspendedReason": null,
+                      "activation": {
+                        "verifiedAt": "2026-10-30T12:03:00.000Z",
+                        "checkedRecords": [
+                          "addr(60)",
+                          "text(name)",
+                          "text(avatar)",
+                          "contenthash"
+                        ]
+                      },
+                      "createdAt": "2026-10-30T11:58:00.000Z",
+                      "updatedAt": "2026-10-30T12:03:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`UNSUPPORTED_PARENT`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UNSUPPORTED_PARENT": {
+                    "summary": "UNSUPPORTED_PARENT",
+                    "value": {
+                      "code": "UNSUPPORTED_PARENT",
+                      "message": "brand.app.eth is not a .eth name directly below .eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`INVALID_SESSION`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "INVALID_SESSION": {
+                    "summary": "INVALID_SESSION",
+                    "value": {
+                      "code": "INVALID_SESSION",
+                      "message": "The SIWE session is missing, malformed or expired"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`NOT_PARENT_OWNER`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "NOT_PARENT_OWNER": {
+                    "summary": "NOT_PARENT_OWNER",
+                    "value": {
+                      "code": "NOT_PARENT_OWNER",
+                      "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`CONNECTION_NOT_FOUND`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "CONNECTION_NOT_FOUND": {
+                    "summary": "CONNECTION_NOT_FOUND",
+                    "value": {
+                      "code": "CONNECTION_NOT_FOUND",
+                      "message": "brand.eth has no username connection"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Saves a new revision of the endpoint settings and runs validation against `sampleUsername`. The connection becomes `validated` only when the stored report has no issues; otherwise it stays `draft`. On an active connection the new revision is a candidate and the active revision keeps serving until you activate the candidate. Requires an operation signature for action `save`. Use `expectedRevision: 0` when the parent has no connection yet.",
+        "operationId": "UniversalUsernamesController_saveConnection",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "path",
+            "description": "The normalized parent name, URL-encoded. A .eth name directly below .eth, such as brand.eth.",
+            "schema": {
+              "type": "string",
+              "example": "brand.eth"
+            }
+          }
+        ],
+        "summary": "Save a username connection",
+        "tags": [
+          "Universal usernames"
+        ],
+        "security": [
+          {
+            "uun-operation-signature": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveUsernameConnectionRequest"
+              },
+              "examples": {
+                "example": {
+                  "summary": "Example",
+                  "value": {
+                    "endpointUrl": "https://api.brand.example/ens/users",
+                    "authMode": "bearer",
+                    "credential": "YOUR_ENDPOINT_TOKEN",
+                    "sampleUsername": "happy",
+                    "expectedRevision": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The connection with the new revision",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnection"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Connection",
+                    "value": {
+                      "parentName": "brand.eth",
+                      "parentNode": "0x2b5c7025998f88550ef2ece8bf87935f542b3c1f2b0d6e6d0b2c9a3e4f5a6b7c",
+                      "chain": "mainnet",
+                      "status": "validated",
+                      "revision": 1,
+                      "activeRevision": null,
+                      "latestRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "validated",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "owner": {
+                        "address": "0x1234567890abcdef1234567890abcdef12345678",
+                        "source": "v1-wrapped",
+                        "checkedAt": "2026-10-30T12:00:00.000Z"
+                      },
+                      "storedSubnamesAcknowledged": false,
+                      "suspendedReason": null,
+                      "activation": null,
+                      "createdAt": "2026-10-30T11:58:00.000Z",
+                      "updatedAt": "2026-10-30T12:03:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`UNSUPPORTED_PARENT`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UNSUPPORTED_PARENT": {
+                    "summary": "UNSUPPORTED_PARENT",
+                    "value": {
+                      "code": "UNSUPPORTED_PARENT",
+                      "message": "brand.app.eth is not a .eth name directly below .eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`INVALID_OPERATION_SIGNATURE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "INVALID_OPERATION_SIGNATURE": {
+                    "summary": "INVALID_OPERATION_SIGNATURE",
+                    "value": {
+                      "code": "INVALID_OPERATION_SIGNATURE",
+                      "message": "The operation signature does not authorize this change"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`NOT_PARENT_OWNER`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "NOT_PARENT_OWNER": {
+                    "summary": "NOT_PARENT_OWNER",
+                    "value": {
+                      "code": "NOT_PARENT_OWNER",
+                      "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`REVISION_CONFLICT`, `INVALID_STATE`, `STORED_SUBNAMES_NOT_ACKNOWLEDGED`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "REVISION_CONFLICT": {
+                    "summary": "REVISION_CONFLICT",
+                    "value": {
+                      "code": "REVISION_CONFLICT",
+                      "message": "expectedRevision 3 does not match the current revision 4"
+                    }
+                  },
+                  "INVALID_STATE": {
+                    "summary": "INVALID_STATE",
+                    "value": {
+                      "code": "INVALID_STATE",
+                      "message": "A paused connection cannot be activated"
+                    }
+                  },
+                  "STORED_SUBNAMES_NOT_ACKNOWLEDGED": {
+                    "summary": "STORED_SUBNAMES_NOT_ACKNOWLEDGED",
+                    "value": {
+                      "code": "STORED_SUBNAMES_NOT_ACKNOWLEDGED",
+                      "message": "brand.eth has 12 stored offchain subnames; set acknowledgeStoredSubnames to continue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`VALIDATION_FAILED`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "VALIDATION_FAILED": {
+                    "summary": "VALIDATION_FAILED",
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "The request body is invalid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Disconnects the parent. This is final: the credential is wiped from every revision, redacted revisions and events are kept, and stored offchain subnames resolve again. The resolver and route stay as they are; changing them back is a separate onchain action. Requires an operation signature for action `disconnect`.",
+        "operationId": "UniversalUsernamesController_disconnect",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "path",
+            "description": "The normalized parent name, URL-encoded. A .eth name directly below .eth, such as brand.eth.",
+            "schema": {
+              "type": "string",
+              "example": "brand.eth"
+            }
+          },
+          {
+            "name": "expectedRevision",
+            "required": true,
+            "in": "query",
+            "description": "The current `revision` of the connection.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "example": 4
+            }
+          }
+        ],
+        "summary": "Disconnect a parent name",
+        "tags": [
+          "Universal usernames"
+        ],
+        "security": [
+          {
+            "uun-operation-signature": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The disconnected connection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnection"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Connection",
+                    "value": {
+                      "parentName": "brand.eth",
+                      "parentNode": "0x2b5c7025998f88550ef2ece8bf87935f542b3c1f2b0d6e6d0b2c9a3e4f5a6b7c",
+                      "chain": "mainnet",
+                      "status": "disconnected",
+                      "revision": 5,
+                      "activeRevision": null,
+                      "latestRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "validated",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "owner": {
+                        "address": "0x1234567890abcdef1234567890abcdef12345678",
+                        "source": "v1-wrapped",
+                        "checkedAt": "2026-10-30T12:00:00.000Z"
+                      },
+                      "storedSubnamesAcknowledged": false,
+                      "suspendedReason": null,
+                      "activation": null,
+                      "createdAt": "2026-10-30T11:58:00.000Z",
+                      "updatedAt": "2026-10-30T12:03:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`INVALID_OPERATION_SIGNATURE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "INVALID_OPERATION_SIGNATURE": {
+                    "summary": "INVALID_OPERATION_SIGNATURE",
+                    "value": {
+                      "code": "INVALID_OPERATION_SIGNATURE",
+                      "message": "The operation signature does not authorize this change"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`NOT_PARENT_OWNER`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "NOT_PARENT_OWNER": {
+                    "summary": "NOT_PARENT_OWNER",
+                    "value": {
+                      "code": "NOT_PARENT_OWNER",
+                      "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`CONNECTION_NOT_FOUND`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "CONNECTION_NOT_FOUND": {
+                    "summary": "CONNECTION_NOT_FOUND",
+                    "value": {
+                      "code": "CONNECTION_NOT_FOUND",
+                      "message": "brand.eth has no username connection"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`REVISION_CONFLICT`, `INVALID_STATE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "REVISION_CONFLICT": {
+                    "summary": "REVISION_CONFLICT",
+                    "value": {
+                      "code": "REVISION_CONFLICT",
+                      "message": "expectedRevision 3 does not match the current revision 4"
+                    }
+                  },
+                  "INVALID_STATE": {
+                    "summary": "INVALID_STATE",
+                    "value": {
+                      "code": "INVALID_STATE",
+                      "message": "A paused connection cannot be activated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/universal-usernames/{parentName}/inspection": {
+      "get": {
+        "description": "Reads the parent onchain: owner and where ownership comes from, resolver, route, whether the resolver can be changed, stored offchain subnames, and anything that blocks a connection. Signed in as the current exact owner of the parent.",
+        "operationId": "UniversalUsernamesController_inspectParent",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "path",
+            "description": "The normalized parent name, URL-encoded. A .eth name directly below .eth, such as brand.eth.",
+            "schema": {
+              "type": "string",
+              "example": "brand.eth"
+            }
+          }
+        ],
+        "summary": "Inspect a parent name",
+        "tags": [
+          "Universal usernames"
+        ],
+        "security": [
+          {
+            "uun-session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The inspection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParentInspection"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Ready to connect",
+                    "value": {
+                      "parentName": "brand.eth",
+                      "parentNode": "0x2b5c7025998f88550ef2ece8bf87935f542b3c1f2b0d6e6d0b2c9a3e4f5a6b7c",
+                      "supported": true,
+                      "owner": {
+                        "address": "0x1234567890abcdef1234567890abcdef12345678",
+                        "source": "v1-wrapped",
+                        "expiresAt": "2027-06-01T00:00:00.000Z"
+                      },
+                      "resolver": {
+                        "address": "0x231b0Ee14048e9dCcD1d247744d114a4EB5E8E63",
+                        "isHybridResolverV2": false
+                      },
+                      "route": {
+                        "id": null,
+                        "isOffchain": false
+                      },
+                      "canSetResolver": true,
+                      "storedSubnames": {
+                        "count": 0
+                      },
+                      "blockers": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`UNSUPPORTED_PARENT`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UNSUPPORTED_PARENT": {
+                    "summary": "UNSUPPORTED_PARENT",
+                    "value": {
+                      "code": "UNSUPPORTED_PARENT",
+                      "message": "brand.app.eth is not a .eth name directly below .eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`INVALID_SESSION`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "INVALID_SESSION": {
+                    "summary": "INVALID_SESSION",
+                    "value": {
+                      "code": "INVALID_SESSION",
+                      "message": "The SIWE session is missing, malformed or expired"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`NOT_PARENT_OWNER`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "NOT_PARENT_OWNER": {
+                    "summary": "NOT_PARENT_OWNER",
+                    "value": {
+                      "code": "NOT_PARENT_OWNER",
+                      "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/universal-usernames/{parentName}/validate": {
+      "post": {
+        "description": "Dry run. Calls the endpoint for one username the same way lookups do and returns every transport, envelope and record issue. Nothing is stored. Returns `200` even when `ok` is `false`. Rate-limited per parent. Signed in as the current exact owner of the parent.",
+        "operationId": "UniversalUsernamesController_validateEndpoint",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "path",
+            "description": "The normalized parent name, URL-encoded. A .eth name directly below .eth, such as brand.eth.",
+            "schema": {
+              "type": "string",
+              "example": "brand.eth"
+            }
+          }
+        ],
+        "summary": "Validate an endpoint",
+        "tags": [
+          "Universal usernames"
+        ],
+        "security": [
+          {
+            "uun-session": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateUsernameEndpointRequest"
+              },
+              "examples": {
+                "example": {
+                  "summary": "Example",
+                  "value": {
+                    "endpointUrl": "https://api.brand.example/ens/users",
+                    "authMode": "bearer",
+                    "credential": "YOUR_ENDPOINT_TOKEN",
+                    "username": "happy"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The validation report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointValidationReport"
+                },
+                "examples": {
+                  "valid": {
+                    "summary": "Valid profile",
+                    "value": {
+                      "ok": true,
+                      "checkedAt": "2026-10-30T12:00:00.000Z",
+                      "username": "happy",
+                      "requestUrl": "https://api.brand.example/ens/users/happy",
+                      "httpStatus": 200,
+                      "latencyMs": 142,
+                      "issues": [],
+                      "preview": {
+                        "texts": {
+                          "name": "Happy",
+                          "avatar": "https://cdn.brand.example/happy.png",
+                          "com.github": "happy",
+                          "com.brand.role": "member"
+                        },
+                        "addresses": {
+                          "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                          "60": "0x1111111111111111111111111111111111111111",
+                          "2147492101": "0x2222222222222222222222222222222222222222"
+                        },
+                        "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                      }
+                    }
+                  },
+                  "invalidRecord": {
+                    "summary": "One invalid record",
+                    "value": {
+                      "ok": false,
+                      "checkedAt": "2026-10-30T12:00:00.000Z",
+                      "username": "happy",
+                      "requestUrl": "https://api.brand.example/ens/users/happy",
+                      "httpStatus": 200,
+                      "latencyMs": 131,
+                      "issues": [
+                        {
+                          "code": "ADDRESS_INVALID",
+                          "kind": "record",
+                          "path": "/addresses/60",
+                          "message": "Address for coin type 60 is not a valid Ethereum address"
+                        }
+                      ],
+                      "preview": {
+                        "texts": {
+                          "name": "Happy"
+                        },
+                        "addresses": {},
+                        "contenthash": null
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`UNSUPPORTED_PARENT`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UNSUPPORTED_PARENT": {
+                    "summary": "UNSUPPORTED_PARENT",
+                    "value": {
+                      "code": "UNSUPPORTED_PARENT",
+                      "message": "brand.app.eth is not a .eth name directly below .eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`INVALID_SESSION`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "INVALID_SESSION": {
+                    "summary": "INVALID_SESSION",
+                    "value": {
+                      "code": "INVALID_SESSION",
+                      "message": "The SIWE session is missing, malformed or expired"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`NOT_PARENT_OWNER`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "NOT_PARENT_OWNER": {
+                    "summary": "NOT_PARENT_OWNER",
+                    "value": {
+                      "code": "NOT_PARENT_OWNER",
+                      "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`VALIDATION_FAILED`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "VALIDATION_FAILED": {
+                    "summary": "VALIDATION_FAILED",
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "The request body is invalid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`RATE_LIMITED`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "RATE_LIMITED": {
+                    "summary": "RATE_LIMITED",
+                    "value": {
+                      "code": "RATE_LIMITED",
+                      "message": "Too many validation requests for brand.eth; try again shortly"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/universal-usernames/{parentName}/activate": {
+      "post": {
+        "description": "Activates a `validated` connection, or promotes a validated candidate revision on an active one. Namespace checks the preconditions, sets the status to `verifying` (the parent starts serving from the endpoint), then resolves the sample username through the ENS Universal Resolver with CCIP-Read. When the live answer matches the validated preview the connection becomes `active`; otherwise it returns to `validated` with `activation.errors`. Requires an operation signature for action `activate`.",
+        "operationId": "UniversalUsernamesController_activateConnection",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "path",
+            "description": "The normalized parent name, URL-encoded. A .eth name directly below .eth, such as brand.eth.",
+            "schema": {
+              "type": "string",
+              "example": "brand.eth"
+            }
+          }
+        ],
+        "summary": "Activate a username connection",
+        "tags": [
+          "Universal usernames"
+        ],
+        "security": [
+          {
+            "uun-operation-signature": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpectedRevisionRequest"
+              },
+              "examples": {
+                "example": {
+                  "summary": "Example",
+                  "value": {
+                    "expectedRevision": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The connection, `active` or back to `validated` with `activation.errors`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnection"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Connection",
+                    "value": {
+                      "parentName": "brand.eth",
+                      "parentNode": "0x2b5c7025998f88550ef2ece8bf87935f542b3c1f2b0d6e6d0b2c9a3e4f5a6b7c",
+                      "chain": "mainnet",
+                      "status": "active",
+                      "revision": 2,
+                      "activeRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "active",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "latestRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "active",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "owner": {
+                        "address": "0x1234567890abcdef1234567890abcdef12345678",
+                        "source": "v1-wrapped",
+                        "checkedAt": "2026-10-30T12:00:00.000Z"
+                      },
+                      "storedSubnamesAcknowledged": false,
+                      "suspendedReason": null,
+                      "activation": {
+                        "verifiedAt": "2026-10-30T12:03:00.000Z",
+                        "checkedRecords": [
+                          "addr(60)",
+                          "text(name)",
+                          "text(avatar)",
+                          "contenthash"
+                        ]
+                      },
+                      "createdAt": "2026-10-30T11:58:00.000Z",
+                      "updatedAt": "2026-10-30T12:03:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`INVALID_OPERATION_SIGNATURE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "INVALID_OPERATION_SIGNATURE": {
+                    "summary": "INVALID_OPERATION_SIGNATURE",
+                    "value": {
+                      "code": "INVALID_OPERATION_SIGNATURE",
+                      "message": "The operation signature does not authorize this change"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`NOT_PARENT_OWNER`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "NOT_PARENT_OWNER": {
+                    "summary": "NOT_PARENT_OWNER",
+                    "value": {
+                      "code": "NOT_PARENT_OWNER",
+                      "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`CONNECTION_NOT_FOUND`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "CONNECTION_NOT_FOUND": {
+                    "summary": "CONNECTION_NOT_FOUND",
+                    "value": {
+                      "code": "CONNECTION_NOT_FOUND",
+                      "message": "brand.eth has no username connection"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`REVISION_CONFLICT`, `INVALID_STATE`, `STORED_SUBNAMES_NOT_ACKNOWLEDGED`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "REVISION_CONFLICT": {
+                    "summary": "REVISION_CONFLICT",
+                    "value": {
+                      "code": "REVISION_CONFLICT",
+                      "message": "expectedRevision 3 does not match the current revision 4"
+                    }
+                  },
+                  "INVALID_STATE": {
+                    "summary": "INVALID_STATE",
+                    "value": {
+                      "code": "INVALID_STATE",
+                      "message": "A paused connection cannot be activated"
+                    }
+                  },
+                  "STORED_SUBNAMES_NOT_ACKNOWLEDGED": {
+                    "summary": "STORED_SUBNAMES_NOT_ACKNOWLEDGED",
+                    "value": {
+                      "code": "STORED_SUBNAMES_NOT_ACKNOWLEDGED",
+                      "message": "brand.eth has 12 stored offchain subnames; set acknowledgeStoredSubnames to continue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "`PRECONDITION_FAILED`: the resolver, route or sample child is not ready. `details` lists each failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "PRECONDITION_FAILED": {
+                    "summary": "PRECONDITION_FAILED",
+                    "value": {
+                      "code": "PRECONDITION_FAILED",
+                      "message": "brand.eth is not ready to activate",
+                      "details": [
+                        {
+                          "code": "RESOLVER_NOT_HYBRID_RESOLVER_V2",
+                          "message": "brand.eth uses resolver 0x231b…8E63, not HybridResolverV2"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/universal-usernames/{parentName}/preview": {
+      "post": {
+        "description": "Fetches the records for any username through the serving revision, or the latest one when nothing is serving yet, and returns them as a validation report. Read-only. Signed in as the current exact owner of the parent.",
+        "operationId": "UniversalUsernamesController_previewUsername",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "path",
+            "description": "The normalized parent name, URL-encoded. A .eth name directly below .eth, such as brand.eth.",
+            "schema": {
+              "type": "string",
+              "example": "brand.eth"
+            }
+          }
+        ],
+        "summary": "Preview a username",
+        "tags": [
+          "Universal usernames"
+        ],
+        "security": [
+          {
+            "uun-session": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewUsernameRequest"
+              },
+              "examples": {
+                "example": {
+                  "summary": "Example",
+                  "value": {
+                    "username": "happy"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The validation report for that username",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointValidationReport"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Preview",
+                    "value": {
+                      "ok": true,
+                      "checkedAt": "2026-10-30T12:00:00.000Z",
+                      "username": "happy",
+                      "requestUrl": "https://api.brand.example/ens/users/happy",
+                      "httpStatus": 200,
+                      "latencyMs": 142,
+                      "issues": [],
+                      "preview": {
+                        "texts": {
+                          "name": "Happy",
+                          "avatar": "https://cdn.brand.example/happy.png",
+                          "com.github": "happy",
+                          "com.brand.role": "member"
+                        },
+                        "addresses": {
+                          "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                          "60": "0x1111111111111111111111111111111111111111",
+                          "2147492101": "0x2222222222222222222222222222222222222222"
+                        },
+                        "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`INVALID_SESSION`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "INVALID_SESSION": {
+                    "summary": "INVALID_SESSION",
+                    "value": {
+                      "code": "INVALID_SESSION",
+                      "message": "The SIWE session is missing, malformed or expired"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`NOT_PARENT_OWNER`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "NOT_PARENT_OWNER": {
+                    "summary": "NOT_PARENT_OWNER",
+                    "value": {
+                      "code": "NOT_PARENT_OWNER",
+                      "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`CONNECTION_NOT_FOUND`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "CONNECTION_NOT_FOUND": {
+                    "summary": "CONNECTION_NOT_FOUND",
+                    "value": {
+                      "code": "CONNECTION_NOT_FOUND",
+                      "message": "brand.eth has no username connection"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`VALIDATION_FAILED`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "VALIDATION_FAILED": {
+                    "summary": "VALIDATION_FAILED",
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "The request body is invalid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "`RATE_LIMITED`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "RATE_LIMITED": {
+                    "summary": "RATE_LIMITED",
+                    "value": {
+                      "code": "RATE_LIMITED",
+                      "message": "Too many validation requests for brand.eth; try again shortly"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/universal-usernames/{parentName}/credential": {
+      "post": {
+        "description": "Replaces the bearer credential. On an active connection this creates a candidate revision that is validated with the new credential and promoted when it passes; if it fails, the active revision keeps serving with the old credential. The credential is never returned. Requires an operation signature for action `rotate-credential`.",
+        "operationId": "UniversalUsernamesController_rotateCredential",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "path",
+            "description": "The normalized parent name, URL-encoded. A .eth name directly below .eth, such as brand.eth.",
+            "schema": {
+              "type": "string",
+              "example": "brand.eth"
+            }
+          }
+        ],
+        "summary": "Rotate the endpoint credential",
+        "tags": [
+          "Universal usernames"
+        ],
+        "security": [
+          {
+            "uun-operation-signature": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotateUsernameCredentialRequest"
+              },
+              "examples": {
+                "example": {
+                  "summary": "Example",
+                  "value": {
+                    "credential": "YOUR_NEW_ENDPOINT_TOKEN",
+                    "expectedRevision": 4
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The connection after rotation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnection"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Connection",
+                    "value": {
+                      "parentName": "brand.eth",
+                      "parentNode": "0x2b5c7025998f88550ef2ece8bf87935f542b3c1f2b0d6e6d0b2c9a3e4f5a6b7c",
+                      "chain": "mainnet",
+                      "status": "active",
+                      "revision": 5,
+                      "activeRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "active",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "latestRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "active",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "owner": {
+                        "address": "0x1234567890abcdef1234567890abcdef12345678",
+                        "source": "v1-wrapped",
+                        "checkedAt": "2026-10-30T12:00:00.000Z"
+                      },
+                      "storedSubnamesAcknowledged": false,
+                      "suspendedReason": null,
+                      "activation": {
+                        "verifiedAt": "2026-10-30T12:03:00.000Z",
+                        "checkedRecords": [
+                          "addr(60)",
+                          "text(name)",
+                          "text(avatar)",
+                          "contenthash"
+                        ]
+                      },
+                      "createdAt": "2026-10-30T11:58:00.000Z",
+                      "updatedAt": "2026-10-30T12:03:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`INVALID_OPERATION_SIGNATURE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "INVALID_OPERATION_SIGNATURE": {
+                    "summary": "INVALID_OPERATION_SIGNATURE",
+                    "value": {
+                      "code": "INVALID_OPERATION_SIGNATURE",
+                      "message": "The operation signature does not authorize this change"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`NOT_PARENT_OWNER`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "NOT_PARENT_OWNER": {
+                    "summary": "NOT_PARENT_OWNER",
+                    "value": {
+                      "code": "NOT_PARENT_OWNER",
+                      "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`CONNECTION_NOT_FOUND`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "CONNECTION_NOT_FOUND": {
+                    "summary": "CONNECTION_NOT_FOUND",
+                    "value": {
+                      "code": "CONNECTION_NOT_FOUND",
+                      "message": "brand.eth has no username connection"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`REVISION_CONFLICT`, `INVALID_STATE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "REVISION_CONFLICT": {
+                    "summary": "REVISION_CONFLICT",
+                    "value": {
+                      "code": "REVISION_CONFLICT",
+                      "message": "expectedRevision 3 does not match the current revision 4"
+                    }
+                  },
+                  "INVALID_STATE": {
+                    "summary": "INVALID_STATE",
+                    "value": {
+                      "code": "INVALID_STATE",
+                      "message": "A paused connection cannot be activated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`VALIDATION_FAILED`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "VALIDATION_FAILED": {
+                    "summary": "VALIDATION_FAILED",
+                    "value": {
+                      "code": "VALIDATION_FAILED",
+                      "message": "The request body is invalid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/universal-usernames/{parentName}/pause": {
+      "post": {
+        "description": "Pauses an active connection. While paused, lookups for usernames under the parent return an error and no signature; they never fall back to stored subnames. Requires an operation signature for action `pause`. Namespace can also pause a connection as an abuse measure; that appears in the events as actor `namespace-admin`.",
+        "operationId": "UniversalUsernamesController_pauseConnection",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "path",
+            "description": "The normalized parent name, URL-encoded. A .eth name directly below .eth, such as brand.eth.",
+            "schema": {
+              "type": "string",
+              "example": "brand.eth"
+            }
+          }
+        ],
+        "summary": "Pause a username connection",
+        "tags": [
+          "Universal usernames"
+        ],
+        "security": [
+          {
+            "uun-operation-signature": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpectedRevisionRequest"
+              },
+              "examples": {
+                "example": {
+                  "summary": "Example",
+                  "value": {
+                    "expectedRevision": 4
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The paused connection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnection"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Connection",
+                    "value": {
+                      "parentName": "brand.eth",
+                      "parentNode": "0x2b5c7025998f88550ef2ece8bf87935f542b3c1f2b0d6e6d0b2c9a3e4f5a6b7c",
+                      "chain": "mainnet",
+                      "status": "paused",
+                      "revision": 5,
+                      "activeRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "active",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "latestRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "active",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "owner": {
+                        "address": "0x1234567890abcdef1234567890abcdef12345678",
+                        "source": "v1-wrapped",
+                        "checkedAt": "2026-10-30T12:00:00.000Z"
+                      },
+                      "storedSubnamesAcknowledged": false,
+                      "suspendedReason": null,
+                      "activation": {
+                        "verifiedAt": "2026-10-30T12:03:00.000Z",
+                        "checkedRecords": [
+                          "addr(60)",
+                          "text(name)",
+                          "text(avatar)",
+                          "contenthash"
+                        ]
+                      },
+                      "createdAt": "2026-10-30T11:58:00.000Z",
+                      "updatedAt": "2026-10-30T12:03:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`INVALID_OPERATION_SIGNATURE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "INVALID_OPERATION_SIGNATURE": {
+                    "summary": "INVALID_OPERATION_SIGNATURE",
+                    "value": {
+                      "code": "INVALID_OPERATION_SIGNATURE",
+                      "message": "The operation signature does not authorize this change"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`NOT_PARENT_OWNER`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "NOT_PARENT_OWNER": {
+                    "summary": "NOT_PARENT_OWNER",
+                    "value": {
+                      "code": "NOT_PARENT_OWNER",
+                      "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`CONNECTION_NOT_FOUND`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "CONNECTION_NOT_FOUND": {
+                    "summary": "CONNECTION_NOT_FOUND",
+                    "value": {
+                      "code": "CONNECTION_NOT_FOUND",
+                      "message": "brand.eth has no username connection"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`REVISION_CONFLICT`, `INVALID_STATE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "REVISION_CONFLICT": {
+                    "summary": "REVISION_CONFLICT",
+                    "value": {
+                      "code": "REVISION_CONFLICT",
+                      "message": "expectedRevision 3 does not match the current revision 4"
+                    }
+                  },
+                  "INVALID_STATE": {
+                    "summary": "INVALID_STATE",
+                    "value": {
+                      "code": "INVALID_STATE",
+                      "message": "A paused connection cannot be activated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/universal-usernames/{parentName}/resume": {
+      "post": {
+        "description": "Resumes a paused connection after checking the owner and the sample username again. Requires an operation signature for action `resume`.",
+        "operationId": "UniversalUsernamesController_resumeConnection",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "path",
+            "description": "The normalized parent name, URL-encoded. A .eth name directly below .eth, such as brand.eth.",
+            "schema": {
+              "type": "string",
+              "example": "brand.eth"
+            }
+          }
+        ],
+        "summary": "Resume a username connection",
+        "tags": [
+          "Universal usernames"
+        ],
+        "security": [
+          {
+            "uun-operation-signature": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpectedRevisionRequest"
+              },
+              "examples": {
+                "example": {
+                  "summary": "Example",
+                  "value": {
+                    "expectedRevision": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The resumed connection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnection"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Connection",
+                    "value": {
+                      "parentName": "brand.eth",
+                      "parentNode": "0x2b5c7025998f88550ef2ece8bf87935f542b3c1f2b0d6e6d0b2c9a3e4f5a6b7c",
+                      "chain": "mainnet",
+                      "status": "active",
+                      "revision": 6,
+                      "activeRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "active",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "latestRevision": {
+                        "revisionNo": 1,
+                        "endpointUrl": "https://api.brand.example/ens/users",
+                        "authMode": "bearer",
+                        "hasCredential": true,
+                        "credentialUpdatedAt": "2026-10-30T11:58:00.000Z",
+                        "sampleUsername": "happy",
+                        "state": "active",
+                        "validation": {
+                          "ok": true,
+                          "checkedAt": "2026-10-30T12:00:00.000Z",
+                          "username": "happy",
+                          "requestUrl": "https://api.brand.example/ens/users/happy",
+                          "httpStatus": 200,
+                          "latencyMs": 142,
+                          "issues": [],
+                          "preview": {
+                            "texts": {
+                              "name": "Happy",
+                              "avatar": "https://cdn.brand.example/happy.png",
+                              "com.github": "happy",
+                              "com.brand.role": "member"
+                            },
+                            "addresses": {
+                              "0": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
+                              "60": "0x1111111111111111111111111111111111111111",
+                              "2147492101": "0x2222222222222222222222222222222222222222"
+                            },
+                            "contenthash": "ipfs://QmYwAPJzv5CZsnAzt8auVZRnGiRAzQmmJYDh4T7SEBuwNA"
+                          }
+                        },
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "createdBy": "0x1234567890abcdef1234567890abcdef12345678"
+                      },
+                      "owner": {
+                        "address": "0x1234567890abcdef1234567890abcdef12345678",
+                        "source": "v1-wrapped",
+                        "checkedAt": "2026-10-30T12:00:00.000Z"
+                      },
+                      "storedSubnamesAcknowledged": false,
+                      "suspendedReason": null,
+                      "activation": {
+                        "verifiedAt": "2026-10-30T12:03:00.000Z",
+                        "checkedRecords": [
+                          "addr(60)",
+                          "text(name)",
+                          "text(avatar)",
+                          "contenthash"
+                        ]
+                      },
+                      "createdAt": "2026-10-30T11:58:00.000Z",
+                      "updatedAt": "2026-10-30T12:03:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`INVALID_OPERATION_SIGNATURE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "INVALID_OPERATION_SIGNATURE": {
+                    "summary": "INVALID_OPERATION_SIGNATURE",
+                    "value": {
+                      "code": "INVALID_OPERATION_SIGNATURE",
+                      "message": "The operation signature does not authorize this change"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`NOT_PARENT_OWNER`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "NOT_PARENT_OWNER": {
+                    "summary": "NOT_PARENT_OWNER",
+                    "value": {
+                      "code": "NOT_PARENT_OWNER",
+                      "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`CONNECTION_NOT_FOUND`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "CONNECTION_NOT_FOUND": {
+                    "summary": "CONNECTION_NOT_FOUND",
+                    "value": {
+                      "code": "CONNECTION_NOT_FOUND",
+                      "message": "brand.eth has no username connection"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`REVISION_CONFLICT`, `INVALID_STATE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "REVISION_CONFLICT": {
+                    "summary": "REVISION_CONFLICT",
+                    "value": {
+                      "code": "REVISION_CONFLICT",
+                      "message": "expectedRevision 3 does not match the current revision 4"
+                    }
+                  },
+                  "INVALID_STATE": {
+                    "summary": "INVALID_STATE",
+                    "value": {
+                      "code": "INVALID_STATE",
+                      "message": "A paused connection cannot be activated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/universal-usernames/{parentName}/events": {
+      "get": {
+        "description": "Returns the audit log for the parent: saves, validations, activations, credential rotations, pauses, suspensions and disconnects, with the actor and revision. Details are redacted and never contain secrets. Signed in as the current exact owner of the parent.",
+        "operationId": "UniversalUsernamesController_listEvents",
+        "parameters": [
+          {
+            "name": "parentName",
+            "required": true,
+            "in": "path",
+            "description": "The normalized parent name, URL-encoded. A .eth name directly below .eth, such as brand.eth.",
+            "schema": {
+              "type": "string",
+              "example": "brand.eth"
+            }
+          }
+        ],
+        "summary": "List connection events",
+        "tags": [
+          "Universal usernames"
+        ],
+        "security": [
+          {
+            "uun-session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Events, newest first",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UsernameConnectionEvent"
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Events",
+                    "value": [
+                      {
+                        "action": "activate",
+                        "actor": "0x1234567890abcdef1234567890abcdef12345678",
+                        "revisionNo": 1,
+                        "createdAt": "2026-10-30T12:03:00.000Z",
+                        "details": {
+                          "checkedRecords": 4
+                        }
+                      },
+                      {
+                        "action": "save",
+                        "actor": "0x1234567890abcdef1234567890abcdef12345678",
+                        "revisionNo": 1,
+                        "createdAt": "2026-10-30T11:58:00.000Z",
+                        "details": {
+                          "endpointHost": "api.brand.example",
+                          "authMode": "bearer"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "`INVALID_SESSION`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "INVALID_SESSION": {
+                    "summary": "INVALID_SESSION",
+                    "value": {
+                      "code": "INVALID_SESSION",
+                      "message": "The SIWE session is missing, malformed or expired"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`NOT_PARENT_OWNER`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "NOT_PARENT_OWNER": {
+                    "summary": "NOT_PARENT_OWNER",
+                    "value": {
+                      "code": "NOT_PARENT_OWNER",
+                      "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`CONNECTION_NOT_FOUND`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "CONNECTION_NOT_FOUND": {
+                    "summary": "CONNECTION_NOT_FOUND",
+                    "value": {
+                      "code": "CONNECTION_NOT_FOUND",
+                      "message": "brand.eth has no username connection"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/nonce": {
+      "get": {
+        "description": "Returns a single-use nonce for a SIWE message. Every Universal Usernames change needs a fresh nonce in its operation signature. The nonce expires after 60 seconds and is consumed when the change is accepted.",
+        "operationId": "AuthenticationController_nonce",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The nonce as plain text",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "k3Xz9QpLm2RtVb7Wc"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get a nonce",
+        "tags": [
+          "Universal usernames"
+        ]
+      }
     }
   },
   "info": {
@@ -228,7 +2520,10 @@
     },
     "termsOfService": "https://namespace.ninja/tos"
   },
-  "tags": [{ "name": "Subnames", "description": "" }],
+  "tags": [
+    { "name": "Subnames", "description": "" },
+    { "name": "Universal usernames", "description": "Connect a .eth name to a username endpoint your brand hosts. Only the current exact owner of the parent can call these routes." }
+  ],
   "servers": [
     {
       "url": "https://offchain-manager.namespace.ninja",
@@ -245,6 +2540,18 @@
         "type": "apiKey",
         "in": "header",
         "name": "x-auth-token"
+      },
+      "uun-session": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-auth-token",
+        "description": "Wallet session for reads: `siwe:<base64(message)>.<base64(signature)>`, the format the Namespace App uses. The SIWE message must be unexpired and signed by the current exact owner of the parent. API keys are rejected."
+      },
+      "uun-operation-signature": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-auth-token",
+        "description": "One signature per change, in the same `siwe:<base64(message)>.<base64(signature)>` format. The EIP-4361 message is signed by the current exact owner and has: statement `Authorize <action> for Universal Usernames on <parentName>`; the deployment chain ID (1 or 11155111); a nonce from `GET /api/v1/auth/nonce`; an `expirationTime` at most 600 seconds after `issuedAt`; and exactly one resource, `urn:namespace:uun:<parentNode>:<action>:<expectedRevision>`. Actions: `save`, `activate`, `rotate-credential`, `pause`, `resume`, `disconnect`."
       }
     },
     "schemas": {
@@ -440,6 +2747,719 @@
           }
         },
         "required": ["parentName"]
+      },
+      "ValidationIssueCode": {
+        "type": "string",
+        "description": "Stable issue code. `envelope` codes fail the whole profile, `record` codes fail one record, `transport` codes come from the request itself.",
+        "enum": [
+          "INVALID_JSON",
+          "DUPLICATE_KEY",
+          "NOT_AN_OBJECT",
+          "UNSUPPORTED_VERSION",
+          "UNKNOWN_FIELD",
+          "USERNAME_MISSING",
+          "USERNAME_MISMATCH",
+          "TEXTS_NOT_OBJECT",
+          "ADDRESSES_NOT_OBJECT",
+          "TOO_MANY_TEXTS",
+          "TOO_MANY_ADDRESSES",
+          "TEXT_KEY_INVALID",
+          "TEXT_VALUE_INVALID",
+          "TEXT_VALUE_TOO_LONG",
+          "COIN_TYPE_INVALID",
+          "COIN_TYPE_UNSUPPORTED",
+          "ADDRESS_INVALID",
+          "CONTENTHASH_INVALID",
+          "CONTENTHASH_UNSUPPORTED",
+          "INVALID_URL",
+          "DESTINATION_BLOCKED",
+          "HTTP_TIMEOUT",
+          "NETWORK_ERROR",
+          "HTTP_REDIRECT",
+          "UNAUTHORIZED",
+          "RATE_LIMITED",
+          "HTTP_ERROR_STATUS",
+          "USERNAME_NOT_FOUND",
+          "CONTENT_TYPE_INVALID",
+          "RESPONSE_TOO_LARGE"
+        ]
+      },
+      "ValidationIssue": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/ValidationIssueCode"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "envelope",
+              "record",
+              "transport"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "description": "RFC 6901 JSON Pointer into the response body. Empty for the root or for transport issues.",
+            "example": "/addresses/60"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable explanation. Never contains secrets or the full profile."
+          }
+        },
+        "required": [
+          "code",
+          "kind",
+          "path",
+          "message"
+        ]
+      },
+      "EndpointValidationReport": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "description": "`true` only when `issues` is empty."
+          },
+          "checkedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "username": {
+            "type": "string",
+            "description": "The normalized username that was requested."
+          },
+          "requestUrl": {
+            "type": "string",
+            "description": "The URL that was called. Never includes credentials."
+          },
+          "httpStatus": {
+            "type": "integer",
+            "nullable": true,
+            "description": "`null` when no response arrived."
+          },
+          "latencyMs": {
+            "type": "integer",
+            "nullable": true
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationIssue"
+            },
+            "description": "Every transport, envelope and record issue found."
+          },
+          "preview": {
+            "type": "object",
+            "nullable": true,
+            "description": "The records that are valid, in human-readable form. `null` when a transport or envelope issue stopped validation.",
+            "properties": {
+              "texts": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "addresses": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Keyed by decimal ENS coin type."
+              },
+              "contenthash": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "texts",
+              "addresses",
+              "contenthash"
+            ]
+          },
+          "onchainConflict": {
+            "type": "boolean",
+            "description": "Set when the sample username already has an onchain owner. That name keeps resolving onchain and never reaches the endpoint."
+          }
+        },
+        "required": [
+          "ok",
+          "checkedAt",
+          "username",
+          "requestUrl",
+          "httpStatus",
+          "latencyMs",
+          "issues",
+          "preview"
+        ]
+      },
+      "UsernameConnectionStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "validated",
+          "verifying",
+          "active",
+          "paused",
+          "suspended",
+          "disconnected"
+        ]
+      },
+      "UsernameRevisionState": {
+        "type": "string",
+        "enum": [
+          "candidate",
+          "validated",
+          "active",
+          "superseded",
+          "rejected"
+        ]
+      },
+      "UsernameConnectionRevision": {
+        "type": "object",
+        "properties": {
+          "revisionNo": {
+            "type": "integer"
+          },
+          "endpointUrl": {
+            "type": "string"
+          },
+          "authMode": {
+            "type": "string",
+            "enum": [
+              "none",
+              "bearer"
+            ]
+          },
+          "hasCredential": {
+            "type": "boolean",
+            "description": "Whether a bearer credential is stored. The value itself is never returned."
+          },
+          "credentialUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "sampleUsername": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/UsernameRevisionState"
+          },
+          "validation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointValidationReport"
+              }
+            ],
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "pattern": "^0x[0-9a-fA-F]{40}$",
+            "description": "Address that signed the save."
+          }
+        },
+        "required": [
+          "revisionNo",
+          "endpointUrl",
+          "authMode",
+          "hasCredential",
+          "credentialUpdatedAt",
+          "sampleUsername",
+          "state",
+          "validation",
+          "createdAt",
+          "createdBy"
+        ]
+      },
+      "UsernameConnectionActivationSuccess": {
+        "type": "object",
+        "properties": {
+          "verifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "checkedRecords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "verifiedAt",
+          "checkedRecords"
+        ]
+      },
+      "UsernameConnectionActivationFailure": {
+        "type": "object",
+        "properties": {
+          "failedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationIssue"
+            }
+          }
+        },
+        "required": [
+          "failedAt",
+          "errors"
+        ]
+      },
+      "UsernameConnection": {
+        "type": "object",
+        "properties": {
+          "parentName": {
+            "type": "string",
+            "example": "brand.eth"
+          },
+          "parentNode": {
+            "type": "string",
+            "description": "Namehash of the parent name."
+          },
+          "chain": {
+            "type": "string",
+            "enum": [
+              "mainnet",
+              "sepolia"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/UsernameConnectionStatus"
+          },
+          "revision": {
+            "type": "integer",
+            "description": "Concurrency counter. Send it back as `expectedRevision` with the next change."
+          },
+          "activeRevision": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UsernameConnectionRevision"
+              }
+            ],
+            "nullable": true,
+            "description": "The revision lookups are served from."
+          },
+          "latestRevision": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UsernameConnectionRevision"
+              }
+            ],
+            "nullable": true,
+            "description": "The most recently saved revision. Differs from `activeRevision` while a candidate is pending."
+          },
+          "owner": {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string",
+                "pattern": "^0x[0-9a-fA-F]{40}$"
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "v1",
+                  "v1-wrapped",
+                  "v2"
+                ],
+                "description": "Where ownership comes from: the ENS registry, the NameWrapper, or the ENSv2 registry."
+              },
+              "checkedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "address",
+              "source",
+              "checkedAt"
+            ]
+          },
+          "storedSubnamesAcknowledged": {
+            "type": "boolean"
+          },
+          "suspendedReason": {
+            "type": "string",
+            "enum": [
+              "owner-changed",
+              "expired"
+            ],
+            "nullable": true
+          },
+          "activation": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UsernameConnectionActivationSuccess"
+              },
+              {
+                "$ref": "#/components/schemas/UsernameConnectionActivationFailure"
+              }
+            ],
+            "description": "Result of the last activation."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "parentName",
+          "parentNode",
+          "chain",
+          "status",
+          "revision",
+          "activeRevision",
+          "latestRevision",
+          "owner",
+          "storedSubnamesAcknowledged",
+          "suspendedReason",
+          "activation",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ParentInspection": {
+        "type": "object",
+        "properties": {
+          "parentName": {
+            "type": "string"
+          },
+          "parentNode": {
+            "type": "string"
+          },
+          "supported": {
+            "type": "boolean",
+            "description": "`true` for a normalized, unexpired .eth name directly below .eth."
+          },
+          "owner": {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string",
+                "pattern": "^0x[0-9a-fA-F]{40}$"
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "v1",
+                  "v1-wrapped",
+                  "v2"
+                ],
+                "description": "Where ownership comes from: the ENS registry, the NameWrapper, or the ENSv2 registry."
+              },
+              "expiresAt": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              }
+            },
+            "required": [
+              "address",
+              "source",
+              "expiresAt"
+            ]
+          },
+          "resolver": {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string",
+                "pattern": "^0x[0-9a-fA-F]{40}$",
+                "nullable": true
+              },
+              "isHybridResolverV2": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "address",
+              "isHybridResolverV2"
+            ]
+          },
+          "route": {
+            "type": "object",
+            "description": "The HybridResolverV2 route for the parent. `null` id when the resolver is not HybridResolverV2.",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "nullable": true
+              },
+              "isOffchain": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "isOffchain"
+            ]
+          },
+          "canSetResolver": {
+            "type": "boolean",
+            "description": "`false` when the name is wrapped with CANNOT_SET_RESOLVER burned."
+          },
+          "storedSubnames": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "count"
+            ]
+          },
+          "blockers": {
+            "type": "array",
+            "description": "Reasons the parent cannot be connected as it is, such as `L2_ROUTE`, `CANNOT_SET_RESOLVER`, `EXPIRED` or `NOT_ETH_2LD`.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ]
+            }
+          }
+        },
+        "required": [
+          "parentName",
+          "parentNode",
+          "supported",
+          "owner",
+          "resolver",
+          "route",
+          "canSetResolver",
+          "storedSubnames",
+          "blockers"
+        ]
+      },
+      "UsernameConnectionEvent": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "save",
+              "validate",
+              "activate",
+              "activation-failed",
+              "rotate-credential",
+              "pause",
+              "resume",
+              "suspend",
+              "disconnect",
+              "acknowledge-stored-subnames"
+            ]
+          },
+          "actor": {
+            "type": "string",
+            "description": "The signer address, `namespace-admin`, or `system`."
+          },
+          "revisionNo": {
+            "type": "integer",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Redacted details. Never contains secrets."
+          }
+        },
+        "required": [
+          "action",
+          "actor",
+          "revisionNo",
+          "createdAt",
+          "details"
+        ]
+      },
+      "UsernameConnectionError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "UNSUPPORTED_PARENT",
+              "INVALID_SESSION",
+              "INVALID_OPERATION_SIGNATURE",
+              "NOT_PARENT_OWNER",
+              "CONNECTION_NOT_FOUND",
+              "REVISION_CONFLICT",
+              "INVALID_STATE",
+              "STORED_SUBNAMES_NOT_ACKNOWLEDGED",
+              "ENDPOINT_BACKED_PARENT",
+              "PRECONDITION_FAILED",
+              "VALIDATION_FAILED",
+              "RATE_LIMITED"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "details": {
+            "type": "array",
+            "description": "Present on `PRECONDITION_FAILED`: one entry per failed precondition.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "ValidateUsernameEndpointRequest": {
+        "type": "object",
+        "properties": {
+          "endpointUrl": {
+            "type": "string",
+            "description": "HTTPS base URL with no query string, fragment or credentials, at most 2048 characters. The username is appended as one path segment.",
+            "example": "https://api.brand.example/ens/users"
+          },
+          "authMode": {
+            "type": "string",
+            "enum": [
+              "none",
+              "bearer"
+            ]
+          },
+          "credential": {
+            "type": "string",
+            "description": "Bearer token Namespace sends as `Authorization: Bearer <credential>`. Required when `authMode` is `bearer`."
+          },
+          "username": {
+            "type": "string",
+            "description": "A username that exists in your system.",
+            "example": "happy"
+          }
+        },
+        "required": [
+          "endpointUrl",
+          "authMode",
+          "username"
+        ]
+      },
+      "SaveUsernameConnectionRequest": {
+        "type": "object",
+        "properties": {
+          "endpointUrl": {
+            "type": "string",
+            "example": "https://api.brand.example/ens/users"
+          },
+          "authMode": {
+            "type": "string",
+            "enum": [
+              "none",
+              "bearer"
+            ]
+          },
+          "credential": {
+            "type": "string",
+            "description": "New bearer token. Omit with `keepCredential: true` to reuse the stored one."
+          },
+          "keepCredential": {
+            "type": "boolean",
+            "description": "Reuse the credential stored on the latest revision."
+          },
+          "sampleUsername": {
+            "type": "string",
+            "description": "A username that exists in your system. Validation and activation check it.",
+            "example": "happy"
+          },
+          "acknowledgeStoredSubnames": {
+            "type": "boolean",
+            "description": "Required when the parent has stored offchain subnames. They stop resolving while the parent is connected. Recorded in the events."
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The current `revision`, or `0` when the parent has no connection yet."
+          }
+        },
+        "required": [
+          "endpointUrl",
+          "authMode",
+          "sampleUsername",
+          "expectedRevision"
+        ]
+      },
+      "ExpectedRevisionRequest": {
+        "type": "object",
+        "properties": {
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The current `revision` of the connection."
+          }
+        },
+        "required": [
+          "expectedRevision"
+        ]
+      },
+      "PreviewUsernameRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "happy"
+          }
+        },
+        "required": [
+          "username"
+        ]
+      },
+      "RotateUsernameCredentialRequest": {
+        "type": "object",
+        "properties": {
+          "credential": {
+            "type": "string"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "credential",
+          "expectedRevision"
+        ]
       }
     }
   }

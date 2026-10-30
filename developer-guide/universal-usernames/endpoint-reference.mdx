@@ -1,0 +1,137 @@
+---
+title: "Endpoint reference"
+description: "The HTTP contract your username endpoint implements."
+sidebarTitle: "Endpoint reference"
+icon: "plug"
+---
+
+import ProfileSchema from '/snippets/universal-usernames/profile-v1-schema.mdx';
+import ProfileExample from '/snippets/universal-usernames/profile-v1-example.mdx';
+
+When a wallet resolves a username under your connected `.eth` name, the Namespace gateway calls your endpoint for that username, checks the answer, and signs the record the wallet asked for. This page is the contract your endpoint implements: the request, the profile schema, status codes, limits, and caching.
+
+To start from working code, use the [adapter template](/developer-guide/universal-usernames/adapter-template).
+
+## Request
+
+```http
+GET https://api.brand.example/ens/users/happy
+Accept: application/json
+User-Agent: Namespace-UniversalUsernames/1
+Authorization: Bearer YOUR_ENDPOINT_TOKEN
+```
+
+Namespace takes the endpoint URL you connected, drops any trailing slash, and appends `/` and the username encoded with `encodeURIComponent`. It sends `Authorization` only when you set up [bearer authentication](#bearer-authentication).
+
+### The username
+
+- It's always one label. Namespace calls your endpoint for `happy.brand.eth`, never for `team.happy.brand.eth`. Deeper names resolve empty without a request.
+- It's already [ENSIP-15](https://docs.ens.domains/ensip/15) normalized, so you receive `happy`, never `Happy`. Labels that aren't normalized resolve empty without a request.
+- It's percent-encoded. `café` arrives as `caf%C3%A9`, so decode the path segment before you look it up.
+
+Look users up by the normalized form of their username. If your system allows usernames that ENSIP-15 changes, such as ones with uppercase letters, store the normalized form next to them. A username that ENSIP-15 rejects can't resolve through ENS.
+
+### Endpoint URL rules
+
+- `https://` only.
+- No credentials in the URL (`https://user:pass@…`), no query string, and no fragment.
+- At most 2,048 characters. A path such as `/ens/users` is fine.
+- It must reach a public address. Requests to private, loopback, link-local, and cloud metadata addresses are blocked, for IPv4 and IPv6.
+- Namespace doesn't follow redirects, so connect the final URL.
+
+## Response
+
+Answer `200` with a JSON body and `Content-Type: application/json`. A parameter such as `; charset=utf-8` is fine.
+
+<ProfileExample />
+
+### Schema v1
+
+<ProfileSchema />
+
+The schema describes a fully valid profile. Namespace doesn't throw away a whole profile for every schema violation: a problem in the envelope fails the profile, and a problem in one record fails only lookups of that record. See [what a lookup returns](#what-a-lookup-returns).
+
+### Field rules
+
+- `version` is `1`.
+- `username` equals the requested username exactly, after decoding. Any other value fails the whole profile.
+- `texts` and `addresses` are required objects. Send `{}` when there's nothing to return.
+- Leave out records you don't have. Never send `null`.
+- `addresses` keys are decimal ENS coin types, such as `"60"` for Ethereum, not chain IDs.
+- `contenthash` is optional and takes an `ipfs://`, `ipns://`, `bzz://`, or `ar://` URI.
+- No other top-level fields, and no duplicate keys at any level.
+- Text values are plain text. Apps must never render them as HTML, so don't put markup in them.
+
+[Records](/developer-guide/universal-usernames/records) lists the text keys, coin types, and contenthash formats.
+
+## Status codes
+
+| Status | Namespace reads it as | The wallet gets |
+| --- | --- | --- |
+| `200` | The profile | The requested record, or an empty value when the profile doesn't have it |
+| `404` | The username doesn't exist | An empty value for every record |
+| `401`, `403` | `UNAUTHORIZED` | An error |
+| `429` | `RATE_LIMITED` | An error |
+| Any `3xx` | `HTTP_REDIRECT`, never followed | An error |
+| Any other status | `HTTP_ERROR_STATUS` | An error |
+
+Only `404` means "no such user". Return it for missing users and for nothing else. If your database is down, answer `500` so wallets see an error instead of an empty profile.
+
+## What a lookup returns
+
+| Situation | Result |
+| --- | --- |
+| The profile has the requested record | The signed record |
+| The profile is valid but doesn't have that record | A signed empty value: the zero address for `addr(node)`, `0x` for `addr(node, coinType)`, `""` for a text record, empty bytes for the contenthash |
+| Your endpoint returns `404` | A signed empty value |
+| The requested record is malformed | An error for that lookup only. Other records still resolve. |
+| The envelope is invalid: bad JSON, a duplicate key, the wrong version, an unknown top-level field, a `username` mismatch, or too many records | An error for every lookup on that username |
+| Timeout, `401`, `403`, `429`, `5xx`, a redirect, the wrong content type, or a response that's too large | An error. Never treated as "no such user". |
+| The connection is paused or suspended | An error with no signature |
+| A deeper name such as `team.happy.brand.eth` | A signed empty value. Your endpoint isn't called. |
+| A name that has an onchain owner, such as an onchain subname `happy.brand.eth` | HybridResolverV2 answers from its own onchain records, even empty ones. Your endpoint isn't called. |
+
+Once `brand.eth` is connected, Namespace never falls back to stored offchain subnames for it, even when your endpoint is down.
+
+## Limits
+
+| Limit | Value |
+| --- | --- |
+| Time per request | 5 seconds in total, including the connection |
+| Response size | 256 KiB (262,144 bytes) after decompression |
+| Text records | 128 |
+| Address records | 128 |
+| Text key | 1 to 256 characters |
+| Text value | Up to 4,096 characters |
+| Address value | 1 to 1,024 characters |
+| Contenthash | Up to 4,096 characters |
+| Requests to your endpoint | 10 per second per parent name, bursts of 20, at most 10 at a time. Lookups over the limit fail with an error. |
+
+## Caching and proof expiry
+
+- The gateway keeps each `200` and `404` answer for 60 seconds from when it fetched it. The window is fixed and doesn't slide when the answer is read again.
+- Failures aren't cached, and nothing stale is served after an outage.
+- Lookups that arrive together for the same username share one request, so a wallet reading five records of one profile costs your endpoint one call.
+- A signed answer expires no later than the cached profile it came from, so a proof lives at most 60 seconds. When less than 10 seconds of the window remain, the gateway fetches a fresh profile before it signs.
+- Saving a new endpoint or rotating the credential starts a new cache.
+
+A change in your system reaches Namespace within 60 seconds. Proofs already issued stay valid until they expire. Wallets, apps, and indexers can keep resolved values for longer than that, and Namespace has no control over their caches.
+
+## Records are public
+
+Anyone who resolves `happy.brand.eth` can read everything your endpoint returns for `happy`. That stays true when you require a bearer token: the token keeps other callers off your endpoint, but the records it serves are public through ENS. Return only what you would show on a public profile page.
+
+## Bearer authentication
+
+Bearer authentication is optional. When you set it up, Namespace sends `Authorization: Bearer <credential>` on every request:
+
+- Compare the token in constant time and answer `401` when it doesn't match.
+- Namespace stores the credential encrypted and never shows it again after you save it.
+- When you rotate the credential, Namespace validates the new one before it stops sending the old one. Accept both tokens until the rotation finishes.
+
+## Related pages
+
+- [Connect universal usernames](/developer-guide/guide/connect-universal-usernames)
+- [Records](/developer-guide/universal-usernames/records)
+- [Troubleshooting](/developer-guide/universal-usernames/troubleshooting)
+- [Universal Usernames SDK](/developer-guide/sdks/universal-usernames)

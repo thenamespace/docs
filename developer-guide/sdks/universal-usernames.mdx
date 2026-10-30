@@ -1,0 +1,185 @@
+---
+title: "Universal Usernames SDK"
+description: "Schema, validator, and endpoint helpers for universal usernames."
+sidebarTitle: "Universal Usernames"
+icon: "globe"
+---
+
+`@thenamespace/universal-usernames` holds everything about the profile your username endpoint returns: the schema v1 definition, the validator Namespace runs, helpers to build and serve profiles, and a CLI that checks a deployed endpoint. The Namespace gateway uses the same validator, so a profile that passes here passes in production.
+
+It ships as CommonJS with type definitions and has no wallet or HTTP client dependencies. The handler uses the standard Fetch API `Request` and `Response`.
+
+## Install
+
+<Tabs>
+<Tab title="npm">
+
+```bash
+npm install @thenamespace/universal-usernames@0.1.0
+```
+
+</Tab>
+<Tab title="Yarn">
+
+```bash
+yarn add @thenamespace/universal-usernames@0.1.0
+```
+
+</Tab>
+<Tab title="pnpm">
+
+```bash
+pnpm add @thenamespace/universal-usernames@0.1.0
+```
+
+</Tab>
+</Tabs>
+
+## Serve profiles
+
+`createUsernameHandler` turns a lookup function into a Fetch API handler, `(request: Request) => Promise<Response>`. It reads the username from the path, calls your lookup, and answers `200` with the profile or `404` when the lookup returns `null`. With `bearerToken` set, it compares the `Authorization` header in constant time and answers `401` when it doesn't match.
+
+| Option | Description |
+| --- | --- |
+| `bearerToken` | Token every request must send as `Authorization: Bearer <token>`. Leave it out for a public endpoint. |
+| `basePath` | The path your endpoint URL ends in, such as `/ens/users`. The username is the segment after it. |
+
+<CodeGroup>
+
+```ts Next.js: app/ens/users/[username]/route.ts
+import { createUsernameHandler, defineUsernameProfile } from '@thenamespace/universal-usernames';
+import { findUserByUsername } from '@/lib/users';
+
+export const GET = createUsernameHandler(
+  async (username) => {
+    const user = await findUserByUsername(username);
+    if (!user) return null;
+
+    return defineUsernameProfile({
+      username,
+      texts: { name: user.displayName },
+      addresses: { eth: user.walletAddress },
+    });
+  },
+  { basePath: '/ens/users', bearerToken: process.env.ENDPOINT_TOKEN },
+);
+```
+
+```ts Hono
+import { Hono } from 'hono';
+import { createUsernameHandler, defineUsernameProfile } from '@thenamespace/universal-usernames';
+import { findUserByUsername } from './users.js';
+
+const handleUsername = createUsernameHandler(
+  async (username) => {
+    const user = await findUserByUsername(username);
+    if (!user) return null;
+
+    return defineUsernameProfile({
+      username,
+      texts: { name: user.displayName },
+      addresses: { eth: user.walletAddress },
+    });
+  },
+  { basePath: '/ens/users', bearerToken: process.env.ENDPOINT_TOKEN },
+);
+
+const app = new Hono();
+app.get('/ens/users/:username', (c) => handleUsername(c.req.raw));
+
+export default app;
+```
+
+</CodeGroup>
+
+Return the username you were given, not the display name you store. Don't catch errors from your user store and return `null`: let them throw so your framework answers `500`, and wallets see an error instead of an empty profile.
+
+## Build profiles
+
+`defineUsernameProfile` builds a `UsernameProfileV1`. Address keys can be decimal coin types or chain names, which it converts with `coinTypeForChain`:
+
+```ts
+import { defineUsernameProfile } from '@thenamespace/universal-usernames';
+
+const profile = defineUsernameProfile({
+  username: 'happy',
+  texts: { name: 'Happy', 'com.github': 'happy' },
+  addresses: {
+    eth: '0x1111111111111111111111111111111111111111',
+    base: '0x2222222222222222222222222222222222222222',
+    btc: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
+  },
+});
+// profile.addresses → { '60': '0x1111…', '2147492101': '0x2222…', '0': 'bc1q…' }
+```
+
+`coinTypeForChain(name)` maps a chain name to its ENS coin type, for example `'eth'` to `60`, `'btc'` to `0`, `'sol'` to `501`, `'base'` to `2147492101`, and `'evm'` to the default EVM coin type `2147483648`. It throws on names it doesn't know.
+
+## Validate from the command line
+
+The CLI makes the same request Namespace makes and prints a validation report:
+
+```bash
+npx @thenamespace/universal-usernames validate https://api.brand.example/ens/users --username happy
+npx @thenamespace/universal-usernames validate https://api.brand.example/ens/users --username happy --token "$ENDPOINT_TOKEN"
+```
+
+It refuses redirects and applies the same size and time limits as the gateway. It exits with `0` when the report has no issues and `1` otherwise, so you can run it in CI after a deploy.
+
+## Validate in code
+
+`validateUsernameProfile` checks a raw response body and returns every issue plus a preview of the records that passed:
+
+```ts
+import { validateUsernameProfile } from '@thenamespace/universal-usernames';
+
+const body = await (await fetch('https://api.brand.example/ens/users/happy')).text();
+const { issues, preview } = validateUsernameProfile(body, { expectedUsername: 'happy' });
+
+for (const issue of issues) {
+  console.log(`${issue.code} (${issue.kind}) at ${issue.path || '/'}: ${issue.message}`);
+}
+```
+
+It works on the raw text rather than parsed JSON, so it catches duplicate keys that `JSON.parse` hides. Each issue has a stable `code`, a `kind` (`envelope`, `record`, or `transport`), and a JSON Pointer `path`. [Troubleshooting](/developer-guide/universal-usernames/troubleshooting) explains every code.
+
+`parseUsernameProfile` does the same split for runtime use. It returns `envelopeErrors`, `recordErrors`, and the `profile`, which is `null` when the envelope is invalid.
+
+## Normalize usernames
+
+```ts
+import { isNormalizedUsername, normalizeUsername } from '@thenamespace/universal-usernames';
+
+normalizeUsername('Happy'); // 'happy'
+isNormalizedUsername('Happy'); // false
+normalizeUsername('team.happy'); // throws UsernameError: one label only
+```
+
+Both follow [ENSIP-15](https://docs.ens.domains/ensip/15). Use `normalizeUsername` when you store usernames, so your lookups match what Namespace sends.
+
+## Reference
+
+| Export | Description |
+| --- | --- |
+| `createUsernameHandler(lookup, options?)` | Fetch API handler for your endpoint |
+| `defineUsernameProfile(input)` | Builds a profile; address keys can be chain names |
+| `validateUsernameProfile(rawBody, { expectedUsername })` | Every issue plus a preview of valid records |
+| `parseUsernameProfile(rawBody, { expectedUsername })` | Envelope errors, record errors, and the parsed profile |
+| `resolveText(profile, key)` | One text record: `found`, `absent`, or `invalid` |
+| `resolveAddress(profile, coinType)` | One address as `0x`-prefixed bytes, with the ENSIP-19 default EVM rules applied |
+| `resolveContenthash(profile)` | The contenthash as ENSIP-7 bytes |
+| `normalizeUsername(input)` | ENSIP-15 normalized single label, or throws `UsernameError` |
+| `isNormalizedUsername(label)` | `true` when the label is one normalized label |
+| `checkEndpointUrl(url, options?)` | Checks an endpoint URL against the URL rules |
+| `buildProfileUrl(endpointUrl, label)` | The URL Namespace requests for a username |
+| `coinTypeForChain(name)` | Chain name to ENS coin type |
+| `isEvmCoinType(coinType)`, `isSupportedCoinType(coinType)` | Coin type checks |
+| `USERNAME_PROFILE_SCHEMA_V1` | The JSON schema for profile v1 |
+| `PROFILE_SCHEMA_VERSION` | `1` |
+| `PROFILE_LIMITS` | Size and count limits |
+| `DEFAULT_EVM_COIN_TYPE` | `2147483648` |
+| `SUPPORTED_CONTENTHASH_PROTOCOLS` | `['ipfs', 'ipns', 'bzz', 'ar']` |
+
+Types: `UsernameProfileV1`, `ValidationIssue`, `ValidationIssueCode`, `EndpointValidationReport`, `ParsedUsernameProfile`, and `RecordResult`.
+
+The package also ships valid and invalid profile fixtures under `fixtures/`, with an index of the issue codes each invalid one should produce. Use them in your own tests.

@@ -103,8 +103,18 @@
             "group": "How to guides",
             "pages": [
               "developer-guide/guide/create-offchain-subnames",
+              "developer-guide/guide/connect-universal-usernames",
               "developer-guide/guide/mint-l1-l2-subnames",
               "developer-guide/guide/subpages"
+            ]
+          },
+          {
+            "group": "Universal usernames",
+            "pages": [
+              "developer-guide/universal-usernames/endpoint-reference",
+              "developer-guide/universal-usernames/records",
+              "developer-guide/universal-usernames/adapter-template",
+              "developer-guide/universal-usernames/troubleshooting"
             ]
           },
           {
@@ -140,7 +150,8 @@
                       "developer-guide/sdks/offchain-manager/chainname",
                       "developer-guide/sdks/offchain-manager/set-default-evm-address",
                       "developer-guide/sdks/offchain-manager/text-records",
-                      "developer-guide/sdks/offchain-manager/data-records"
+                      "developer-guide/sdks/offchain-manager/data-records",
+                      "developer-guide/sdks/offchain-manager/universal-usernames"
                     ]
                   },
                   {
@@ -165,6 +176,13 @@
                       "developer-guide/sdks/indexer-manager/installation",
                       "developer-guide/sdks/indexer-manager/fetch-l2-subnames",
                       "developer-guide/sdks/indexer-manager/fetch-l2-registries"
+                    ]
+                  },
+                  {
+                    "group": "Universal Usernames",
+                    "icon": "globe",
+                    "pages": [
+                      "developer-guide/sdks/universal-usernames"
                     ]
                   },
                   {
@@ -200,7 +218,25 @@
                       "api-reference/offchain-manager/create-or-update-a-subname",
                       "api-reference/offchain-manager/get-subname-by-full-name",
                       "api-reference/offchain-manager/query-subnames",
-                      "api-reference/offchain-manager/delete-a-subname"
+                      "api-reference/offchain-manager/delete-a-subname",
+                      {
+                        "group": "Universal usernames",
+                        "icon": "globe",
+                        "pages": [
+                          "api-reference/offchain-manager/universal-usernames/get-connection",
+                          "api-reference/offchain-manager/universal-usernames/inspect-parent",
+                          "api-reference/offchain-manager/universal-usernames/validate-endpoint",
+                          "api-reference/offchain-manager/universal-usernames/save-connection",
+                          "api-reference/offchain-manager/universal-usernames/activate-connection",
+                          "api-reference/offchain-manager/universal-usernames/preview-username",
+                          "api-reference/offchain-manager/universal-usernames/rotate-credential",
+                          "api-reference/offchain-manager/universal-usernames/pause-connection",
+                          "api-reference/offchain-manager/universal-usernames/resume-connection",
+                          "api-reference/offchain-manager/universal-usernames/disconnect",
+                          "api-reference/offchain-manager/universal-usernames/list-events",
+                          "api-reference/offchain-manager/universal-usernames/get-nonce"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -243,6 +279,7 @@
         "tab": "Changelog",
         "pages": [
           "changelog/offchain-sdk",
+          "changelog/universal-usernames-sdk",
           "changelog/address-sdk",
           "changelog/indexer-sdk",
           "changelog/mint-sdk",

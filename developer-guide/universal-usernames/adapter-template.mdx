@@ -1,0 +1,157 @@
+---
+title: "Adapter template"
+description: "A tested Hono endpoint to start from."
+sidebarTitle: "Adapter template"
+icon: "file-code"
+---
+
+The adapter template is a small TypeScript endpoint built with [Hono](https://hono.dev). It answers `GET /{username}` with a schema v1 profile, returns `404` for unknown usernames, and can require a bearer token. It has no dependency on Namespace packages, so you can copy it into any repository. The docs repository runs its tests on every change.
+
+<Card title="View the template on GitHub" icon="github" href="https://github.com/thenamespace/docs/tree/main/examples/universal-usernames-adapter" horizontal>
+  examples/universal-usernames-adapter
+</Card>
+
+## What's in it
+
+| File | What it does |
+| --- | --- |
+| `src/app.ts` | The Hono app: bearer check, `GET /:username`, `404` for unknown usernames and paths, `500` when the lookup throws |
+| `src/bearer-token.ts` | Constant-time bearer token comparison |
+| `src/users.ts` | `lookupUser`, a stub over an in-memory map. Replace it with your user store. |
+| `src/profile.ts` | The `UsernameProfileV1` type |
+| `src/server.ts` | Starts the Node.js server and reads `PORT` and `ENDPOINT_TOKEN` |
+| `schema/profile-v1.schema.json` | The profile schema the tests validate against |
+| `tests/app.test.ts` | Vitest tests for `200`, `404`, `401`, `500`, and unknown paths |
+
+## Run it
+
+You need Node.js 22.12 or later.
+
+```bash
+git clone --depth 1 https://github.com/thenamespace/docs.git namespace-docs
+cp -R namespace-docs/examples/universal-usernames-adapter my-usernames-endpoint
+cd my-usernames-endpoint
+npm install
+npm run dev
+```
+
+Then request a sample user:
+
+```bash
+curl -i http://localhost:8787/happy
+```
+
+Run the tests and the type check:
+
+```bash
+npm test
+npm run typecheck
+```
+
+## The handler
+
+`createApp` takes your lookup function and an optional token. Everything Namespace relies on lives here: the status codes, the JSON content type, and the order of checks, so a wrong token never reveals whether a username exists.
+
+```ts src/app.ts
+import { Hono } from 'hono';
+import { isAuthorizedBearer } from './bearer-token.js';
+import type { UsernameProfileV1 } from './profile.js';
+
+/** Returns the profile for a username, or null when the username doesn't exist. */
+export type LookupUser = (username: string) => Promise<UsernameProfileV1 | null>;
+
+export interface AppOptions {
+  lookupUser: LookupUser;
+  /** When set, every request must send `Authorization: Bearer <endpointToken>`. */
+  endpointToken?: string;
+}
+
+/**
+ * Namespace calls GET {your endpoint URL}/{username}, where username is one
+ * ENSIP-15 normalized label. Answer 200 with the profile, or 404 when the
+ * username doesn't exist. Any other status is treated as an outage, never as
+ * "no such user".
+ */
+export function createApp({ lookupUser, endpointToken }: AppOptions): Hono {
+  const app = new Hono();
+
+  if (endpointToken) {
+    app.use('*', async (c, next) => {
+      if (!isAuthorizedBearer(c.req.header('Authorization'), endpointToken)) {
+        return c.json({ error: 'unauthorized' }, 401);
+      }
+      await next();
+    });
+  }
+
+  app.get('/:username', async (c) => {
+    // Hono decodes the percent-encoded label, so "caf%C3%A9" arrives as "café".
+    const username = c.req.param('username');
+    const profile = await lookupUser(username);
+    if (!profile) return c.json({ error: 'not_found' }, 404);
+    return c.json(profile);
+  });
+
+  app.notFound((c) => c.json({ error: 'not_found' }, 404));
+
+  // A failing user store must not look like a missing user, so it gets a 500.
+  app.onError((error, c) => {
+    console.error('Username lookup failed', error);
+    return c.json({ error: 'internal_error' }, 500);
+  });
+
+  return app;
+}
+```
+
+The bearer check hashes both tokens before comparing them, so the comparison takes the same time whatever the token's length:
+
+```ts src/bearer-token.ts
+import { createHash, timingSafeEqual } from 'node:crypto';
+
+const BEARER = /^Bearer\s+(.+)$/i;
+
+/** Checks an Authorization header against the expected bearer token in constant time. */
+export function isAuthorizedBearer(header: string | undefined, expectedToken: string): boolean {
+  const presented = header?.match(BEARER)?.[1];
+  if (!presented) return false;
+
+  // Hashing both sides gives timingSafeEqual equal-length inputs, so the
+  // comparison time reveals neither the token nor its length.
+  return timingSafeEqual(sha256(presented), sha256(expectedToken));
+}
+
+function sha256(value: string): Buffer {
+  return createHash('sha256').update(value).digest();
+}
+```
+
+## Connect your user store
+
+Replace `lookupUser` in `src/users.ts`. It receives the decoded, normalized username and returns a profile or `null`:
+
+- Return `null` when the user doesn't exist. The app answers `404`, and wallets get an empty result.
+- Throw when your store fails. The app answers `500`, and wallets get an error instead of a wrong "no such user".
+- Set `username` to the username you received, not the display name you store.
+- Key addresses by coin type and leave missing records out. See [Records](/developer-guide/universal-usernames/records).
+
+## Require a bearer token
+
+Set `ENDPOINT_TOKEN` in `.env` to a long random value, for example from `openssl rand -hex 32`. Every request then needs `Authorization: Bearer <token>`, and anything else gets `401`. Enter the same token as the credential when you connect the endpoint. The records stay public through ENS either way; the token only keeps other callers off your endpoint.
+
+## Deploy and validate
+
+```bash
+npm run build
+npm start
+```
+
+Serve it over HTTPS on any Node.js host, then validate the public URL with the [validator CLI](/developer-guide/sdks/universal-usernames#validate-from-the-command-line):
+
+```bash
+npx @thenamespace/universal-usernames validate https://usernames.brand.example --username happy --token "$ENDPOINT_TOKEN"
+```
+
+The CLI exits with `0` when the profile is valid and prints every issue otherwise. When it passes, [connect the endpoint](/developer-guide/guide/connect-universal-usernames) in the Namespace App.
+
+To serve the endpoint under a path, mount the app with `app.route('/ens/users', createApp(…))` and connect `https://api.brand.example/ens/users`. The template's README shows the full snippet.

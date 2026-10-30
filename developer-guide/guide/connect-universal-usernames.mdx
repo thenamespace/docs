@@ -1,0 +1,189 @@
+---
+title: "Connect universal usernames"
+description: "Resolve every username in your system as an ENS name."
+sidebarTitle: "Connect universal usernames"
+icon: "globe"
+---
+
+import ProfileExample from '/snippets/universal-usernames/profile-v1-example.mdx';
+
+Connect `brand.eth` to an HTTPS endpoint you run, and every username that endpoint knows resolves as `username.brand.eth` in ENS-aware wallets. You build the endpoint, connect it in the Namespace App, point `brand.eth` at Namespace's HybridResolverV2, and activate. Your system stays the source of truth for usernames and records.
+
+For the concepts first, read [Universal usernames](/overview/universal-usernames).
+
+## Prerequisites
+
+- A `.eth` name directly below `.eth`, such as `brand.eth`, that hasn't expired.
+- The wallet that owns it. Only the exact owner can connect a name, and approved operators don't count:
+  - for a wrapped name, the NameWrapper owner;
+  - for an unwrapped name, the ENS registry owner, shown as the manager in the ENS app, which can differ from the registrant;
+  - for an ENSv2 name, the owner in the ENSv2 registry.
+- A place to host an HTTPS endpoint with a public address.
+- ETH for one or two transactions, unless `brand.eth` already uses HybridResolverV2.
+
+<Note>
+Universal usernames is rolling out to selected brands first. If the Namespace App doesn't show a **Usernames** tab for your wallet, [talk to us](/user-guide/custom-solutions).
+</Note>
+
+## What you sign
+
+| Step | What it takes |
+| --- | --- |
+| Save the endpoint | One wallet signature |
+| Switch the resolver | One or two transactions, only if `brand.eth` isn't on HybridResolverV2 yet |
+| Activate | One wallet signature |
+| Each later change: replace the endpoint, rotate the credential, pause, resume, disconnect | One wallet signature, no transaction |
+
+Each signature authorizes one change to one parent at one revision, uses a single-use nonce, and expires within 10 minutes, so it can't be replayed.
+
+<Steps>
+  <Step title="Choose the parent name">
+
+Open the [offchain dashboard](https://app.namespace.ninja/offchain) in the Namespace App, go to the **Usernames** tab, and connect the wallet that owns `brand.eth`. Pick the name from the list, or type it in. The App checks ownership live, so a name you transferred recently shows its current owner.
+
+  </Step>
+
+  <Step title="Inspect the parent">
+
+The App reads `brand.eth` onchain and shows its registry version, whether it's wrapped, its resolver and route, the records on the parent that will be copied, the number of stored offchain subnames, and any onchain subnames.
+
+Some states block a connection:
+
+| Blocker | Why | What to do |
+| --- | --- | --- |
+| `NOT_ETH_2LD` | The name isn't directly below `.eth`, for example `brand.app.eth` or a DNS name | Use a second-level `.eth` name |
+| `EXPIRED` | The name has expired | Renew it |
+| `CANNOT_SET_RESOLVER` | The name is wrapped with the `CANNOT_SET_RESOLVER` fuse burned | Use another name; the resolver can't change |
+| `L2_ROUTE` | `brand.eth` already uses HybridResolverV2 to serve subnames from an L2 | Switching the route would break those subnames, so it's blocked |
+
+If `brand.eth` has stored offchain subnames, the App asks you to acknowledge that they stop resolving while the parent is connected. Namespace records that acknowledgment in the connection's events, and blocks changes to stored subnames until you disconnect.
+
+Onchain subnames such as an existing onchain `happy.brand.eth` keep resolving onchain and hide that username from your endpoint. The App lists them so you can decide what to do with each.
+
+  </Step>
+
+  <Step title="Build the endpoint">
+
+Your endpoint answers `GET {endpoint URL}/{username}` with a JSON profile, or `404` when the username doesn't exist:
+
+<ProfileExample />
+
+Pick a starting point:
+
+- Copy the [adapter template](/developer-guide/universal-usernames/adapter-template), a tested Hono endpoint, and replace its `lookupUser` stub.
+- Use `createUsernameHandler` from the [Universal Usernames SDK](/developer-guide/sdks/universal-usernames) inside your existing service.
+- Have your coding agent build it. Install the skill with `npx skills add thenamespace/skills -s universal-usernames`; it carries the contract, record formats, and adapters for Hono, Express, and Next.js.
+
+The [endpoint reference](/developer-guide/universal-usernames/endpoint-reference) has the full contract. Deploy the endpoint and check it before you connect it:
+
+```bash
+npx @thenamespace/universal-usernames validate https://api.brand.example/ens/users --username happy
+```
+
+  </Step>
+
+  <Step title="Connect and validate">
+
+In the App, enter:
+
+- The endpoint URL, such as `https://api.brand.example/ens/users`. Namespace appends `/{username}`.
+- The authentication: none, or a bearer token your endpoint expects.
+- A sample username that exists in your system, such as `happy`.
+
+Select **Validate** for a dry run. Namespace calls your endpoint the same way lookups do, lists every issue with the JSON path it applies to, and shows a read-only preview of the records that passed. Nothing is stored yet. Fix any issues with the [troubleshooting codes](/developer-guide/universal-usernames/troubleshooting) and validate again.
+
+When the report is clean, select **Save** and sign the message in your wallet. The connection becomes `validated`. Namespace stores the token encrypted and never shows it again.
+
+  </Step>
+
+  <Step title="Point the parent at HybridResolverV2">
+
+Lookups reach your endpoint through Namespace's HybridResolverV2 and its offchain route, route `1`. If `brand.eth` already uses HybridResolverV2 on its default or offchain route, skip this step.
+
+| Network | HybridResolverV2 address |
+| --- | --- |
+| Ethereum mainnet | `0x0A67542cbD8d71CB760d1EeB5a4b4a77ea35Ff9b` |
+| Sepolia | `0x976a3E43b2a6706F52D9555931c68eb62D134ff7` |
+
+HybridResolverV2 has no fallback to your current resolver. Records on `brand.eth` itself, such as its address, avatar, or contenthash, have to be copied to HybridResolverV2 before the switch, or `brand.eth` stops returning them. The App does this in order:
+
+1. On HybridResolverV2, set the offchain route for `brand.eth` and copy every record the current resolver holds that the App can encode, in one `multicall`.
+2. Set the resolver of `brand.eth` to HybridResolverV2.
+
+| Parent | Transaction 1, on HybridResolverV2 | Transaction 2 |
+| --- | --- | --- |
+| Already on HybridResolverV2, default or offchain route | None | None |
+| ENSv1, unwrapped | `multicall` with `setNameRoute(name, 1)` and the record copies | `setResolver` on the ENS registry |
+| ENSv1, wrapped | Same as unwrapped | `setResolver` on the NameWrapper |
+| ENSv2 | Same `multicall`, with `setNameRoute` first | `setResolver` on the `.eth` registry |
+
+With a wallet that supports batched calls (EIP-5792), the App sends both as one batch. After the switch it shows the old and new value of every copied record. If a record can't be copied, the App stops and asks before dropping it. Your old resolver isn't changed.
+
+Until you activate, the parent keeps serving any stored offchain subnames, and usernames from your endpoint resolve empty.
+
+  </Step>
+
+  <Step title="Activate and verify">
+
+Select **Activate** and sign. Namespace checks that:
+
+- your wallet still owns `brand.eth`;
+- the resolver of `brand.eth` is HybridResolverV2;
+- the route for `happy.brand.eth` is the offchain route;
+- `happy.brand.eth` has no onchain owner;
+- stored offchain subnames are acknowledged, if there are any.
+
+The connection moves to `verifying` and the parent starts serving from your endpoint. Namespace then resolves the sample username through the ENS Universal Resolver with CCIP-Read and compares the answer with the validated preview. A match makes the connection `active`. A mismatch puts it back to `validated` with the errors, and you can fix them and activate again.
+
+Check it yourself with any ENS client. viem follows CCIP-Read by default:
+
+```ts
+import { createPublicClient, http } from 'viem';
+import { mainnet } from 'viem/chains';
+import { normalize } from 'viem/ens';
+
+const client = createPublicClient({ chain: mainnet, transport: http() });
+const name = normalize('happy.brand.eth');
+
+const address = await client.getEnsAddress({ name });
+const avatar = await client.getEnsText({ name, key: 'avatar' });
+console.log({ address, avatar });
+```
+
+  </Step>
+
+  <Step title="Manage the connection">
+
+The **Usernames** tab shows the connection's health. From there you can:
+
+- Preview any username to see the records it resolves to right now. Records are edited in your own system; Namespace only shows them.
+- Replace the endpoint by saving the new URL and activating it. The current endpoint keeps serving until the new one passes, and a failed replacement leaves it serving.
+- Rotate the credential. Namespace validates the new token before it switches, so accept both tokens on your endpoint until the rotation finishes.
+- Pause the connection. While it's paused, lookups under `brand.eth` return an error with no signature. Resuming checks ownership and the sample username again.
+- Disconnect. This is final: Namespace wipes the credential, keeps a redacted history, and stored offchain subnames resolve again. The resolver and route stay as they are, so switch the resolver back yourself if you want to.
+- Read the events. Every save, activation, rotation, pause, suspension, and disconnect is logged with the signer and revision.
+
+If `brand.eth` changes owner or expires, Namespace suspends the connection within about a minute and wipes the credential. Lookups return an error from then on. The new owner has to connect from scratch.
+
+  </Step>
+</Steps>
+
+## Behaviours to plan for
+
+These follow from how the deployed resolver and the gateway work. They aren't bugs, so design around them.
+
+- A username that has an onchain owner keeps resolving onchain. HybridResolverV2 answers names with an onchain owner from its own records, even empty ones, so your endpoint never sees them.
+- There's no fallback resolver. Copy the parent's records before switching, which the App does for you.
+- Usernames are one label. `team.happy.brand.eth` resolves empty and never reaches your endpoint.
+- Proofs last at most 60 seconds, and Namespace serves a change within 60 seconds. Wallets and apps can cache answers for longer.
+- Changing the connection takes a wallet signature, never a transaction. Only the first resolver switch is onchain.
+- Everything that resolves is public, even when your endpoint requires a bearer token.
+
+## Troubleshooting
+
+[Troubleshooting universal usernames](/developer-guide/universal-usernames/troubleshooting) explains every validation issue code and connection error. For general problems, see [Troubleshooting](/developer-guide/troubleshooting).
+
+## Next steps
+
+- Automate setup with the [owner API](/api-reference/offchain-manager/universal-usernames/get-connection) or the [Offchain Manager SDK](/developer-guide/sdks/offchain-manager/universal-usernames).
+- Read the [endpoint reference](/developer-guide/universal-usernames/endpoint-reference) and [records](/developer-guide/universal-usernames/records) in full.

@@ -27,7 +27,11 @@ function walk(directory) {
 }
 
 const files = walk(root);
-const mdxFiles = files.filter((file) => file.endsWith('.mdx'));
+// Snippets are imported into pages and never rendered on their own, so they
+// need no frontmatter or navigation entry.
+const mdxFiles = files.filter(
+  (file) => file.endsWith('.mdx') && !relative(root, file).startsWith('snippets/'),
+);
 const routes = new Set(
   mdxFiles.map((file) => relative(root, file).replace(/\.mdx$/, '')),
 );

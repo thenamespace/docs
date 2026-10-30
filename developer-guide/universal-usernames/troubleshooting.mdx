@@ -1,0 +1,183 @@
+---
+title: "Troubleshooting universal usernames"
+description: "Fix validation issues and connection errors."
+sidebarTitle: "Troubleshooting"
+icon: "screwdriver-wrench"
+---
+
+Validation reports, the validator CLI, and the Namespace App describe each problem with a stable code, a kind, and a `path` into your response, such as `/addresses/60`. Find the code below.
+
+Each issue has one of three kinds:
+
+- `envelope` issues fail the whole profile. Every lookup for that username returns an error.
+- `record` issues fail one record. Lookups for that record return an error, and the other records still resolve.
+- `transport` issues come from the request itself, before Namespace can read a profile.
+
+Validation reports every issue it finds, so fix them all before you save.
+
+## Envelope issues
+
+### `INVALID_JSON`
+
+The body isn't valid JSON. Check for trailing commas, single quotes, or an HTML error page served with a `200`. Serialize the profile with your platform's JSON encoder instead of building the string by hand.
+
+### `DUPLICATE_KEY`
+
+The same key appears twice in one object, at any depth, such as two `"60"` entries in `addresses`. Most JSON parsers keep the last one silently, which is why Namespace rejects it. Build the response from a map or dictionary so each key appears once.
+
+### `NOT_AN_OBJECT`
+
+The body is valid JSON but not an object, for example an array or a string. Return one profile object per request.
+
+### `UNSUPPORTED_VERSION`
+
+`version` is missing or isn't `1`. Send `"version": 1` as a number, not the string `"1"`.
+
+### `UNKNOWN_FIELD`
+
+The profile has a top-level field that schema v1 doesn't define, such as `name` or `avatar` at the root. Move text records into `texts` and remove anything else. Only `version`, `username`, `texts`, `addresses`, and `contenthash` are allowed.
+
+### `USERNAME_MISSING`
+
+`username` is missing or empty. Add it to every `200` response.
+
+### `USERNAME_MISMATCH`
+
+`username` doesn't equal the requested username exactly. Echo the decoded path segment you received instead of the display name your database stores, so a request for `café` answers `"username": "café"`.
+
+### `TEXTS_NOT_OBJECT`
+
+`texts` is missing or isn't an object. Send `"texts": {}` when there are no text records.
+
+### `ADDRESSES_NOT_OBJECT`
+
+`addresses` is missing or isn't an object, for example an array of `{ chain, value }` pairs. Send an object keyed by coin type, or `"addresses": {}` when there are none.
+
+### `TOO_MANY_TEXTS`
+
+`texts` has more than 128 keys. Return only the records wallets need.
+
+### `TOO_MANY_ADDRESSES`
+
+`addresses` has more than 128 entries. Use the [default EVM address](/developer-guide/universal-usernames/records#default-evm-address) instead of repeating one address for every EVM chain.
+
+## Record issues
+
+### `TEXT_KEY_INVALID`
+
+A text key is empty or longer than 256 characters. Shorten it or remove the record.
+
+### `TEXT_VALUE_INVALID`
+
+A text value isn't a string, for example `null`, a number, or an object. Convert it to a string, or leave the record out when there's no value.
+
+### `TEXT_VALUE_TOO_LONG`
+
+A text value is longer than 4,096 characters. Truncate it, or host long content elsewhere and link to it with `url`.
+
+### `COIN_TYPE_INVALID`
+
+An `addresses` key isn't a canonical decimal coin type between `0` and `4294967295`. Keys such as `"ETH"`, `"0x3c"`, `"060"`, or `"-1"` fail. Use the decimal number, such as `"60"`. [Records](/developer-guide/universal-usernames/records#address-records) lists common coin types.
+
+### `COIN_TYPE_UNSUPPORTED`
+
+The coin type is well formed, but Namespace has no address coder for it, so it can't encode the address. This usually means a chain ID was used instead of a coin type: Base is `2147492101`, not `8453`. Use the coin type, or remove coins Namespace can't encode.
+
+### `ADDRESS_INVALID`
+
+The value isn't a valid address for that coin type: an Ethereum address with a wrong checksum, a Bitcoin address under coin type `60`, or an empty string. Send checksummed or all-lowercase EVM addresses, and check each address matches its coin type.
+
+### `CONTENTHASH_INVALID`
+
+The contenthash uses a supported protocol, but the value after it is malformed, such as `ipfs://` followed by something that isn't a CID. Check the hash or CID.
+
+### `CONTENTHASH_UNSUPPORTED`
+
+The contenthash doesn't start with `ipfs://`, `ipns://`, `bzz://`, or `ar://`. A bare CID or an `https://` URL fails because Namespace never guesses the protocol. Add the protocol, or leave `contenthash` out.
+
+## Transport issues
+
+### `INVALID_URL`
+
+The endpoint URL breaks the [URL rules](/developer-guide/universal-usernames/endpoint-reference#endpoint-url-rules). Use an `https://` URL with no credentials, query string, or fragment, at most 2,048 characters long.
+
+### `DESTINATION_BLOCKED`
+
+The endpoint host resolves to an address Namespace doesn't call, such as a private, loopback, link-local, or cloud metadata address. Serve the endpoint from a public address. A local or VPN-only service can't be connected.
+
+### `HTTP_TIMEOUT`
+
+No complete response arrived within 5 seconds. Look up the user by an indexed key, avoid calls to slow services on the request path, and check for cold starts on serverless hosts.
+
+### `NETWORK_ERROR`
+
+Namespace couldn't connect: DNS failed, the connection was refused or reset, or TLS failed. Check the hostname, that the server is running, and that its certificate is valid and trusted.
+
+### `HTTP_REDIRECT`
+
+The endpoint answered with a `3xx` redirect. Namespace never follows redirects. Connect the final URL, including the right host, `https://`, and trailing path.
+
+### `UNAUTHORIZED`
+
+The endpoint answered `401` or `403`. Check that the bearer credential saved in Namespace matches the token your endpoint expects, and that your endpoint accepts `Authorization: Bearer <token>`. If you rotated the token, accept both until the rotation finishes.
+
+### `RATE_LIMITED`
+
+The endpoint answered `429`. Allow at least 10 requests per second, with bursts of 20, from Namespace.
+
+### `HTTP_ERROR_STATUS`
+
+The endpoint answered a status other than `200`, `404`, `401`, `403`, `429`, or a redirect, usually a `5xx`. Check your server logs for the request. Only answer `404` for usernames that don't exist.
+
+### `USERNAME_NOT_FOUND`
+
+The endpoint answered `404` for the sample username during setup. At lookup time a `404` is a normal empty result, but validation needs a profile to check. Enter a username that exists in your system.
+
+### `CONTENT_TYPE_INVALID`
+
+The response `Content-Type` isn't `application/json`. Set it explicitly. Many frameworks default to `text/plain` or `text/html` when you write a string.
+
+### `RESPONSE_TOO_LARGE`
+
+The response is larger than 256 KiB after decompression. Remove large values, such as images embedded as data URIs, and link to them instead.
+
+## Connection errors
+
+The owner API returns `{ "code": "…", "message": "…" }` when a request fails. `PRECONDITION_FAILED` also lists each failure in `details`.
+
+| Code | Status | What to do |
+| --- | --- | --- |
+| `UNSUPPORTED_PARENT` | 400 | Use a `.eth` name directly below `.eth`, such as `brand.eth`. |
+| `INVALID_SESSION` | 401 | Sign in again with the wallet that owns the parent name. API keys don't work here. |
+| `INVALID_OPERATION_SIGNATURE` | 401 | Sign a new message for this change with a fresh nonce. Check the action, parent, expected revision, chain, and expiry. |
+| `NOT_PARENT_OWNER` | 403 | Sign with the current owner of the parent: the NameWrapper owner for wrapped names, or the ENS registry owner (manager) for unwrapped ones. Approved operators can't connect a name. |
+| `CONNECTION_NOT_FOUND` | 404 | The parent has no connection yet. Save one first. |
+| `REVISION_CONFLICT` | 409 | Someone changed the connection since you read it. Reload it and send the new `revision` as `expectedRevision`. |
+| `INVALID_STATE` | 409 | The change isn't possible in the current status, for example resuming a connection that isn't paused. Reload the connection and check `status`. |
+| `STORED_SUBNAMES_NOT_ACKNOWLEDGED` | 409 | The parent has stored offchain subnames. They stop resolving while it's connected. Save again with `acknowledgeStoredSubnames: true` if that's what you want. |
+| `ENDPOINT_BACKED_PARENT` | 409 | Stored offchain subnames can't be created, changed, or deleted while the parent is connected. Change usernames in your own system instead. |
+| `PRECONDITION_FAILED` | 412 | Activation checks failed. Fix each entry in `details`, such as switching the resolver to HybridResolverV2 or removing an onchain owner from the sample name. |
+| `VALIDATION_FAILED` | 422 | The request body is invalid. Check the fields against the [API reference](/api-reference/offchain-manager/universal-usernames/save-connection). |
+| `RATE_LIMITED` | 429 | Wait a moment before validating or previewing again. |
+
+## Lookups that surprise people
+
+### A username resolves to old onchain records
+
+`happy.brand.eth` has an onchain owner, for example from an earlier onchain subname. HybridResolverV2 answers names with an onchain owner from its own records, even empty ones, so your endpoint is never called for that name. Setup reports this as an onchain conflict. Remove or transfer the onchain subname if you want your endpoint to answer.
+
+### `brand.eth` lost its own records after the resolver switch
+
+HybridResolverV2 has no fallback to your previous resolver, so records on the parent name itself have to be copied to it before the switch. The Namespace App copies them for you. If you switched the resolver yourself, set the parent's records again on HybridResolverV2.
+
+### `team.happy.brand.eth` resolves empty
+
+Each username is one label under the parent. Deeper names are out of scope, resolve empty, and never reach your endpoint.
+
+### A change in my system doesn't show up in a wallet
+
+Namespace serves the change within 60 seconds. Proofs already issued last at most 60 seconds, and wallets and apps can cache answers for longer. Reload the wallet, or check with a fresh client such as viem.
+
+### Every lookup fails after I paused the connection
+
+That's what pausing does: lookups return an error with no signature until you resume. They don't fall back to stored subnames.

@@ -1,0 +1,103 @@
+---
+title: "Universal usernames"
+description: "Connect a .eth name to your username endpoint from code."
+sidebarTitle: "Universal usernames"
+icon: "globe"
+---
+
+The Offchain Manager SDK can run the whole [universal usernames setup](/developer-guide/guide/connect-universal-usernames) from code: validate an endpoint, save it, activate it, and manage it afterwards. These methods are in `@thenamespace/offchain-manager` 1.2.0 and later.
+
+They don't use API keys. Only the wallet that owns the parent name can call them, so the client needs that wallet:
+
+- Reads use a sign-in session from that wallet.
+- Every change asks the wallet for one signature that authorizes that change, on that parent, at the revision you send. No transaction is involved.
+
+## Install and initialize
+
+```bash
+npm install @thenamespace/offchain-manager@1.2.0
+```
+
+Pass the owner's wallet as `provider`. It accepts the same wallets as the [Avatar SDK](/developer-guide/sdks/avatar/installation): a viem `WalletClient`, an ethers `Signer`, or a `WalletProvider`.
+
+```ts
+import { createOffchainClient } from '@thenamespace/offchain-manager';
+
+const client = createOffchainClient({
+  mode: 'mainnet',
+  provider: walletClient, // the wallet that owns brand.eth
+});
+```
+
+Use `mode: 'sepolia'` with a Sepolia name while you test.
+
+## Connect a parent name
+
+```ts
+const parentName = 'brand.eth';
+const endpoint = {
+  endpointUrl: 'https://api.brand.example/ens/users',
+  authMode: 'bearer' as const,
+  credential: process.env.ENDPOINT_TOKEN,
+};
+
+// 1. Dry run: nothing is stored.
+const report = await client.validateUsernameEndpoint(parentName, { ...endpoint, username: 'happy' });
+if (!report.ok) {
+  for (const issue of report.issues) console.error(issue.code, issue.path, issue.message);
+  throw new Error('Fix the endpoint before saving it');
+}
+
+// 2. Save. Use expectedRevision 0 for a parent with no connection yet. One signature.
+const current = await client.getUsernameConnection(parentName);
+const saved = await client.saveUsernameConnection(parentName, {
+  ...endpoint,
+  sampleUsername: 'happy',
+  expectedRevision: current?.revision ?? 0,
+});
+
+// 3. Point brand.eth at HybridResolverV2 (see the guide), then activate. One signature.
+const connection = await client.activateUsernameConnection(parentName, {
+  expectedRevision: saved.revision,
+});
+console.log(connection.status); // 'active', or 'validated' with connection.activation.errors
+```
+
+Every change takes the connection's current `revision` as `expectedRevision`. If someone else changed the connection in between, the call fails with a conflict instead of overwriting their change.
+
+## Methods
+
+| Method | What it does | Wallet |
+| --- | --- | --- |
+| `getUsernameConnection(parentName)` | Status, revisions, and the last validation. Never includes the credential. Returns `null` when the parent has no connection. | Session |
+| `validateUsernameEndpoint(parentName, { endpointUrl, authMode, credential?, username })` | Dry run against your endpoint. Returns a validation report; stores nothing. | Session |
+| `saveUsernameConnection(parentName, { endpointUrl, authMode, credential?, keepCredential?, sampleUsername, acknowledgeStoredSubnames?, expectedRevision })` | Saves a new revision and validates it. `validated` only when the report is clean. | One signature |
+| `activateUsernameConnection(parentName, { expectedRevision })` | Checks the preconditions, verifies a live lookup, and starts serving | One signature |
+| `previewUsername(parentName, username)` | The records any username resolves to now, as a validation report | Session |
+| `rotateUsernameCredential(parentName, { credential, expectedRevision })` | Validates a new bearer token and switches to it | One signature |
+| `pauseUsernameConnection(parentName, { expectedRevision })` | Lookups return an error until you resume | One signature |
+| `resumeUsernameConnection(parentName, { expectedRevision })` | Rechecks ownership and the sample username, then serves again | One signature |
+| `disconnectUsernameConnection(parentName, { expectedRevision })` | Ends the connection for good and wipes the credential | One signature |
+| `getUsernameConnectionEvents(parentName)` | The audit log, newest first | Session |
+
+Each method calls one route of the [owner API](/api-reference/offchain-manager/universal-usernames/get-connection). The request fields and the `UsernameConnection` shape are documented there.
+
+## Types
+
+| Type | Description |
+| --- | --- |
+| `UsernameConnection` | The connection: `status`, `revision`, `activeRevision`, `latestRevision`, owner snapshot, and activation result. Revisions report `hasCredential`, never the credential. |
+| `UsernameConnectionStatus` | `'draft' \| 'validated' \| 'verifying' \| 'active' \| 'paused' \| 'suspended' \| 'disconnected'` |
+| `UsernameValidationReport` | The validation report from `@thenamespace/universal-usernames`: `ok`, `issues`, `preview`, and request details |
+
+## Errors
+
+The universal usernames methods throw typed errors instead of raw HTTP errors:
+
+| Error | When |
+| --- | --- |
+| `NotParentOwnerError` | The wallet isn't the current owner of the parent (`403 NOT_PARENT_OWNER`) |
+| `ConnectionRevisionConflictError` | `expectedRevision` is stale (`409 REVISION_CONFLICT`). Reload the connection and retry. |
+| `EndpointValidationError` | The request was rejected as invalid (`422 VALIDATION_FAILED`) |
+
+Other failures carry the API's `code` and `message`. [Troubleshooting universal usernames](/developer-guide/universal-usernames/troubleshooting#connection-errors) explains each code. The existing subname methods keep their current error behaviour.

@@ -6,6 +6,12 @@ icon: "cloud"
 ---
 
 
+<Update label="Unreleased" description="v1.2.0">
+  - Added:
+    - **Universal usernames**: `getUsernameConnection`, `validateUsernameEndpoint`, `saveUsernameConnection`, `activateUsernameConnection`, `previewUsername`, `rotateUsernameCredential`, `pauseUsernameConnection`, `resumeUsernameConnection`, `disconnectUsernameConnection`, and `getUsernameConnectionEvents` connect a `.eth` name to a brand-hosted username endpoint. They authenticate with the parent owner's wallet, and every change takes one signature instead of an API key.
+    - **Typed errors** for these methods: `NotParentOwnerError`, `ConnectionRevisionConflictError`, and `EndpointValidationError`. Existing methods keep their current error behaviour.
+</Update>
+
 <Update label="May 1, 2026" description="v1.0.13">
   - Added:
     - **New Blockchain Support**: Added support for two Substrate L1 chains:

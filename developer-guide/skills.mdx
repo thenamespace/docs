@@ -85,6 +85,21 @@ Once installed, your AI agent can:
 - Tell a name obstacle from a minter obstacle, so a gated wallet is not sent back to the name field
 - Cap the price with `maxValue` and handle `MintManagerError` codes
 
+### Universal usernames skill
+
+The `universal-usernames` skill is for the coding agent that builds your username endpoint. It covers the endpoint contract, profile schema v1, record formats, the `404` versus error rules, bearer authentication, and adapters for Hono, Express, and Next.js.
+
+**Install in your project:**
+
+```bash
+npx skills add thenamespace/skills -s universal-usernames
+```
+
+Once installed, your AI agent can:
+- Build an endpoint that maps your users to schema v1 profiles
+- Key addresses by ENS coin type and apply the default EVM address correctly
+- Check the endpoint with the validator CLI and fix each issue code it reports
+
 <Note>
   Skills work with any AI coding tool that supports agent context, including Cursor, Claude Code, and GitHub Copilot.
 </Note>
