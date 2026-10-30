@@ -13,7 +13,8 @@
     "check:a11y": "mint a11y",
     "check:content": "node scripts/check-docs.mjs",
     "check:examples": "tsc --noEmit --project examples/tsconfig.json",
-    "check": "npm run validate && npm run check:links && npm run check:a11y && npm run check:content && npm run check:examples"
+    "check:adapter": "npm ci --prefix examples/universal-usernames-adapter && npm run typecheck --prefix examples/universal-usernames-adapter && npm test --prefix examples/universal-usernames-adapter",
+    "check": "npm run validate && npm run check:links && npm run check:a11y && npm run check:content && npm run check:examples && npm run check:adapter"
   },
   "devDependencies": {
     "@thenamespace/mint-manager": "2.0.0",

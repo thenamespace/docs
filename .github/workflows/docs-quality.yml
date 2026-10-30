@@ -42,9 +42,14 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            examples/universal-usernames-adapter/package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
+      # Also installs and tests the universal usernames adapter template
+      # (check:adapter), which has its own lockfile.
       - name: Validate documentation
         run: npm run check

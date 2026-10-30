@@ -1,0 +1,28 @@
+{
+  "name": "universal-usernames-adapter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Template brand endpoint for Namespace universal usernames: serves one profile JSON per username.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=.env src/server.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node --env-file-if-exists=.env dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@hono/node-server": "2.1.5",
+    "hono": "4.13.8"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "ajv": "8.20.0",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "vitest": "3.2.7"
+  }
+}

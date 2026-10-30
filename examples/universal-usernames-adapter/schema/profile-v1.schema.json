@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Universal Usernames profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "username", "texts", "addresses"],
+  "properties": {
+    "version": { "const": 1 },
+    "username": { "type": "string", "minLength": 1 },
+    "texts": {
+      "type": "object",
+      "maxProperties": 128,
+      "propertyNames": { "minLength": 1, "maxLength": 256 },
+      "additionalProperties": { "type": "string", "maxLength": 4096 }
+    },
+    "addresses": {
+      "type": "object",
+      "maxProperties": 128,
+      "propertyNames": { "pattern": "^(0|[1-9][0-9]*)$" },
+      "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 1024 }
+    },
+    "contenthash": { "type": "string", "minLength": 1, "maxLength": 4096 }
+  }
+}
