@@ -5,20 +5,17 @@
  *   import { FlowExplainer } from '/snippets/flow-explainer.jsx'
  *   <FlowExplainer />
  *
- * Boxed, looping explainer of one lookup, laid out to match the protocol
- * diagram: wallet -> ENS resolver -> gateway -> records -> signed response ->
- * wallet. Motion is CSS keyframes remounted per beat, so it runs off the main
- * thread.
+ * Boxed, looping explainer of one Universal Usernames lookup, start to finish:
+ * wallet -> ENS Universal Resolver -> HybridResolverV2 reverts with
+ * OffchainLookup -> Namespace gateway -> brand endpoint -> signed answer ->
+ * verified callback. Motion is CSS keyframes remounted per beat, so it runs off
+ * the main thread.
  *
- * Two toggles, and neither one changes the path:
- *
- *  - Parent name. A `.eth` name and a DNS domain imported into ENS resolve
- *    identically, so only the string being resolved moves.
- *  - Records. Step 3 reads from ONE store, never both. On-chain means an RPC
- *    call to a registry contract; off-chain means an HTTPS call to a system you
- *    already run. Nothing is fanned out and nothing is merged — the unselected
- *    store stays on the canvas, muted, so the choice is visible without drawing
- *    a path nobody takes.
+ * The client, not the resolver, makes the gateway request. Steps 3 and 6 run
+ * on arcs that go around the Ethereum group, straight between the wallet and
+ * the gateway, so the diagram never implies a contract fetching anything.
+ * Step 7 passes under the Universal Resolver node on its way to
+ * HybridResolverV2, which is the callback route the client actually takes.
  *
  * MOTION BUDGET. Two kinds of motion live here and they follow different rules.
  *
@@ -28,7 +25,7 @@
  *    because a request in flight is progress-as-time; easing it at both ends
  *    made the request look like it hesitated before leaving and again before
  *    arriving.
- *  - Interface motion — toggles, step arrows, the pause cue, chip and caption
+ *  - Interface motion — step arrows, the pause cue, chip and caption
  *    enters. This is feedback and stays under 300ms, transform/opacity only,
  *    transitions for anything reversible and keyframes only for one-shots that
  *    always run to completion.
@@ -38,10 +35,11 @@
  *  1. Each beat is travel + land + dwell, and the dwell scales with caption
  *     length. A flat beat left ~900ms of dead air after short captions and cut
  *     the long ones off mid-read.
- *  2. Beat 2 is the only beat whose path is a rejection — the resolver does not
- *     answer, it reverts with a gateway URL. It gets a recoil in the resolver's
- *     own hue before the real request runs, because "the resolver stores no
- *     answer" is the sentence readers bounce off.
+ *  2. Beat 2 is the only beat whose path is a refusal. HybridResolverV2 does
+ *     not answer; it reverts with OffchainLookup. Its packet reaches the
+ *     resolver and comes straight back in the resolver's own hue instead of
+ *     travelling on, because "the resolver stores no answer" is the sentence
+ *     readers bounce off.
  *  3. Traversed edges hold at a dim accent instead of resetting, then wipe
  *     together at the loop boundary, so one full lookup is visible as a unit.
  *
@@ -60,7 +58,7 @@
  *     rather than useRef, which is not guaranteed to be injected.
  *  5. Plain <div>s, never <figure>. Mintlify wraps a <figure> in
  *     react-medium-image-zoom, which forced two bugs: clicking the diagram
- *     lifted the bare <svg> into a modal, losing the caption and dots, and the
+ *     lifted the bare <svg> into a modal, losing the caption and step arrows, and the
  *     zoom wrapper is a shrink-to-fit <span> that inherited the svg's min-width
  *     and pushed the whole page into horizontal scroll on mobile. The <svg>
  *     keeps role="img" and its aria-label, which is what actually carries the
@@ -74,78 +72,19 @@
 
 export const FlowExplainer = () => {
   /* Narrative timing. TRAVEL and LAND together are one packet animation;
-     custom.css splits fx-flow at TRAVEL / (TRAVEL + LAND). Changing either
-     number here means changing that split too. */
+     custom.css splits fx-flow at TRAVEL / (TRAVEL + LAND). RECOIL is the whole
+     fx-recoil animation, which reaches the resolver at RECOIL_ARRIVE of its
+     run. Changing any of these means changing custom.css too. */
   const TRAVEL_MS = 900
   const LAND_MS = 180
-  const RECOIL_MS = 560
+  const RECOIL_MS = 900
+  const RECOIL_ARRIVE = 0.45
   const SETTLE_MS = 400
 
-  const ROUTES = [
-    {
-      id: 'ens',
-      label: '.eth name',
-      name: 'happy.brand.eth',
-      note: 'brand.eth registered in ENS',
-    },
-    {
-      id: 'dns',
-      label: 'DNS name',
-      name: 'happy.brand.id',
-      note: 'brand.id imported into ENS with DNSSEC',
-    },
-  ]
-
-  /* Geometry lives on the store: step 3 draws one path out and step 4 draws
-     one path back, to whichever store is selected. */
-  const STORES = [
-    {
-      id: 'onchain',
-      label: 'Onchain',
-      node: 'chain',
-      note: 'one RPC call to your registry contract',
-      lookup: 'The gateway makes one RPC call and reads the record from your registry contract.',
-      back: 'The contract returns the record. Nothing else is queried.',
-      out: {
-        d: 'M662,144 C700,140 712,73 750,73',
-        nx: 706,
-        ny: 100,
-        chip: { text: 'eth_call · recordOf(node)', x: 590, y: 112 },
-      },
-      ret: {
-        d: 'M750,92 C712,92 700,160 664,164',
-        nx: 718,
-        ny: 134,
-        /* Response lands in the same slot the request left from. */
-        chip: { text: 'addr(60) 0x1a9C…4b2f · avatar', x: 600, y: 112 },
-      },
-    },
-    {
-      id: 'offchain',
-      label: 'Offchain',
-      node: 'api',
-      note: 'one HTTPS request to your API',
-      lookup: 'The gateway makes one HTTPS request and reads the record from the system you already run.',
-      back: 'Your API returns the record. Nothing else is queried.',
-      out: {
-        d: 'M662,172 C700,176 712,243 750,243',
-        nx: 706,
-        ny: 218,
-        chip: { text: 'GET /records/happy', x: 590, y: 206 },
-      },
-      ret: {
-        d: 'M750,224 C712,224 700,180 664,176',
-        nx: 718,
-        ny: 196,
-        chip: { text: 'addr(60) 0x1a9C…4b2f · avatar', x: 600, y: 206 },
-      },
-    },
-  ]
+  const NAME = 'happy.brand.eth'
 
   const [beat, setBeat] = useState(0)
   const [paused, setPaused] = useState(false)
-  const [routeId, setRouteId] = useState('ens')
-  const [storeId, setStoreId] = useState('onchain')
   /* True while the reader stepped here themselves. A deliberate step gets no
      caption fade — someone clicking through at their own pace is fighting a
      260ms cross-fade on every press. */
@@ -159,58 +98,81 @@ export const FlowExplainer = () => {
   const [visible, setVisible] = useState(false)
   const [rootEl, setRootEl] = useState(null)
 
-  const route = ROUTES.find((r) => r.id === routeId)
-  const store = STORES.find((s) => s.id === storeId)
-  const NAME = route.name
-
   const NODES = [
-    { id: 'wallet', tone: 'wallet', x: 24, y: 130, w: 116, h: 56, label: 'Wallet / App' },
-    { id: 'resolver', tone: 'eth', x: 250, y: 130, w: 160, h: 56, label: 'ENS Resolver', sub: 'CCIP-Read' },
-    { id: 'gateway', tone: 'gw', x: 526, y: 130, w: 136, h: 56, label: 'CCIP Gateway' },
-    { id: 'chain', tone: 'chain', x: 754, y: 46, w: 176, h: 54, label: 'Onchain records', sub: 'your registry contract' },
-    { id: 'api', tone: 'api', x: 754, y: 216, w: 176, h: 54, label: 'Offchain records', sub: 'your API or database' },
+    { id: 'wallet', tone: 'wallet', x: 16, y: 130, w: 112, h: 56, label: 'Wallet / App' },
+    { id: 'universal', tone: 'chain', x: 184, y: 130, w: 152, h: 56, label: 'Universal Resolver', sub: 'ENS' },
+    { id: 'resolver', tone: 'eth', x: 392, y: 130, w: 160, h: 56, label: 'HybridResolverV2', sub: 'brand.eth resolver' },
+    { id: 'gateway', tone: 'gw', x: 624, y: 130, w: 148, h: 56, label: 'Namespace gateway', sub: 'CCIP-Read' },
+    { id: 'endpoint', tone: 'api', x: 816, y: 130, w: 136, h: 56, label: 'Your endpoint', sub: 'api.brand.example' },
   ]
 
   /* `beat` is the step an edge carries its packet on. `chip` is the payload
-     shown while that beat plays. */
+     shown while that beat plays. Requests run on the upper lane (y 148) and
+     answers on the lower one (y 170). */
   const EDGES = [
     {
       id: 'query',
       beat: 0,
       num: '1',
-      nx: 193,
+      nx: 156,
       ny: 140,
-      d: 'M140,148 L246,148',
-      chip: { text: `resolve("${NAME}")`, x: 193, y: 66 },
+      d: 'M128,148 L180,148',
+      chip: { text: `resolve("${NAME}", addr)`, x: 156, y: 76 },
+    },
+    {
+      id: 'lookup',
+      beat: 1,
+      num: '2',
+      kind: 'recoil',
+      nx: 364,
+      ny: 140,
+      d: 'M336,148 L388,148',
+      chip: { text: 'revert OffchainLookup(…)', x: 364, y: 76 },
     },
     {
       id: 'ccip',
-      beat: 1,
-      num: '2',
-      nx: 466,
-      ny: 140,
-      d: 'M410,148 L522,148',
-      chip: { text: 'GET /lookup/{sender}/{data}.json', x: 466, y: 84 },
+      beat: 2,
+      num: '3',
+      nx: 110,
+      ny: 36,
+      d: 'M72,130 L72,60 Q72,44 88,44 L682,44 Q698,44 698,60 L698,126',
+      chip: { text: 'GET /offchain-resolver/…/{data}.json', x: 400, y: 24 },
     },
-    { id: 'lookup', beat: 2, num: '3', ...store.out },
-    { id: 'return', beat: 3, num: '4', ...store.ret },
     {
-      id: 'signed',
+      id: 'fetch',
+      beat: 3,
+      num: '4',
+      nx: 794,
+      ny: 140,
+      d: 'M772,148 L812,148',
+      chip: { text: 'GET /ens/users/happy', x: 794, y: 76 },
+    },
+    {
+      id: 'profile',
       beat: 4,
       num: '5',
-      nx: 466,
+      nx: 794,
       ny: 186,
-      d: 'M522,170 L412,170',
-      chip: { text: '200 OK · sig 0x1c8f…9d02', x: 466, y: 216 },
+      d: 'M816,170 L776,170',
+      chip: { text: '200 · {"version":1,…}', x: 794, y: 228 },
     },
     {
-      id: 'records',
+      id: 'signed',
       beat: 5,
       num: '6',
-      nx: 194,
+      nx: 110,
+      ny: 288,
+      d: 'M698,186 L698,256 Q698,272 682,272 L88,272 Q72,272 72,256 L72,190',
+      chip: { text: 'addr 0x1111…1111 · expires · sig', x: 400, y: 296 },
+    },
+    {
+      id: 'callback',
+      beat: 6,
+      num: '7',
+      nx: 156,
       ny: 186,
-      d: 'M246,170 L142,170',
-      chip: { text: 'addr(60) 0x1a9C…4b2f', x: 194, y: 216 },
+      d: 'M128,170 L388,170',
+      chip: { text: 'resolveWithProof(…)', x: 262, y: 228 },
     },
   ]
 
@@ -218,43 +180,54 @@ export const FlowExplainer = () => {
   const CHIP_H = 19
   const chipW = (text) => text.length * 5.75 + 16
 
+  /* `active` is source then target; the arrival ring lands on the second
+     entry. Step 7 also lights the Universal Resolver it passes through. */
   const BEATS = [
     {
-      active: ['wallet', 'resolver'],
-      caption: `A wallet asks Ethereum to resolve ${NAME}.`,
+      active: ['wallet', 'universal'],
+      caption: `A wallet asks the ENS Universal Resolver for the address of ${NAME}.`,
     },
     {
-      active: ['resolver', 'gateway'],
+      active: ['universal', 'resolver'],
       caption:
-        'The resolver stores no answer. It reverts with a gateway URL — that is CCIP-Read.',
+        "brand.eth uses Namespace's HybridResolverV2. It has no stored record for happy, so it reverts with OffchainLookup.",
     },
     {
-      active: ['gateway', store.node],
-      caption: store.lookup,
-    },
-    {
-      active: [store.node, 'gateway'],
-      caption: store.back,
-    },
-    {
-      active: ['gateway', 'resolver'],
-      caption: 'The gateway signs the response so nothing can be swapped in transit.',
-    },
-    {
-      active: ['resolver', 'wallet'],
+      active: ['wallet', 'gateway'],
       caption:
-        'The resolver verifies that signature on Ethereum, and the wallet gets its records.',
+        "Contracts can't make HTTP calls, so the wallet's ENS library sends the lookup to the Namespace gateway itself.",
+    },
+    {
+      active: ['gateway', 'endpoint'],
+      caption: 'The gateway finds the endpoint connected to brand.eth and requests happy from it.',
+    },
+    {
+      active: ['endpoint', 'gateway'],
+      caption: "Your endpoint returns happy's profile as JSON, or 404 if there is no such user.",
+    },
+    {
+      active: ['gateway', 'wallet'],
+      caption:
+        'The gateway validates the profile, encodes the address and signs it. The signature expires within 60 seconds.',
+    },
+    {
+      active: ['wallet', 'resolver', 'universal'],
+      caption:
+        'The wallet passes the signed answer back. HybridResolverV2 checks the signer and expiry, then returns the address.',
     },
   ]
 
   const step = BEATS[beat]
-  /* Beat 2 spends RECOIL_MS bouncing off the resolver before the real request
-     leaves, so everything timed off the packet shifts by the same lead. */
-  const lead = beat === 1 ? RECOIL_MS : 0
+  const recoil = EDGES.some((e) => e.beat === beat && e.kind === 'recoil')
+  /* When the packet reaches the receiving node, and when its animation ends.
+     The chip and the arrival ring key off the first, the beat clock off the
+     second. */
+  const arriveMs = recoil ? RECOIL_MS * RECOIL_ARRIVE : TRAVEL_MS
+  const packetMs = recoil ? RECOIL_MS : TRAVEL_MS + LAND_MS
   /* Dwell scales with how much there is to read, clamped so a one-line caption
      still holds long enough to land and a long one never stalls the loop. */
   const dwellMs = Math.min(1600, Math.max(700, step.caption.length * 22))
-  const beatMs = lead + TRAVEL_MS + LAND_MS + dwellMs
+  const beatMs = packetMs + dwellMs
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -314,18 +287,7 @@ export const FlowExplainer = () => {
     setBeat((b) => (b + delta + BEATS.length) % BEATS.length)
   }
 
-  /* A toggle changes what is being asked for, so the run restarts. Flipping
-     store at beat 4 otherwise left a payload on screen for a request that was
-     never made. */
-  const retarget = (fn) => (value) => {
-    fn(value)
-    setManual(true)
-    setSettling(false)
-    setBeat(0)
-  }
-
   const isOn = (id) => step.active.includes(id)
-  /* Source then target, in every beat — the ring lands on the receiver. */
   const arriving = step.active[1]
 
   return (
@@ -336,48 +298,9 @@ export const FlowExplainer = () => {
       onMouseLeave={() => setPaused(false)}
       ref={setRootEl}
     >
-      <div className="fx-controls">
-        <div aria-label="Parent name" className="fx-toggle" role="group">
-          <span className="fx-toggle-label">Parent name</span>
-          <div className="fx-toggle-row">
-            {ROUTES.map((r) => (
-              <button
-                aria-pressed={r.id === routeId}
-                className="fx-btn"
-                data-on={r.id === routeId}
-                key={r.id}
-                onClick={() => retarget(setRouteId)(r.id)}
-                type="button"
-              >
-                {r.label}
-              </button>
-            ))}
-          </div>
-          <span className="fx-toggle-note">{route.note}</span>
-        </div>
-        <div aria-label="Where the records live" className="fx-toggle" data-align="end" role="group">
-          <span className="fx-toggle-label">Records</span>
-          <div className="fx-toggle-row">
-            {STORES.map((s) => (
-              <button
-                aria-pressed={s.id === storeId}
-                className="fx-btn"
-                data-on={s.id === storeId}
-                key={s.id}
-                onClick={() => retarget(setStoreId)(s.id)}
-                type="button"
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-          <span className="fx-toggle-note">{store.note}</span>
-        </div>
-      </div>
-
       <div className="fx-scroll">
         <svg
-          aria-label={`A wallet resolves ${NAME}. The ENS resolver reverts with a gateway URL, the gateway reads the record from ${storeId === 'onchain' ? 'a registry contract on chain' : 'your own API'}, signs the response, and the resolver returns the record to the wallet.`}
+          aria-label={`A wallet resolves ${NAME}. The ENS Universal Resolver calls brand.eth's resolver, HybridResolverV2, which reverts with OffchainLookup. The wallet then asks the Namespace gateway. The gateway requests happy from the brand's endpoint, signs the answer and returns it. HybridResolverV2 checks the signature and its expiry before the wallet shows the address.`}
           className="fx-svg"
           role="img"
           viewBox="0 0 964 316"
@@ -395,14 +318,14 @@ export const FlowExplainer = () => {
           </defs>
 
           {/* Every group label sits 8px above its own box, and every box keeps
-              26px of air around what it holds. */}
+              at least 8px of air around the nodes it holds. */}
           <g className="fx-group">
-            <rect height="108" rx="10" width="148" x="8" y="104" />
-            <text x="8" y="96">Client interface</text>
-            <rect height="108" rx="10" width="188" x="236" y="104" />
-            <text x="236" y="96">Naming layer</text>
-            <rect height="284" rx="14" width="456" x="500" y="16" />
-            <text x="500" y="8">Resolution infrastructure</text>
+            <rect height="108" rx="10" width="128" x="8" y="104" />
+            <text x="8" y="96">Client</text>
+            <rect height="108" rx="10" width="392" x="172" y="104" />
+            <text x="172" y="96">Ethereum</text>
+            <rect height="108" rx="10" width="348" x="612" y="104" />
+            <text x="612" y="96">Offchain</text>
           </g>
 
           {EDGES.map((e) => {
@@ -441,7 +364,7 @@ export const FlowExplainer = () => {
                 key={`${beat}-c-${e.id}`}
                 /* Lands with the packet rather than ahead of it: the payload
                    label used to appear before the request had left. */
-                style={{ animationDelay: `${lead + TRAVEL_MS * 0.55}ms` }}
+                style={{ animationDelay: `${arriveMs * 0.55}ms` }}
               >
                 <rect
                   height={CHIP_H}
@@ -455,31 +378,22 @@ export const FlowExplainer = () => {
             )
           })}
 
-          {/* The resolver's refusal, in the resolver's own hue: out a quarter of
-              the way and straight back, before the real request runs. */}
-          {EDGES.filter((e) => e.beat === beat && beat === 1).map((e) => (
-            <circle
-              className="fx-packet"
-              data-kind="recoil"
-              key={`${beat}-r-${e.id}`}
-              r="4.5"
-              style={{ offsetPath: `path("${e.d}")` }}
-            />
-          ))}
-
+          {/* A recoil edge carries the resolver's refusal instead of a request
+              that travels on: out to the resolver and straight back, in the
+              resolver's own hue. */}
           {EDGES.filter((e) => e.beat === beat).map((e) => (
             <circle
               className="fx-packet"
+              data-kind={e.kind}
               key={`${beat}-${e.id}`}
               r="4.5"
-              style={{ offsetPath: `path("${e.d}")`, animationDelay: `${lead}ms` }}
+              style={{ offsetPath: `path("${e.d}")` }}
             />
           ))}
 
           {NODES.map((n) => (
             <g
               className="fx-node"
-              data-muted={n.id === 'chain' || n.id === 'api' ? n.id !== store.node : undefined}
               data-on={isOn(n.id)}
               data-tone={n.tone}
               key={n.id}
@@ -510,7 +424,7 @@ export const FlowExplainer = () => {
               height={n.h}
               key={`${beat}-l-${n.id}`}
               rx="12"
-              style={{ animationDelay: `${lead + TRAVEL_MS}ms` }}
+              style={{ animationDelay: `${arriveMs}ms` }}
               width={n.w}
               x={n.x}
               y={n.y}
@@ -520,7 +434,7 @@ export const FlowExplainer = () => {
       </div>
 
       <div className="fx-footer">
-        <p className="fx-caption" data-manual={manual} key={`${routeId}-${storeId}-${beat}`}>
+        <p className="fx-caption" data-manual={manual} key={beat}>
           <span className="fx-step">{beat + 1}</span>
           {step.caption}
         </p>

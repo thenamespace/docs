@@ -262,68 +262,6 @@ html[data-theme="dark"] .fx {
   --fx-api: #bb8ef7;
 }
 
-/* Toggles: the parent name on the left, where the records live on the right —
-   the two ends of the diagram they each control. Neither changes the path,
-   which is the point the card is making. */
-.fx-controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 16px 24px;
-  margin-bottom: 18px;
-}
-.fx-toggle {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 7px;
-}
-.fx-toggle[data-align="end"] { align-items: flex-end; text-align: right; }
-.fx-toggle-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--fx-muted);
-}
-.fx-toggle-row {
-  display: flex;
-  padding: 3px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-}
-.fx-btn {
-  padding: 5px 13px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--fx-dim);
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.4;
-  cursor: pointer;
-  transition: color 200ms var(--fx-ease-out), background 200ms var(--fx-ease-out),
-              scale 150ms var(--fx-ease-out);
-}
-/* The toggles are the main thing to touch here and had no press feedback at
-   all. `scale` rather than `transform` so it never fights a transform the
-   button picks up elsewhere; 0.96 because anything under 0.95 reads theatrical. */
-.fx-btn:active { scale: 0.96; }
-.fx-btn[data-on="true"] {
-  background: color-mix(in srgb, var(--fx-accent) 18%, transparent);
-  color: var(--fx-accent);
-}
-.fx-btn:focus-visible { outline: 2px solid var(--fx-accent); outline-offset: 3px; }
-@media (hover: hover) and (pointer: fine) {
-  .fx-btn[data-on="false"]:hover { color: var(--fx-text); }
-}
-.fx-toggle-note {
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--fx-dim);
-}
-
 .fx-scroll { overflow-x: auto; overscroll-behavior-x: contain; }
 
 /* The widest docs content column leaves only ~679px inside this box, so a
@@ -367,9 +305,6 @@ html[data-theme="dark"] .fx {
   transform: scale(1.03);
   filter: drop-shadow(0 4px 16px color-mix(in srgb, var(--tone) 26%, transparent));
 }
-/* The store this lookup does not use. Present, so the either/or is visible;
-   dimmed, so it never reads as a second request. */
-.fx-node[data-muted="true"] { opacity: 0.3; }
 .fx-node[data-on="true"] rect {
   stroke: var(--tone);
   fill: color-mix(in srgb, var(--tone) 15%, var(--fx-surface));
@@ -469,22 +404,24 @@ html[data-theme="dark"] .fx {
   100%    { offset-distance: 100%; opacity: 0; scale: 0.2; }
 }
 
-/* Beat 2, and only beat 2. The resolver does not answer — it reverts with a
-   gateway URL — so the packet leaves, stalls, and comes back in the resolver's
-   own hue before the real request runs. It is the one beat whose path is a
-   refusal, and drawing it like the other five was why readers bounced off it. */
+/* Beat 2, and only beat 2. HybridResolverV2 does not answer: it reverts with
+   OffchainLookup. So the packet reaches the resolver, holds, and comes back in
+   the resolver's own hue instead of travelling on. It is the one beat whose
+   path is a refusal, and drawing it like the others was why readers bounced
+   off it. 900ms = RECOIL_MS, and the 45% stop is RECOIL_ARRIVE, both in
+   flow-explainer.jsx. */
 .fx-packet[data-kind="recoil"] {
   fill: var(--fx-eth);
   filter: drop-shadow(0 0 6px var(--fx-eth));
-  animation: fx-recoil 560ms var(--fx-ease-io) both;
+  animation: fx-recoil 900ms var(--fx-ease-io) both;
 }
 @keyframes fx-recoil {
-  0%   { offset-distance: 0%;  opacity: 0; }
-  12%  { opacity: 1; }
-  46%  { offset-distance: 26%; opacity: 1; }
-  54%  { offset-distance: 26%; opacity: 1; }
-  92%  { offset-distance: 0%;  opacity: 1; }
-  100% { offset-distance: 0%;  opacity: 0; }
+  0%   { offset-distance: 0%;   opacity: 0; }
+  10%  { opacity: 1; }
+  45%  { offset-distance: 100%; opacity: 1; }
+  55%  { offset-distance: 100%; opacity: 1; }
+  92%  { offset-distance: 0%;   opacity: 1; }
+  100% { offset-distance: 0%;   opacity: 0; }
 }
 
 /* Arrival ring on the receiving node. A sibling one-shot rather than an
@@ -611,11 +548,10 @@ html[data-theme="dark"] .fx {
 @media (prefers-reduced-motion: reduce) {
   .fx-packet, .fx-land { display: none; }
   .fx-chip, .fx-caption, .fx-node, .fx-node rect, .fx-node-label,
-  .fx-edge, .fx-edge-num, .fx-btn, .fx-navbtn, .fx-pause {
+  .fx-edge, .fx-edge-num, .fx-navbtn, .fx-pause {
     transition: none;
     animation: none;
   }
   .fx-node[data-on="true"] { transform: none; }
-  .fx-btn:active { scale: none; }
   .fx-navbtn:active { transform: none; }
 }
