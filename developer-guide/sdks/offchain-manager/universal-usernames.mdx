@@ -18,7 +18,7 @@ They don't use API keys. Only the wallet that owns the parent name can call them
 npm install @thenamespace/offchain-manager@1.2.0
 ```
 
-Pass the owner's wallet as `provider`. It accepts the same wallets as the [Avatar SDK](/developer-guide/sdks/avatar/installation): a viem `WalletClient`, an ethers `Signer`, or a `WalletProvider`.
+Pass the owner's wallet as `provider`. It accepts the same wallets as the [Avatar SDK](/developer-guide/sdks/avatar/installation): a viem `WalletClient`, an ethers `Signer`, or a `WalletProvider`. The sign-in messages use the API host of the selected network as their domain.
 
 ```ts
 import { createOffchainClient } from '@thenamespace/offchain-manager';
@@ -48,7 +48,8 @@ if (!report.ok) {
   throw new Error('Fix the endpoint before saving it');
 }
 
-// 2. Save. Use expectedRevision 0 for a parent with no connection yet. One signature.
+// 2. Save. One signature. getUsernameConnection returns null only when the parent
+//    never had a connection; after a disconnect it returns the old one, whose revision you send.
 const current = await client.getUsernameConnection(parentName);
 const saved = await client.saveUsernameConnection(parentName, {
   ...endpoint,

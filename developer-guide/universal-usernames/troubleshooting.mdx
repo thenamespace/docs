@@ -151,7 +151,7 @@ The owner API returns `{ "code": "…", "message": "…" }` when a request fails
 | `INVALID_SESSION` | 401 | Sign in again with the wallet that owns the parent name. API keys don't work here. |
 | `INVALID_OPERATION_SIGNATURE` | 401 | Sign a new message for this change with a fresh nonce. Check the action, parent, expected revision, chain, and expiry. |
 | `NOT_PARENT_OWNER` | 403 | Sign with the current owner of the parent: the NameWrapper owner for wrapped names, or the ENS registry owner (manager) for unwrapped ones. Approved operators can't connect a name. |
-| `CONNECTION_NOT_FOUND` | 404 | The parent has no connection yet. Save one first. |
+| `CONNECTION_NOT_FOUND` | 404 | The parent has never had a connection. Save one with `expectedRevision: 0`. |
 | `REVISION_CONFLICT` | 409 | Someone changed the connection since you read it. Reload it and send the new `revision` as `expectedRevision`. |
 | `INVALID_STATE` | 409 | The change isn't possible in the current status, for example resuming a connection that isn't paused, or activating after a credential rotation, which already promoted the new credential. Reload the connection and check `status`. |
 | `STORED_SUBNAMES_NOT_ACKNOWLEDGED` | 409 | The parent has stored offchain subnames. They stop resolving while it's connected. Save again with `acknowledgeStoredSubnames: true` if that's what you want. |

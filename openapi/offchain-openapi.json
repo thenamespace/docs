@@ -448,7 +448,7 @@
         }
       },
       "put": {
-        "description": "Saves a new revision of the endpoint settings and runs validation against `sampleUsername`. The connection becomes `validated` only when the stored report has no issues; otherwise it stays `draft`. On an active connection the new revision is a candidate: the active revision keeps serving until you activate the candidate, and if activation fails the candidate is `rejected` and the active revision stays. Requires an operation signature for action `save`. Use `expectedRevision: 0` when the parent has no connection yet.",
+        "description": "Saves a new revision of the endpoint settings and runs validation against `sampleUsername`. The connection becomes `validated` only when the stored report has no issues; otherwise it stays `draft`. On an active connection the new revision is a candidate: the active revision keeps serving until you activate the candidate, and if activation fails the candidate is `rejected` and the active revision stays. Requires an operation signature for action `save`. Use `expectedRevision: 0` when the parent has never had a connection. After a disconnect, send the `revision` of the disconnected connection; the next save starts a new draft.",
         "operationId": "UniversalUsernamesController_saveConnection",
         "parameters": [
           {
@@ -2754,13 +2754,13 @@
         "type": "apiKey",
         "in": "header",
         "name": "x-auth-token",
-        "description": "Wallet session for reads: `siwe:<base64(message)>.<base64(signature)>`, the format the Namespace App uses. The SIWE message must be unexpired and signed by the current exact owner of the parent. API keys are rejected."
+        "description": "Wallet session for reads: `siwe:<base64(UTF-8 message)>.<base64(UTF-8 signature)>`, the format the Namespace App uses. The SIWE message must be unexpired and signed by the current exact owner of the parent. API keys are rejected."
       },
       "uun-operation-signature": {
         "type": "apiKey",
         "in": "header",
         "name": "x-auth-token",
-        "description": "One signature per change, in the same `siwe:<base64(message)>.<base64(signature)>` format. The EIP-4361 message is signed by the current exact owner and has: statement `Authorize <action> for Universal Usernames on <parentName>`; the deployment chain ID (1 or 11155111); a nonce from `GET /api/v1/auth/nonce`; an `expirationTime` at most 600 seconds after `issuedAt`; and exactly one resource, `urn:namespace:uun:<parentNode>:<action>:<expectedRevision>`. Actions: `save`, `activate`, `rotate-credential`, `pause`, `resume`, `disconnect`."
+        "description": "One signature per change, in the same `siwe:<base64(UTF-8 message)>.<base64(UTF-8 signature)>` format. The EIP-4361 message is signed by the current exact owner and has: a `domain` that is the API host or a Namespace App domain; statement `Authorize <action> for Universal Usernames on <parentName>`; the deployment chain ID (1 or 11155111); a nonce from `GET /api/v1/auth/nonce`; an `expirationTime` at most 600 seconds after `issuedAt`; and exactly one resource, `urn:namespace:uun:<parentNode>:<action>:<expectedRevision>`. Actions: `save`, `activate`, `rotate-credential`, `pause`, `resume`, `disconnect`."
       }
     },
     "schemas": {
@@ -3620,7 +3620,7 @@
           "expectedRevision": {
             "type": "integer",
             "minimum": 0,
-            "description": "The current `revision`, or `0` when the parent has no connection yet."
+            "description": "The current `revision`, including after a disconnect, or `0` when the parent has never had a connection."
           }
         },
         "required": [

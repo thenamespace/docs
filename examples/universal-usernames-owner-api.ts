@@ -18,8 +18,13 @@ const owner = privateKeyToAccount(ownerKey as `0x${string}`);
 
 type Action = 'save' | 'activate' | 'rotate-credential' | 'pause' | 'resume' | 'disconnect';
 
+// Base64 of the UTF-8 text, so Unicode parent names encode correctly.
+function base64(text: string): string {
+  return Buffer.from(text, 'utf8').toString('base64');
+}
+
 function toAuthToken(message: string, signature: string): string {
-  return `siwe:${btoa(message)}.${btoa(signature)}`;
+  return `siwe:${base64(message)}.${base64(signature)}`;
 }
 
 async function signOperation(parentName: string, action: Action, expectedRevision: number) {

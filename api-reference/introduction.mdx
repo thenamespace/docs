@@ -58,7 +58,7 @@ These routes connect a `.eth` name to a [username endpoint](/developer-guide/uni
 
 ### Authenticate as the owner
 
-Both kinds of credential go in the `x-auth-token` header as `siwe:<base64(message)>.<base64(signature)>`, where the message is an [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361) sign-in message and the signature is the wallet's hex signature string.
+Both kinds of credential go in the `x-auth-token` header as `siwe:<base64(message)>.<base64(signature)>`, where the message is an [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361) sign-in message, the signature is the wallet's hex signature string, and both are base64-encoded as UTF-8 text. The message `domain` is the API host, such as `offchain-manager.namespace.ninja`, or a Namespace App domain.
 
 - Reads, such as getting the connection or validating an endpoint, take an unexpired sign-in session signed by the owner.
 - Each change takes its own operation signature: a fresh message with a nonce from [`GET /api/v1/auth/nonce`](/api-reference/offchain-manager/universal-usernames/get-nonce), the statement `Authorize <action> for Universal Usernames on <parentName>`, an expiry at most 10 minutes after it was issued, and exactly one resource, `urn:namespace:uun:<parentNode>:<action>:<expectedRevision>`.
@@ -79,7 +79,8 @@ const message = createSiweMessage({
   resources: [`urn:namespace:uun:${namehash(parentName)}:pause:${revision}`],
 });
 const signature = await owner.signMessage({ message });
-const token = `siwe:${btoa(message)}.${btoa(signature)}`;
+const base64 = (text: string) => Buffer.from(text, 'utf8').toString('base64');
+const token = `siwe:${base64(message)}.${base64(signature)}`;
 ```
 
 The [Offchain Manager SDK](/developer-guide/sdks/offchain-manager/universal-usernames) builds and signs these messages for you.
