@@ -1,6 +1,6 @@
 ---
 title: "Learn about Subnames"
-description: "Learn more about Subnames and how to choose between offchain and L1."
+description: "Learn more about subnames and how to choose offchain or onchain."
 sidebarTitle: "Learn about Subnames"
 icon: "question"
 ---
@@ -41,29 +41,25 @@ See [Use cases](/overview/use-cases) for examples across wallets, payments, AI a
 - **Stronger security:** Showing a name and avatar helps users verify a recipient, which can reduce address-poisoning and lookalike-address scams.
 - **Brand distribution:** Users carry your brand into every app they touch, and every transaction becomes a brand impression.
 
-## L1 subnames
+## Offchain or onchain
 
-L1 subnames are created through ENS contracts on Ethereum. On ENSv1 names, their guarantees depend on the parent name's fuse configuration and the minting contract used.
+Namespace issues subnames in two ways. Both resolve in ENS apps, and both work under the same parent name.
 
+| | Offchain | Onchain (Ethereum L1) |
+| --- | --- | --- |
+| Where it lives | Namespace stores the subname and its records | The ENSv2 registry on Ethereum |
+| Who controls it | The parent-name owner, through the Namespace App or API | The wallet that minted it |
+| Cost to issue | No transaction or gas | Ethereum gas, plus the mint price you set |
+| Parent name | ENSv1 or ENSv2 | ENSv2 |
+| Best for | Gasless, high-volume onboarding and frequently changing records | Lower-volume flows where users should own their subname |
 
-When a name is activated through the [Namespace App](/user-guide/app#activate-your-ens-name), the activation flow configures the parent and its minting rules before users register subnames. Review the confirmation transaction carefully because fuse changes may be irreversible.
-
-<Note>Fuses are permission bits that restrict what can be done with a name. Once burned (enabled), a fuse cannot be reverted until the name expires.</Note>
-L1 issuance usually has the highest transaction cost, so it best fits lower-volume flows where Ethereum-native ownership is a requirement.
-
-<Card title="Enable L1 subname minting—no code" icon="desktop" href="/user-guide/app#activate-your-ens-name">
-  Activate your ENS name, configure L1 minting rules, and let users register through Namespace.
-</Card>
-
-## L2 subnames
-
-New L2 listings aren't available in the Namespace App. L2 subnames already minted on Base and Optimism keep resolving, and their owners don't need to do anything.
+Start with offchain subnames unless users need to hold the subname themselves.
 
 ## Offchain subnames
 
-Offchain subnames are stored by an operator and resolved through [CCIP Read](https://eips.ethereum.org/EIPS/eip-3668). Creating or updating one does not require a blockchain transaction, which makes this model useful for high-volume onboarding and frequently changing records.
+Namespace stores offchain subnames and their records, and ENS clients resolve them through [CCIP Read](https://eips.ethereum.org/EIPS/eip-3668). Creating or updating one needs no blockchain transaction.
 
-Offchain subnames are not minted as NFTs. The parent-name operator controls issuance and updates through its API-key and application rules. Compatible ENS clients can still read their address, text, and content-hash records through the configured resolver.
+Offchain subnames aren't NFTs. The parent-name owner controls issuance and updates through the Namespace App or with an API key. Compatible ENS clients read their address, text, and content-hash records through the Namespace resolver.
 
 <CardGroup cols={2}>
   <Card title="Create offchain subnames—no code" icon="desktop" href="/user-guide/dev-portal#create-and-manage-subnames">
@@ -74,9 +70,18 @@ Offchain subnames are not minted as NFTs. The parent-name operator controls issu
   </Card>
 </CardGroup>
 
-## Choose a model
+## Onchain subnames on Ethereum
 
-- Choose **offchain** for gasless issuance, high volume, and application-managed identities.
-- Choose **L1** when Ethereum-native ownership outweighs transaction cost.
+Onchain subnames are minted in the ENSv2 registry on Ethereum (L1). The wallet that mints a subname owns it as an onchain asset and can transfer it.
+
+You set the rules when you activate your name: a one-time or yearly price in dollars, paid in USDC or DAI, plus optional pricing tiers, reservations, a mint window, a whitelist, or token gating. Minters pay your price plus Ethereum gas. Activation needs an ENSv2 name.
+
+<Card title="Enable onchain subname minting—no code" icon="desktop" href="/user-guide/app#activate-your-ens-name">
+  Activate your ENS name, set prices and rules, and let people mint subnames through Namespace.
+</Card>
+
+## L2 subnames
+
+New L2 subnames are coming soon. Subnames already minted on Base and Optimism keep resolving, and their owners don't need to do anything.
 
 See [Getting started](/getting-started) for the no-code and developer paths for each model.
