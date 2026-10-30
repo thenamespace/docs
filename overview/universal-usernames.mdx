@@ -17,68 +17,79 @@ Almost every product that ships usernames picks one of two approaches. Both leav
 
 ## A better way with ENS
 
-Every username you've already issued gets a matching ENS name. One rule, applied across your whole user base:
+Every username you've already issued gets a matching ENS name under a `.eth` name you own. One rule, applied across your whole user base:
 
 ```
-Your username:   happy.brand
-ENS name:        happy.brand.eth
-        or       happy.brand.id, using a domain you already own
+Your username:    happy
+Your .eth name:   brand.eth
+ENS name:         happy.brand.eth
 ```
 
 Your system stays the source of truth and no data moves. The username just gains a form that ENS-aware wallets already know how to read.
 
 <Note>
-This does not turn `.brand` into a new ENS top-level domain. Each user gets an ENS name for the identity they already have.
+This does not create a new ENS top-level domain. Each user gets an ENS name under your `.eth` name for the identity they already have.
 </Note>
 
-## ENS isn't limited to .eth or Ethereum
+## How it works
 
-Two (wrong) assumptions people usually make.
+You run a small HTTPS endpoint that returns a JSON profile for one username: display name, avatar, other text records, and addresses. You connect `brand.eth` to that endpoint in the Namespace App, then point `brand.eth` at Namespace's HybridResolverV2 resolver.
 
-**You don't need a `.eth` name.**
+From then on, a lookup for `happy.brand.eth` works like this:
 
-`happy.brand.eth` and `happy.brand.id` resolve identically. The first means registering `brand.eth`. The second means taking a domain you already own, turning on DNSSEC, and [importing it into ENS](https://docs.ens.domains/learn/dns/). Same result, so pick on branding.
+1. The wallet asks ENS. HybridResolverV2 has no record stored for `happy`, so it answers with a CCIP-Read lookup that sends the wallet to the Namespace gateway.
+2. The gateway calls your endpoint for `happy`, checks the response, and signs the record the wallet asked for.
+3. HybridResolverV2 checks the signature and its expiry on Ethereum before the wallet uses the answer.
 
-**ENS isn't only for Ethereum.**
+Nobody claims, mints, or registers anything per user, and nothing is written onchain per user. If a username exists in your system, it resolves. If you rename, suspend, or reassign it there, Namespace serves the change within 60 seconds. Wallets and apps can cache answers for longer.
 
-One name holds a separate address record for every chain, and they don't have to be EVM chains. Bitcoin, Solana, Base, Arbitrum, and Ethereum sit side by side on the same name, along with profile fields like display name and avatar. Your user has one name and it works everywhere they hold funds.
+One name can hold an address for every chain your users hold funds on, including non-EVM chains such as Bitcoin and Solana, next to profile fields like display name and avatar. Your endpoint returns all of them in one response.
 
 ## Follow one lookup
 
-The diagram is a single name being looked up, start to finish. Its two toggles are the decisions above: the parent name, and where records are read from. Neither changes the path.
-
-It loops on its own. Hover to pause, or use the dots to step through it.
+The diagram is one lookup for `happy.brand.eth`, start to finish. It starts when it scrolls into view and loops on its own. Hover to pause, or use the arrows to step through it.
 
 <FlowExplainer />
 
-Nothing there asked you to move your users, usernames, or records. The wallet asked a question, your system answered, the wallet showed the result.
+Nothing there asked you to move your users, usernames, or records. The wallet asked a question, your system answered, and Ethereum checked the signature.
 
 ## Your records stay where they are
 
-Records can live in the database you run today, on an L2, or on another chain. No second registry on Ethereum, nothing to keep in sync. Whatever answers the question inside your product answers it here too.
+Your endpoint reads from the database or service you run today. Namespace doesn't copy your user list or store profiles. The gateway keeps each response for at most 60 seconds, so a burst of lookups for one user costs your endpoint one request.
+
+## Who controls what
+
+Your system decides which usernames exist, what their records say, and who each name points to. Users don't get independent ownership of their name, so they can't transfer it or edit it outside your product.
+
+Only the wallet that owns `brand.eth` can connect it, replace the endpoint, pause it, or disconnect it. Each change needs a signature from that wallet but no transaction.
+
+Everything that resolves is public. Anyone can look up `happy.brand.eth` and read its records, even when your endpoint requires a bearer token from Namespace.
 
 ## Decide before you build
 
-1. **The naming rule.** A parent name and a predictable pattern, such as `happy.brand` becoming `happy.brand.eth`. Nobody should have to learn a second identity.
-2. **Where the answer comes from.** Your database, a contract in your existing registry, or a proof Ethereum can verify.
-3. **Who runs it.** Someone holds the parent name, keeps the lookup path online, and fixes it when it breaks.
+1. **The parent name.** A `.eth` name you own directly below `.eth`, such as `brand.eth`. Each username becomes one label under it.
+2. **The endpoint.** The service that answers `GET /{username}` with a profile, and whether it requires a bearer token.
+3. **Who runs it.** Someone holds the parent name, keeps the endpoint online, and fixes it when it breaks.
 
 ## What this does not do
 
-- Your existing TLD does not become part of ENS. Users gain an ENS name; `.brand` stays yours.
+- The parent has to be a `.eth` name directly below `.eth`. DNS names imported into ENS and deeper names such as `team.brand.eth` can't be connected.
+- Each username is a single label. `happy.brand.eth` works; `team.happy.brand.eth` doesn't.
+- Records come from your endpoint over HTTPS. They aren't read from a contract, an L2, or another chain.
+- Reverse resolution isn't supported, so an address can't show `happy.brand.eth` as its primary name.
 - Support varies. Most major wallets resolve these names, but not every app does, so test the ones your users actually use.
-- Anything served this way is public. Addresses, avatars, and profile fields are readable by anyone who asks.
+
+<Note>
+Universal usernames is rolling out to selected brands first. [Talk to us](/user-guide/custom-solutions) to connect your parent name.
+</Note>
 
 ## Next steps
 
-<CardGroup cols={3}>
+<CardGroup cols={2}>
   <Card title="Learn about subnames" icon="tag" href="/overview/subnames">
-    Compare offchain and onchain names before you pick how to issue them.
-  </Card>
-  <Card title="Issue gasless subnames" icon="cloud" href="/developer-guide/guide/create-offchain-subnames">
-    Create names and manage their records with the Offchain Manager SDK.
+    See how universal usernames compare with offchain and onchain subnames.
   </Card>
   <Card title="Talk to us" icon="compass-drafting" href="/user-guide/custom-solutions">
-    Bring your existing naming service and we will map it onto ENS with you.
+    Plan your parent name, endpoint, and rollout with the Namespace team.
   </Card>
 </CardGroup>
