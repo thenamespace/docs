@@ -5,120 +5,193 @@ sidebarTitle: "Troubleshooting"
 icon: "screwdriver-wrench"
 ---
 
-Use this page when a Namespace integration fails during setup, subname creation, minting, or resolution. Start with the error category below, then confirm your environment and request parameters.
+Find the symptom you're seeing below. Each entry gives the likely cause, a short fix, and the page with the full details.
 
-## Before you troubleshoot
+Before you dig in, rule out the usual suspects:
 
-Check these basics first:
+- The client's network matches the parent name. Use `mode: 'sepolia'` or `isTestnet` for testnet names, and mainnet settings for mainnet names.
+- The package version in your project matches the version these docs use.
+- API keys and private keys are loaded from server-side environment variables.
 
-- Use a supported Node.js version. The documentation examples and repository use Node.js 22.
-- Confirm the package version in your project matches the version documented in `package.json`.
-- Use Sepolia or another supported testnet while developing.
-- Keep API keys and wallet private keys in server-side environment variables.
-- Confirm the parent ENS name is configured for the operation you are attempting.
+## Offchain subnames
 
-## Authentication errors
+### An offchain subname doesn't resolve
 
-### `401` or `403` from the Offchain API
+**Likely cause:** the parent name isn't using the Namespace resolver, or the app reading the name doesn't support CCIP Read.
 
-The API key is missing, expired, or does not authorize the parent name.
+1. In the [Namespace App](https://app.namespace.ninja/offchain), open **Offchain**, select the parent name, and open **Resolution**. Click **Update resolver**, then **Configure**, until the status reads **Configured**.
+2. Look the name up with [Resolvio](/user-guide/resolvio). If it resolves there, the problem is in the consuming app.
+3. Confirm the consuming wallet or library supports CCIP Read. Offchain subnames don't support reverse resolution, so looking up a name from an address won't return them.
 
-1. Generate or copy the key in the [Namespace App](/user-guide/dev-portal#create-an-api-key).
-2. Confirm your server loaded `NAMESPACE_API_KEY`.
-3. Use an address-based key as `defaultApiKey`, or map a domain-based key to the exact parent name.
-4. Do not expose the key in browser code or commit it to source control.
+See [Configure the resolver](/user-guide/dev-portal#configure-the-resolver).
+
+### Subnames stopped resolving after an ENSv2 upgrade
+
+**Likely cause:** upgrading a name to ENSv2 resets its resolver.
+
+1. Open the name in the Namespace App, go to **Offchain** > **Resolution**, and set the Namespace resolver again with **Update resolver** and **Configure**.
+2. Check that the status reads **Configured**.
+
+Your existing subnames and SDK code don't need to change. See [Namespace ENSv2 migration](/overview/ensv2#upgrade-to-ensv2-in-the-namespace-app).
+
+### `401` from the Offchain API
+
+**Likely cause:** the API key is missing, expired, revoked, or scoped to a different parent name. The API returns `401` with "Missing or invalid API key".
+
+1. Check that your server loads the key and sends it. The REST API expects it in the `x-auth-token` header. The SDK takes it as `defaultApiKey` or in `domainApiKeys`.
+2. Check the key's scope. A domain-based key only works for the parent name it was created for. An address-based key works for every name the creating wallet owns.
+3. If the key has expired or you've lost it, [create a new key](/user-guide/dev-portal#create-an-api-key).
+
+See [API key setup](/developer-guide/sdks/offchain-manager/generate-api-key) and the [API overview](/api-reference/introduction).
+
+### Subname already exists or is unavailable
+
+**Likely cause:** the label is already registered under the parent. Creating it again returns `409` "Subname already exists" from the API.
+
+1. Call `isSubnameAvailable` before `createSubname`.
+2. To change an existing subname, call `updateSubname` instead of creating it again.
 
 ```typescript
-import { createOffchainClient } from '@thenamespace/offchain-manager';
+const { isAvailable } = await client.isSubnameAvailable('alice.example.eth');
 
-const apiKey = process.env.NAMESPACE_API_KEY;
-if (!apiKey) throw new Error('Missing NAMESPACE_API_KEY');
-
-const client = createOffchainClient({
-  mode: 'sepolia',
-  defaultApiKey: apiKey,
-});
-```
-
-## Subname creation errors
-
-### The subname already exists
-
-Call `isSubnameAvailable` and await the result before creating a subname:
-
-```typescript
-const { isAvailable } = await client.isSubnameAvailable(
-  'alice.example.eth',
-);
-
-if (!isAvailable) {
-  throw new Error('alice.example.eth is already registered');
+if (isAvailable) {
+  await client.createSubname({ parentName: 'example.eth', label: 'alice' });
+} else {
+  await client.updateSubname('alice.example.eth', {
+    texts: [{ key: 'name', value: 'Alice' }],
+  });
 }
 ```
 
-If your product intentionally updates existing subnames, call `updateSubname` explicitly instead of relying on create behavior.
+See [Check subname availability](/developer-guide/sdks/offchain-manager/is-subname-available).
 
-### Records fail validation
+### Can't create more subnames under a parent
 
-- Use a complete, valid address for the selected `ChainName`.
-- Use the label only in `label`; do not pass the full subname.
-- Pass the parent separately in `parentName`.
-- Follow [ENSIP-15](https://docs.ens.domains/ensip/15/) normalization rules for labels.
+**Likely cause:** you've reached the limit of 2,000 subnames per parent name.
 
-## Minting errors
+1. Ask for a higher limit in the [Namespace Builders group](https://t.me/+5FAwyiKOTeswNTIy).
 
-These errors come from the deprecated Mint Manager SDK, which supports onchain listings created on ENSv1 names.
+See [Offchain subnames](/user-guide/dev-portal).
 
-### `canMint` is false
+## Records
 
-Inspect `validationErrors` from `getMintDetails`. Common causes include an unavailable label, a missing whitelist entry, a reserved name, or a wallet that does not meet the listing rules.
+### Records don't show in wallets or apps
 
-```typescript
-const details = await mintClient.getMintDetails({
-  parentName: 'example.eth',
-  label: 'alice',
-  minterAddress: account.address,
-});
+**Likely cause:** the record was saved under a different chain or key than the app reads, or the app shows cached data.
 
-if (!details.canMint) {
-  throw new Error(details.validationErrors.join(', '));
-}
-```
+1. Fetch the subname with `getSingleSubname` and check the stored records.
+2. Check address records use the right [`ChainName`](/developer-guide/sdks/offchain-manager/chainname). To set one EVM address on every supported EVM chain, use [`setDefaultEvmAddress`](/developer-guide/sdks/offchain-manager/set-default-evm-address).
+3. Check text record keys match what the app reads, such as `description`. Keys are case-sensitive.
 
-### The transaction simulation fails
+If you read through Resolvio, [clear the name's cache](/api-reference/resolvio/clear-ens-cache) before reading again.
 
-Confirm all of the following:
+### Creating a subname fails validation
 
-- The wallet client and public client use the same chain.
-- The parent name is activated and listed for that chain.
-- The wallet has enough native currency for the mint price and gas.
-- You pass the `value` returned by `getMintTransactionParameters` unchanged.
-- You generated the transaction parameters immediately before simulation so price and signature data are current.
+**Likely cause:** the label or address is malformed.
 
-## Resolution errors
+1. Pass only the label in `label` and the parent in `parentName`, not the full subname.
+2. Use a complete, valid address for each `ChainName`.
+3. Follow [ENSIP-15](https://docs.ens.domains/ensip/15/) normalization for labels.
 
-### An offchain subname does not resolve
+See [Create or update a subname](/developer-guide/sdks/offchain-manager/create-update-subname).
 
-1. Confirm the subname exists in the Namespace App.
-2. Confirm the parent name uses the Namespace Hybrid resolver.
-3. Check that the consuming wallet or app supports CCIP Read.
-4. Test the name through [Resolvio](/user-guide/resolvio) to separate resolver issues from client integration issues.
+## Onchain subnames (ENSv2)
 
-### An address or text record is missing
+### An onchain mint fails or the label can't be minted
 
-Fetch the subname directly and inspect its stored records. Make sure you used the correct chain and text-record key. Record keys are case-sensitive.
+**Likely cause:** one of the listing's rules blocks this label or wallet. Onchain subnames are minted on Ethereum (L1) under a name activated in the Namespace App.
 
-## Network and RPC errors
+Check the listing in [Configure pricing and rules](/user-guide/app#configure-pricing-and-rules):
 
-- Confirm the RPC endpoint supports the chain used by the wallet and public clients.
-- Check the provider dashboard for rate limiting or an invalid token.
-- Avoid mixing mainnet parent names with testnet configuration.
-- Retry transient `429` and `5xx` errors with bounded exponential backoff.
+1. **Price**: type the label into **Price check** to see what it costs. A [reservation](/user-guide/app#reservations) can block the label or give it a custom price.
+2. **Who can mint**: with a [whitelist](/user-guide/app#whitelist) in **Gate** mode, only listed wallets can mint. With [token gating](/user-guide/app#token-gated), the wallet must hold the minimum balance of the listed tokens.
+3. **When**: minting only works inside the [mint window](/user-guide/app#mint-window), if one is set.
+
+Labels that are already minted show as taken. Pick another label.
+
+### Mint is blocked with "Insufficient funds"
+
+**Likely cause:** the wallet doesn't hold enough of the payment token or ETH. Onchain subnames are paid in USDC or DAI, and network fees are paid in ETH. The ENS Components forms block the transaction with "Insufficient funds" when the wallet can't pay.
+
+1. Add USDC or DAI to cover the price, and pick that token in the mint form.
+2. Add ETH to cover network fees.
+
+See [Mint onchain subnames](/developer-guide/sdks/ens-components/mint-subnames).
+
+## ENS Components
+
+### Forms render unstyled
+
+**Likely cause:** the stylesheet isn't imported.
+
+1. Import it once at the root of your app: `import '@thenamespace/ens-components/styles.css';`
+
+See [Import the styles](/developer-guide/sdks/ens-components/installation#import-the-styles).
+
+### Forms throw provider or wallet errors
+
+**Likely cause:** the forms aren't wrapped in the wagmi and React Query providers, a chain is missing from the wagmi config, or the forms render on the server.
+
+1. Wrap your app in `WagmiProvider` and `QueryClientProvider`.
+2. Add every chain you use to the wagmi config: `mainnet`, plus `sepolia` if you use `isTestnet`. Minting under an ENSv1 listing can also need Base or Optimism.
+3. In Next.js and other SSR frameworks, render the forms and providers in client components (`'use client'`).
+
+Pass `onConnectWallet` to the forms so a disconnected user can connect. See [Install ENS Components](/developer-guide/sdks/ens-components/installation).
+
+### `SubnameMintForm` doesn't work for your parent name
+
+**Likely cause:** the parent has no ENSv2 activation, or it's an ENSv1 listing.
+
+1. [Activate the name](/user-guide/app#activate-your-ens-name) in the Namespace App.
+2. For a parent listed before ENSv2, pass `version={1}`.
+
+See [Mint under an old Namespace listing](/developer-guide/sdks/ens-components/mint-subnames#mint-under-an-old-namespace-listing).
+
+### `OffchainSubnameForm` shows success but no subname is created
+
+**Likely cause:** the form only reads from Namespace. It never writes the subname itself.
+
+1. Pass `onSubnameCreated` and `onSubnameUpdated` callbacks that send the subname to your server.
+2. On your server, write it with an Offchain Manager client that holds the API key.
+
+See [Create offchain subnames](/developer-guide/sdks/ens-components/offchain-subnames).
+
+## Rate limits
+
+### Requests fail intermittently or get rate limited
+
+**Likely cause:** you're using a shared public RPC endpoint. `http()` with no URL in wagmi uses the chain's public RPC, which is rate limited.
+
+1. Pass your own RPC URL for each chain in production.
+2. Retry transient failures, such as `5xx` responses, with bounded exponential backoff.
+
+See [Set up providers](/developer-guide/sdks/ens-components/installation#set-up-providers).
+
+## ENSv1 listings (deprecated)
+
+<Warning>
+  Mint Manager, Indexer Manager, and the Mint API are deprecated. They only work with onchain listings on ENSv1 names. For new names, use [ENSv2 onchain subnames](/user-guide/app) and [`SubnameMintForm`](/developer-guide/sdks/ens-components/mint-subnames).
+</Warning>
+
+### `checkName` returns `taken` or `blocked`
+
+`taken` means the label is registered, so offer a different one. `blocked` means the label is free but this wallet can't mint it. Read `reasons`, such as `MINTER_NOT_WHITELISTED`, `MINTER_NOT_TOKEN_OWNER`, or `LISTING_EXPIRED`. See [Check a name before you mint](/developer-guide/sdks/mint-manager/check-name).
+
+### Mint Manager throws `MintManagerError`
+
+Branch on `error.code`:
+
+- `RPC_ERROR`: a registry read failed, so the name's status is unknown. Retry, and pass your own endpoints in `customRpcUrls`.
+- `LISTING_NOT_FOUND`: no listing exists for the parent on this network. Check `isTestnet` and the spelling.
+- `PRICE_EXCEEDS_MAX`: the quote went over your `maxValue` and nothing was submitted. Re-quote, then raise the cap or show the new price.
+- `SIGNATURE_EXPIRED`: the mint authorization expired. Call `prepareMint` again and submit promptly.
+
+See [Error handling](/developer-guide/sdks/mint-manager/errors) for every code.
 
 ## Get more help
 
-When asking for support, include the SDK package and version, network, parent name, method name, and complete error message. Remove API keys, RPC tokens, wallet private keys, and other secrets.
+When you ask for support, include the package and version, network, parent name, method name, and the full error message. Remove API keys, RPC tokens, private keys, and other secrets first.
 
 <Card title="Namespace Builders on Telegram" icon="telegram" href="https://t.me/+OsziFgfuZz03NjEy">
-  Ask an integration question and include the non-sensitive diagnostic details listed above.
+  Ask an integration question and include the details listed above.
 </Card>
