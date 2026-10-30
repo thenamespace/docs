@@ -6,69 +6,43 @@ icon: "bolt"
 tag: "New"
 ---
 
-[ENSv2](https://ens.domains/blog/post/ensv2-live-on-mainnet) is live on Ethereum mainnet. New `.eth` names are registered on ENSv2. Names registered before it, called ENSv1 names, keep resolving, and upgrading them to ENSv2 is optional.
+## What is ENSv2?
 
-Namespace works with both. Use this page to check what works with your name and what to do if you upgrade it.
+[ENSv2](https://ens.domains/blog/post/ensv2-live-on-mainnet) is the new version of ENS, now live on Ethereum mainnet. New `.eth` names are registered on ENSv2. Names registered before it are ENSv1 names, and they keep resolving. See the [ENSv2 overview](https://docs.ens.domains/ensv2/overview) in the ENS docs.
 
-<Info>
-  Right now, only offchain subnames can migrate to ENSv2. Onchain listings on ENSv1 names stay on ENSv1.
-</Info>
+## Do I need to do anything for my existing offchain subnames?
 
-## What works with each version
+No. Offchain subnames work with ENSv1 and ENSv2 names. Namespace stores them and their records, and ENS clients resolve them through CCIP Read.
+
+## What happens if I upgrade my name to ENSv2?
+
+Upgrading resets the name's resolver. If the name has offchain subnames, [set the Namespace resolver again](/user-guide/dev-portal#configure-the-resolver) so they keep resolving. Your subnames, API keys, and SDK code don't change.
+
+## Do my onchain listings move to ENSv2?
+
+No. Listings on ENSv1 names stay on ENSv1, keep working, and can still be edited. See [ENSv1 listings](/user-guide/app#ensv1-deprecated) in the Namespace App guide.
+
+## I'm using Mint Manager, Indexer Manager, or the Mint API. What now?
+
+They're deprecated. They keep working for existing ENSv1 listings but don't support ENSv2 names. See [Mint Manager](/developer-guide/sdks/mint-manager), [Indexer Manager](/developer-guide/sdks/indexer-manager), and the [Mint API reference](/api-reference/mint-manager/estimate-mint-params).
+
+## Which products work with ENSv2?
 
 | Product | ENSv1 names | ENSv2 names |
 | --- | --- | --- |
-| [Offchain subnames](/user-guide/dev-portal) in the App, SDK, and API | Supported | Supported |
-| [Onchain subnames](/user-guide/app) in the Namespace App | Existing listings keep working | Supported on Ethereum (L1) |
-| [Resolvio](/user-guide/resolvio) | Supported | Supported |
-| [ENS Widget](/user-guide/ens-widget) and [Subpages](/user-guide/subpages) | Supported | Not supported |
-| [Mint Manager](/developer-guide/sdks/mint-manager), [Indexer Manager](/developer-guide/sdks/indexer-manager), and the Mint API | Deprecated, existing listings only | Not supported |
+| [Offchain subnames](/user-guide/dev-portal) in the App, SDK, and API | Yes | Yes |
+| [Onchain subnames](/user-guide/app) in the Namespace App | Existing listings only | Yes, on Ethereum (L1) |
+| [Resolvio](/user-guide/resolvio) | Yes | Yes |
+| [ENS Widget](/user-guide/ens-widget) and [Subpages](/user-guide/subpages) | Existing listings only | No |
+| Mint Manager, Indexer Manager, and the Mint API | Existing listings only | No |
 
-## You already use Namespace with an ENSv1 name
+## What about L2 subnames?
 
-You don't need to do anything. Offchain subnames, onchain listings, and subnames you have already minted keep working, including L2 subnames on Base and Optimism.
+New L2 subnames are coming soon. Subnames already minted on Base and Optimism keep resolving, and their owners don't need to do anything.
 
-### Upgrade to ENSv2 in the Namespace App
+## Where do I start with a new name?
 
-The whole migration happens in the [Namespace App](https://app.namespace.ninja). You don't need to visit the ENS app.
-
-Upgrading a name to ENSv2 resets its resolver. If the name has offchain subnames, set the Namespace resolver again right after the upgrade so they keep resolving. Your existing subnames and SDK code keep working without changes.
-
-<Steps>
-  <Step title="Open the name in the Namespace App">
-    Connect the wallet that owns the name and open it in the [Namespace App](https://app.namespace.ninja). The app prompts you to upgrade ENSv1 names.
-  </Step>
-
-  <Step title="Upgrade to ENSv2">
-    Follow the prompts in the Namespace App and confirm the transactions in your wallet.
-  </Step>
-
-  <Step title="Set the Namespace resolver again">
-    Still in the Namespace App, go to **Offchain**, select the name and open **Resolution**. Click **Update resolver**, then **Configure**, and check that the status reads **Configured**. See [Configure the resolver](/user-guide/dev-portal#configure-the-resolver) for screenshots of each step.
-  </Step>
-</Steps>
-
-### Onchain subnames stay on ENSv1
-
-Onchain subnames can't migrate to ENSv2 yet. A listing created on an ENSv1 name, and the subnames minted under it, stay on ENSv1.
-
-<Warning>
-  If your name has an active onchain listing, ask in the [Namespace Builders group](https://t.me/+5FAwyiKOTeswNTIy) before you upgrade it.
-</Warning>
-
-## You're starting with a new name
-
-Names you register now, including through [Namespace search](/user-guide/app/search-register), are ENSv2 names. You can issue offchain or onchain subnames under them.
-
-Offchain subnames are gasless and suit high-volume issuance. Manage them in the [Namespace App](/user-guide/dev-portal), or integrate them with the [SDK](/developer-guide/guide/create-offchain-subnames) or [API](/api-reference/introduction).
-
-Onchain subnames are minted on Ethereum (L1). To offer them, [activate your name](/user-guide/app#activate-your-ens-name) in the Namespace App.
-
-## Learn more about ENSv2
-
-- [ENSv2 overview](https://docs.ens.domains/ensv2/overview) in the ENS docs
-- [Migrating a name to ENSv2](https://docs.ens.domains/ensv2/migration)
-- [ENSv2 readiness for developers](https://docs.ens.domains/web/ensv2-readiness)
+Pick offchain subnames for gasless, high-volume issuance: use the [Namespace App](/user-guide/dev-portal), the [SDK](/developer-guide/guide/create-offchain-subnames), or the [API](/api-reference/introduction). Pick onchain subnames on Ethereum when users should own them: [activate your name](/user-guide/app#activate-your-ens-name) in the Namespace App.
 
 ## Continue where you left off
 
