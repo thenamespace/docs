@@ -64,7 +64,7 @@ Coin types aren't chain IDs. Base is `2147492101`, not `8453`, and Polygon is `2
 | Linea | `2147542792` |
 | Scroll | `2148018000` |
 
-Namespace converts addresses to bytes with [`@ensdomains/address-encoder`](https://github.com/ensdomains/address-encoder) 2.0.1, which covers about 150 coins. Any coin it has a coder for works, not only the ones above.
+Namespace converts addresses to bytes with [`@ensdomains/address-encoder`](https://github.com/ensdomains/address-encoder) 2.0.1, which covers about 150 coins. Any coin it has a coder for works, not only the ones above, and so does every EVM chain: its coin type is `2147483648 + chainId`.
 
 ### Address format
 
