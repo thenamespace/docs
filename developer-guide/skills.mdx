@@ -5,91 +5,101 @@ sidebarTitle: "Skills"
 icon: "scroll"
 ---
 
-Skills are installable context packages for AI coding tools. They give tools like Cursor, Claude Code, and GitHub Copilot the details they need about a specific Namespace SDK or UI library, including APIs, common patterns, and examples. Once a skill is installed, you do not need to keep re-explaining the same integration in every chat.
+Skills are instruction packages for AI coding agents. Each one gives your agent the APIs, patterns, and examples for one Namespace SDK, API, or ENS task, so you do not have to explain the same integration in every chat.
 
-### Offchain ENS Subname SDK skill
+The skills live in the [thenamespace/skills](https://github.com/thenamespace/skills) repository and follow the [Agent Skills specification](https://agentskills.io/specification). Check your coding tool's documentation to confirm that it loads Agent Skills.
 
-The `offchain-ens-subname-sdk` skill gives your agent the context it needs to work with the Namespace Offchain Manager SDK. It includes examples and common workflows for creating, managing, and resolving offchain ENS subnames.
+## Install skills
 
-**Install in your project:**
+Install every skill at once:
+
+```bash
+npx skills add thenamespace/skills --yes
+```
+
+Or install one skill with the `-s` flag:
 
 ```bash
 npx skills add thenamespace/skills -s offchain-ens-subname-sdk
 ```
 
-Once installed, your AI agent can:
-- Generate code for creating offchain subnames from a prompt
-- Suggest the right SDK methods, types, and parameters
-- Answer SDK questions without digging through the docs
+## Which skill to use
 
-### ENS components skill
+| Scenario | Skill |
+| --- | --- |
+| Integrate, debug, or audit ENS in your app | `ens` |
+| Issue gasless offchain subnames to your users | `offchain-ens-subname-sdk` |
+| Register a `*.celo.eth` name onchain from an agent | `celonames` |
+| Resolve ENS profiles and addresses over HTTP | `resolvio` |
+| Add React components for ENS registration, records, or subnames | `ens-components` |
+| Upload, update, or delete ENS avatar and header images | `avatar-sdk` |
 
-The `ens-components` skill helps your agent build ENS flows in React with `@thenamespace/ens-components`. It covers name registration and renewal, record management, onchain and offchain subname minting and renewal, transaction progress screens, avatar uploads, and theming. The skill sets the ENSv2 default and reserves `version={1}` for parents on old Namespace listings.
+### ENS skill
 
-**Install in your project:**
+The `ens` skill is a vendor-neutral guide to the ENS protocol for app developers, auditors, and AI agent builders. It covers ENSIP-15 normalization, forward and reverse resolution, CCIP Read, multichain coin types, L2 primary names (ENSIP-19), records, subnames, smart contract naming, subgraph queries, ENSv2 readiness, and AI agent identity.
 
 ```bash
-npx skills add thenamespace/skills -s ens-components
+npx skills add thenamespace/skills -s ens
 ```
 
-Once installed, your AI agent can:
-- Scaffold React flows for name registration, renewal, record management, and subname minting
-- Choose the right component for the job, including `EnsNameRegistrationForm`, `NameRenewForm`, `EnsRecordsForm`, `SubnameMintForm`, `SubnameRenewForm`, and `OffchainSubnameForm`
-- Keep onchain flows on ENSv2 and reach for `version={1}` only for parents on old Namespace listings
+The repository recommends viem 2.35 or later with wagmi. ethers v6 is also supported. No API key is needed.
+
+### Offchain ENS subname SDK skill
+
+The `offchain-ens-subname-sdk` skill covers the [Offchain Manager SDK](/developer-guide/sdks/offchain-manager) (`@thenamespace/offchain-manager`). Your agent can use it to create and manage gasless subnames under `.eth` names, imported web2 domains, and alternative TLDs.
+
+```bash
+npx skills add thenamespace/skills -s offchain-ens-subname-sdk
+```
+
+You need an [API key](/developer-guide/sdks/offchain-manager/generate-api-key) for write operations.
+
+### Celo Names skill
+
+The `celonames` skill covers registering, renewing, and managing Celo Names (`*.celo.eth`) through the L2Registrar contract on Celo mainnet. Names are ERC-721 NFTs on Celo and resolve from Ethereum through CCIP Read.
+
+```bash
+npx skills add thenamespace/skills -s celonames
+```
+
+The agent needs a wallet with CELO or stablecoins and access to a Celo RPC such as `https://forno.celo.org`.
 
 ### Resolvio ENS resolution skill
 
-The `resolvio` skill gives your agent the context it needs to use the Resolvio ENS Resolution API for forward lookups, reverse lookups, profile reads, text records, and contenthash retrieval.
-
-**Install in your project:**
+The `resolvio` skill covers the [Resolvio](/user-guide/resolvio) ENS Resolution API: forward and reverse lookups, full profile reads (texts, addresses, and contenthash), and batch reverse resolution for tables and leaderboards.
 
 ```bash
 npx skills add thenamespace/skills -s resolvio
 ```
 
-Once installed, your AI agent can:
-- Resolve ENS names to addresses on supported chains
-- Reverse resolve wallet addresses to ENS names
-- Fetch full ENS profiles, including texts, addresses, and contenthash, in one request
-- Use bulk endpoints for tables, leaderboards, and multi-row UI data
+No API key is needed. The examples use `curl`.
+
+### ENS components skill
+
+The `ens-components` skill helps your agent build ENS flows in React with [`@thenamespace/ens-components`](/developer-guide/sdks/ens-components). It covers name registration and renewal, record editing, onchain and offchain subname minting, avatar and header uploads, theming, and callback-driven customization. Every form runs on ENSv2 by default. The skill passes `version={1}` to `SubnameMintForm` only when the parent has an existing Namespace listing.
+
+```bash
+npx skills add thenamespace/skills -s ens-components
+```
 
 ### Avatar SDK skill
 
-The `avatar-sdk` skill gives your agent the context it needs to manage ENS avatar and header images with the `@thenamespace/avatar` SDK. It covers SIWE v4 authentication, automatic and manual signing flows, and the Metadata Service profile media routes.
-
-**Install in your project:**
+The `avatar-sdk` skill covers uploading, updating, and deleting ENS avatar and header images with the [Avatar SDK](/developer-guide/sdks/avatar) (`@thenamespace/avatar`). It includes SIWE v4 authentication, automatic and manual signing flows, network enforcement, and direct use of a Viem, Ethers, wagmi, or custom `WalletProvider`. It works with EOAs and deployed smart contract wallets.
 
 ```bash
 npx skills add thenamespace/skills -s avatar-sdk
 ```
 
-Once installed, your AI agent can:
-- Upload and delete avatar and header images for ENS subnames
-- Wire up a Viem, Ethers, or wagmi wallet as the signing provider with no adapters
-- Use the manual SIWE flow for server-side or custom signing
-- Enforce the correct network and handle SDK error codes
+## Legacy skills
 
 ### Mint Manager SDK skill
 
 <Warning>
-  The Mint Manager SDK is deprecated. Install this skill only to mint under an existing onchain listing on an ENSv1 name.
+  The [Mint Manager SDK](/developer-guide/sdks/mint-manager) is deprecated. Install this skill only to mint under an existing onchain listing on an ENSv1 name.
 </Warning>
 
-The `mint-manager-sdk` skill is the agent instructions for minting onchain ENS subnames with `@thenamespace/mint-manager`. It includes the check-then-mint flow, setting records at mint time, and the `MintManagerError` codes.
-
-**Install in your project:**
+The `mint-manager-sdk` skill covers minting onchain subnames on Ethereum, Base, and Optimism with `@thenamespace/mint-manager`, including `checkName`, records at mint time, `maxValue` price caps, and `MintManagerError` codes.
 
 ```bash
 npx skills add thenamespace/skills -s mint-manager-sdk
 ```
-
-Once installed, your AI agent can:
-- Check availability, price, and mint eligibility in a single `checkName` call
-- Build, simulate, and submit the mint transaction on Ethereum, Base, or Optimism
-- Apply text, address, and contenthash records in the same transaction as the mint
-- Tell a name obstacle from a minter obstacle, so a gated wallet is not sent back to the name field
-- Cap the price with `maxValue` and handle `MintManagerError` codes
-
-<Note>
-  Skills work with any AI coding tool that supports agent context, including Cursor, Claude Code, and GitHub Copilot.
-</Note>
