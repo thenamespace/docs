@@ -97,15 +97,19 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
 
     ## Configure pricing and rules
 
-    Every tab after **Setup** is optional, and tabs you skip stay marked **OFF**. Turn a rule on with the toggle at the top of its tab. The **Price check** panel shows which rule applies to a label as you change them.
+    Every tab after **Setup** is optional. Turn a rule on with the toggle at the top of its tab. Tabs you skip stay marked **OFF**. Use **Price check** to see what a label costs as you change the rules.
 
     ### Prices
 
-    The **Prices** tab has two optional rule types. Each has its own toggle.
+    A label's price comes from up to three rules that work together. Only the base price is required:
 
-    **Label length pricing** sets a yearly price for labels of a specific length. Click **Add length tier**, enter the number of characters, then enter the price. Short labels are scarce, so you might charge $50 for one character, $20 for two, and $10 for three.
+    - **Base price**: set on **Setup**. Applies when no other rule matches the label.
+    - **Label length pricing**: a price per year for labels of an exact length. Click **Add length tier**, then enter the number of characters and the price, such as $50 for 1 character, $20 for 2, and $10 for 3.
+    - **Character-class pricing**: one price for labels made only of letters (**Letters only**) and one for labels made only of numbers (**Numbers only**). Labels that mix letters and numbers match neither.
 
-    **Character-class pricing** sets a price for labels made only of letters (**Letters only**) or only of numbers (**Numbers only**). For example, letter-only labels could cost $5 and number-only labels $2. Labels that mix letters and numbers match neither class.
+    Length and character-class pricing each have their own toggle. A [reservation](#reservations) overrides all of them.
+
+    {/* TODO: confirm precedence. State which price applies when a label matches both a length tier and a character class (for example, "abc" with a 3-character tier and a Letters only price). */}
 
     <Frame>
       <img src="/assets/onchain/configure-prices.png" alt="Prices tab with label length pricing at 50, 20, and 10 dollars per year for one, two, and three characters, and character-class pricing at 5 dollars for letters only and 2 dollars for numbers only" />
@@ -113,7 +117,11 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
 
     ### Reservations
 
-    Reservations block labels or give them a custom price, and they override every other rule. Add a label, then choose **Blocked** so nobody can mint it, or **Priced** and enter its price.
+    Block specific labels or give them a custom price. Reservations override every other rule.
+
+    - Click **Add reserved label** and enter the label.
+    - **Blocked**: nobody can mint it.
+    - **Priced**: it can be minted at the price you enter.
 
     <Frame>
       <img src="/assets/onchain/configure-reservations.png" alt="Reservations tab with admin and token blocked and degen priced at 100 dollars" />
@@ -121,7 +129,11 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
 
     ### Mint window
 
-    Allow minting only between two dates. Set **Opens at** and **Closes at**, or leave one side empty for an open start or end.
+    Allow minting only between two dates.
+
+    - **Opens at**: when minting starts.
+    - **Closes at**: when minting stops.
+    - Leave either one empty for an open start or end.
 
     <Frame>
       <img src="/assets/onchain/configure-mint-window.png" alt="Mint window tab with opening and closing dates set three days apart" />
@@ -129,8 +141,9 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
 
     ### Whitelist
 
-    Add wallet addresses under **Allowed addresses**, then pick a mode:
+    Limit minting to listed wallets, or let them mint for free.
 
+    - **Allowed addresses**: click **Add address** for each wallet.
     - **Gate**: only listed wallets can mint.
     - **Free mint**: anyone can mint, and listed wallets pay nothing.
 
@@ -140,12 +153,11 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
 
     ### Token gated
 
-    Turn on **Token-gated access** to let only wallets that hold specific tokens mint. For each token, pick the **Standard** (ERC721, ERC1155, or ERC20), paste the token **Contract** address, and set **Min. held**, the minimum balance a minter needs. Click **Add token** to add another.
+    Let only wallets that hold specific tokens mint.
 
-    With more than one token, choose how to combine them under **Combine with**:
-
-    - **All of them**: the minter must hold every listed token.
-    - **Any one**: holding one of the listed tokens is enough.
+    - **Standard**: ERC721, ERC1155, or ERC20.
+    - **Contract** and **Min. held**: the token's contract address and the minimum balance a minter needs. Click **Add token** to add another.
+    - **Combine with**: **All of them** requires every listed token. **Any one** requires just one.
 
     <Frame>
       <img src="/assets/onchain/configure-token-gated.png" alt="Token gated tab with Any one selected, an ERC20 token requiring at least 200 held, an ERC721 token requiring at least 1, and the Add token button" />
@@ -153,9 +165,11 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
 
     ### Other settings
 
-    **Use a custom resolver** registers every subname with the resolver you set, whatever resolver the minting app asks for.
+    Set the resolver for new subnames and what their owners can do after minting.
 
-    **Owner permissions** controls what a subname's owner can do after minting. **Default** lets owners set a resolver, create subnames under their subname, and transfer it. **Renew** and **Unregister** are off by default. Choose **Custom** to change these. Unregister permanently destroys the subname and frees the label for anyone to mint, so it's usually left off.
+    - **Use a custom resolver**: registers every subname with your resolver, whatever resolver the minting app asks for.
+    - **Owner permissions**, **Default**: owners can set a resolver, create subnames under their subname, and transfer it. **Renew** and **Unregister** stay off.
+    - **Owner permissions**, **Custom**: change any of these. Unregister permanently destroys the subname and frees the label for anyone to mint, so it's usually left off.
 
     <Frame>
       <img src="/assets/onchain/configure-other-settings.png" alt="Other settings tab with the custom resolver off and default owner permissions: set resolver, create subnames, and transfer on; renew and unregister off" />
