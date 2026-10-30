@@ -65,6 +65,36 @@ console.log(connection.status); // 'active', or 'validated' with connection.acti
 
 Every change takes the connection's current `revision` as `expectedRevision`. If someone else changed the connection in between, the call fails with a conflict instead of overwriting their change.
 
+## Replace the endpoint or rotate the credential
+
+On an active connection the two changes work differently:
+
+- Replacing the endpoint is two calls. `saveUsernameConnection` stores the new endpoint as a candidate while the current one keeps serving, and `activateUsernameConnection` promotes it after a live check. If the check fails, the candidate is rejected and the current endpoint keeps serving.
+- Rotating the credential is one call. `rotateUsernameCredential` validates the new token and promotes it before it returns. Calling `activateUsernameConnection` afterwards fails with `409 INVALID_STATE`.
+
+```ts
+// Replace the endpoint: save, then activate.
+const candidate = await client.saveUsernameConnection(parentName, {
+  endpointUrl: 'https://api.brand.example/v2/ens/users',
+  authMode: 'bearer',
+  keepCredential: true,
+  sampleUsername: 'happy',
+  expectedRevision: connection.revision,
+});
+const replaced = await client.activateUsernameConnection(parentName, {
+  expectedRevision: candidate.revision,
+});
+
+// Rotate the credential: one call, already serving when it returns.
+const newToken = process.env.NEW_ENDPOINT_TOKEN;
+if (!newToken) throw new Error('Set NEW_ENDPOINT_TOKEN to the new bearer token');
+const rotated = await client.rotateUsernameCredential(parentName, {
+  credential: newToken,
+  expectedRevision: replaced.revision,
+});
+console.log(rotated.status); // 'active'
+```
+
 ## Methods
 
 | Method | What it does | Wallet |
@@ -72,9 +102,9 @@ Every change takes the connection's current `revision` as `expectedRevision`. If
 | `getUsernameConnection(parentName)` | Status, revisions, and the last validation. Never includes the credential. Returns `null` when the parent has no connection. | Session |
 | `validateUsernameEndpoint(parentName, { endpointUrl, authMode, credential?, username })` | Dry run against your endpoint. Returns a validation report; stores nothing. | Session |
 | `saveUsernameConnection(parentName, { endpointUrl, authMode, credential?, keepCredential?, sampleUsername, acknowledgeStoredSubnames?, expectedRevision })` | Saves a new revision and validates it. `validated` only when the report is clean. | One signature |
-| `activateUsernameConnection(parentName, { expectedRevision })` | Checks the preconditions, verifies a live lookup, and starts serving | One signature |
+| `activateUsernameConnection(parentName, { expectedRevision })` | Checks the preconditions, verifies a live lookup, and starts serving. On an active connection, promotes the endpoint replacement you saved. | One signature |
 | `previewUsername(parentName, username)` | The records any username resolves to now, as a validation report | Session |
-| `rotateUsernameCredential(parentName, { credential, expectedRevision })` | Validates a new bearer token and switches to it | One signature |
+| `rotateUsernameCredential(parentName, { credential, expectedRevision })` | Validates a new bearer token and switches to it in the same call. There's nothing to activate afterwards. | One signature |
 | `pauseUsernameConnection(parentName, { expectedRevision })` | Lookups return an error until you resume | One signature |
 | `resumeUsernameConnection(parentName, { expectedRevision })` | Rechecks ownership and the sample username, then serves again | One signature |
 | `disconnectUsernameConnection(parentName, { expectedRevision })` | Ends the connection for good and wipes the credential | One signature |
@@ -100,4 +130,4 @@ The universal usernames methods throw typed errors instead of raw HTTP errors:
 | `ConnectionRevisionConflictError` | `expectedRevision` is stale (`409 REVISION_CONFLICT`). Reload the connection and retry. |
 | `EndpointValidationError` | The request was rejected as invalid (`422 VALIDATION_FAILED`) |
 
-Other failures carry the API's `code` and `message`. [Troubleshooting universal usernames](/developer-guide/universal-usernames/troubleshooting#connection-errors) explains each code. The existing subname methods keep their current error behaviour.
+Other failures carry the API's `code` and `message`. `UPSTREAM_UNAVAILABLE` (`503`) means an Ethereum RPC or the Namespace gateway didn't answer during an ownership, inspection, or validation check; nothing changed, so retry the call. [Troubleshooting universal usernames](/developer-guide/universal-usernames/troubleshooting#connection-errors) explains each code. The existing subname methods keep their current error behaviour.

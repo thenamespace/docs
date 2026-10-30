@@ -425,11 +425,30 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "`UPSTREAM_UNAVAILABLE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UPSTREAM_UNAVAILABLE": {
+                    "summary": "UPSTREAM_UNAVAILABLE",
+                    "value": {
+                      "code": "UPSTREAM_UNAVAILABLE",
+                      "message": "The ENS RPC did not answer while checking the owner of brand.eth; try again"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
       "put": {
-        "description": "Saves a new revision of the endpoint settings and runs validation against `sampleUsername`. The connection becomes `validated` only when the stored report has no issues; otherwise it stays `draft`. On an active connection the new revision is a candidate and the active revision keeps serving until you activate the candidate. Requires an operation signature for action `save`. Use `expectedRevision: 0` when the parent has no connection yet.",
+        "description": "Saves a new revision of the endpoint settings and runs validation against `sampleUsername`. The connection becomes `validated` only when the stored report has no issues; otherwise it stays `draft`. On an active connection the new revision is a candidate: the active revision keeps serving until you activate the candidate, and if activation fails the candidate is `rejected` and the active revision stays. Requires an operation signature for action `save`. Use `expectedRevision: 0` when the parent has no connection yet.",
         "operationId": "UniversalUsernamesController_saveConnection",
         "parameters": [
           {
@@ -650,6 +669,25 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "`UPSTREAM_UNAVAILABLE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UPSTREAM_UNAVAILABLE": {
+                    "summary": "UPSTREAM_UNAVAILABLE",
+                    "value": {
+                      "code": "UPSTREAM_UNAVAILABLE",
+                      "message": "The ENS RPC did not answer while checking the owner of brand.eth; try again"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -838,6 +876,25 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "`UPSTREAM_UNAVAILABLE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UPSTREAM_UNAVAILABLE": {
+                    "summary": "UPSTREAM_UNAVAILABLE",
+                    "value": {
+                      "code": "UPSTREAM_UNAVAILABLE",
+                      "message": "The ENS RPC did not answer while checking the owner of brand.eth; try again"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -957,6 +1014,25 @@
                     "value": {
                       "code": "NOT_PARENT_OWNER",
                       "message": "The signer is not the current owner of brand.eth"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`UPSTREAM_UNAVAILABLE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UPSTREAM_UNAVAILABLE": {
+                    "summary": "UPSTREAM_UNAVAILABLE",
+                    "value": {
+                      "code": "UPSTREAM_UNAVAILABLE",
+                      "message": "The ENS RPC did not answer while checking the owner of brand.eth; try again"
                     }
                   }
                 }
@@ -1171,13 +1247,32 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "`UPSTREAM_UNAVAILABLE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UPSTREAM_UNAVAILABLE": {
+                    "summary": "UPSTREAM_UNAVAILABLE",
+                    "value": {
+                      "code": "UPSTREAM_UNAVAILABLE",
+                      "message": "The ENS RPC did not answer while checking the owner of brand.eth; try again"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/universal-usernames/{parentName}/activate": {
       "post": {
-        "description": "Activates a `validated` connection, or promotes a validated candidate revision on an active one. Namespace checks the preconditions, sets the status to `verifying` (the parent starts serving from the endpoint), then resolves the sample username through the ENS Universal Resolver with CCIP-Read. When the live answer matches the validated preview the connection becomes `active`; otherwise it returns to `validated` with `activation.errors`. Requires an operation signature for action `activate`.",
+        "description": "Activates a `validated` connection, or promotes the candidate revision that `PUT` saved on an active connection (endpoint replacement). Credential rotation promotes itself, so there is nothing to activate after it. Namespace checks the preconditions, sets the status to `verifying` (the parent starts serving from the endpoint), then resolves the sample username through the ENS Universal Resolver with CCIP-Read. When the live answer matches the validated preview the connection becomes `active`; otherwise it returns to `validated` with `activation.errors`. Requires an operation signature for action `activate`.",
         "operationId": "UniversalUsernamesController_activateConnection",
         "parameters": [
           {
@@ -1441,6 +1536,25 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "`UPSTREAM_UNAVAILABLE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UPSTREAM_UNAVAILABLE": {
+                    "summary": "UPSTREAM_UNAVAILABLE",
+                    "value": {
+                      "code": "UPSTREAM_UNAVAILABLE",
+                      "message": "The ENS RPC did not answer while checking the owner of brand.eth; try again"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1621,13 +1735,32 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "`UPSTREAM_UNAVAILABLE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UPSTREAM_UNAVAILABLE": {
+                    "summary": "UPSTREAM_UNAVAILABLE",
+                    "value": {
+                      "code": "UPSTREAM_UNAVAILABLE",
+                      "message": "The ENS RPC did not answer while checking the owner of brand.eth; try again"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/universal-usernames/{parentName}/credential": {
       "post": {
-        "description": "Replaces the bearer credential. On an active connection this creates a candidate revision that is validated with the new credential and promoted when it passes; if it fails, the active revision keeps serving with the old credential. The credential is never returned. Requires an operation signature for action `rotate-credential`.",
+        "description": "Replaces the bearer credential. On an active connection Namespace validates a new revision with the new credential and promotes it in the same call when it passes; if it fails, the active revision keeps serving with the old credential. Do not call activate afterwards: there is no candidate left, and it returns `409 INVALID_STATE`. The credential is never returned. Requires an operation signature for action `rotate-credential`.",
         "operationId": "UniversalUsernamesController_rotateCredential",
         "parameters": [
           {
@@ -1879,6 +2012,25 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "`UPSTREAM_UNAVAILABLE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UPSTREAM_UNAVAILABLE": {
+                    "summary": "UPSTREAM_UNAVAILABLE",
+                    "value": {
+                      "code": "UPSTREAM_UNAVAILABLE",
+                      "message": "The ENS RPC did not answer while checking the owner of brand.eth; try again"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2112,6 +2264,25 @@
                     "value": {
                       "code": "INVALID_STATE",
                       "message": "A paused connection cannot be activated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`UPSTREAM_UNAVAILABLE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UPSTREAM_UNAVAILABLE": {
+                    "summary": "UPSTREAM_UNAVAILABLE",
+                    "value": {
+                      "code": "UPSTREAM_UNAVAILABLE",
+                      "message": "The ENS RPC did not answer while checking the owner of brand.eth; try again"
                     }
                   }
                 }
@@ -2355,6 +2526,25 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "`UPSTREAM_UNAVAILABLE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UPSTREAM_UNAVAILABLE": {
+                    "summary": "UPSTREAM_UNAVAILABLE",
+                    "value": {
+                      "code": "UPSTREAM_UNAVAILABLE",
+                      "message": "The ENS RPC did not answer while checking the owner of brand.eth; try again"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2475,6 +2665,25 @@
                     "value": {
                       "code": "CONNECTION_NOT_FOUND",
                       "message": "brand.eth has no username connection"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`UPSTREAM_UNAVAILABLE`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsernameConnectionError"
+                },
+                "examples": {
+                  "UPSTREAM_UNAVAILABLE": {
+                    "summary": "UPSTREAM_UNAVAILABLE",
+                    "value": {
+                      "code": "UPSTREAM_UNAVAILABLE",
+                      "message": "The ENS RPC did not answer while checking the owner of brand.eth; try again"
                     }
                   }
                 }
@@ -3318,7 +3527,8 @@
               "ENDPOINT_BACKED_PARENT",
               "PRECONDITION_FAILED",
               "VALIDATION_FAILED",
-              "RATE_LIMITED"
+              "RATE_LIMITED",
+              "UPSTREAM_UNAVAILABLE"
             ]
           },
           "message": {
