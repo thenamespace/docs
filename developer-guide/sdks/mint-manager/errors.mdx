@@ -5,6 +5,10 @@ sidebarTitle: "Error handling"
 icon: "circle-alert"
 ---
 
+import MintManagerDeprecated from '/snippets/mint-manager-deprecated.mdx';
+
+<MintManagerDeprecated />
+
 Every failure the SDK raises is a `MintManagerError` carrying a stable `code`. Branch on `code`; the `message` is written for a human reading a log and may change between releases.
 
 ```typescript

@@ -1,0 +1,62 @@
+---
+title: "Namespace ENSv2 migration"
+description: "What ENSv2 changes for your names and subnames."
+sidebarTitle: "ENSv2 migration"
+icon: "bolt"
+tag: "New"
+---
+
+## What is ENSv2?
+
+[ENSv2](https://ens.domains/blog/post/ensv2-live-on-mainnet) is the new version of ENS, now live on Ethereum mainnet. New `.eth` names are registered on ENSv2. Names registered before it are ENSv1 names, and they keep resolving. See the [ENSv2 overview](https://docs.ens.domains/ensv2/overview) in the ENS docs.
+
+## Do I need to do anything for my existing offchain subnames?
+
+No. Offchain subnames work with ENSv1 and ENSv2 names. Namespace stores them and their records, and ENS clients resolve them through CCIP Read.
+
+## What happens if I upgrade my name to ENSv2?
+
+Upgrading resets the name's resolver. If the name has offchain subnames, [set the Namespace resolver again](/user-guide/dev-portal#configure-the-resolver) so they keep resolving. Your subnames, API keys, and SDK code don't change.
+
+## Do my onchain listings move to ENSv2?
+
+No. Listings on ENSv1 names stay on ENSv1, keep working, and can still be edited. See [ENSv1 listings](/user-guide/app#ensv1-deprecated) in the Namespace App guide.
+
+## I'm using Mint Manager, Indexer Manager, or the Mint API. What now?
+
+They're deprecated. They keep working for existing ENSv1 listings but don't support ENSv2 names. See [Mint Manager](/developer-guide/sdks/mint-manager), [Indexer Manager](/developer-guide/sdks/indexer-manager), and the [Mint API reference](/api-reference/mint-manager/estimate-mint-params).
+
+## Which products work with ENSv2?
+
+| Product | ENSv1 names | ENSv2 names |
+| --- | --- | --- |
+| [Offchain subnames](/user-guide/dev-portal) in the App, SDK, and API | Yes | Yes |
+| [Onchain subnames](/user-guide/app) in the Namespace App | Existing listings only | Yes, on Ethereum (L1) |
+| [Resolvio](/user-guide/resolvio) | Yes | Yes |
+| [ENS Widget](/user-guide/ens-widget) and [Subpages](/user-guide/subpages) | Existing listings only | No |
+| Mint Manager, Indexer Manager, and the Mint API | Existing listings only | No |
+
+## What about L2 subnames?
+
+New L2 subnames are coming soon. Subnames already minted on Base and Optimism keep resolving, and their owners don't need to do anything.
+
+## Where do I start with a new name?
+
+Pick offchain subnames for gasless, high-volume issuance: use the [Namespace App](/user-guide/dev-portal), the [SDK](/developer-guide/guide/create-offchain-subnames), or the [API](/api-reference/introduction). Pick onchain subnames on Ethereum when users should own them: [activate your name](/user-guide/app#activate-your-ens-name) in the Namespace App.
+
+## Continue where you left off
+
+<CardGroup cols={2}>
+  <Card title="Developer quickstart" icon="rocket" href="/developer-guide/quickstart">
+    Pick your first Namespace integration.
+  </Card>
+  <Card title="Create offchain subnames" icon="diagram-subtask" href="/developer-guide/guide/create-offchain-subnames">
+    Go from API key to a resolved name with the SDK.
+  </Card>
+  <Card title="Offchain subnames" icon="cloud" href="/user-guide/dev-portal">
+    Configure the resolver and manage subnames in the Namespace App.
+  </Card>
+  <Card title="Namespace App" icon="coins" href="/user-guide/app">
+    Activate your name and issue onchain subnames.
+  </Card>
+</CardGroup>

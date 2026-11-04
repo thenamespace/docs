@@ -1,0 +1,106 @@
+---
+title: "Hooks and helpers"
+description: "Lower-level building blocks behind the forms."
+sidebarTitle: "Hooks and helpers"
+icon: "code"
+---
+
+The forms are built from hooks and helpers that the package also exports. Use them when you build a custom UI and a form doesn't fit. Start with the forms when you can, because they handle pricing, approvals, batching, and errors for you.
+
+## Check ENSv2 availability
+
+ENSv2 helpers take a viem `PublicClient` and a deployment object that holds the contract addresses for mainnet or Sepolia.
+
+```tsx
+'use client';
+
+import {
+  getEnsV2RegistrationDeployment,
+  isEnsV2NameAvailable,
+} from '@thenamespace/ens-components';
+import { usePublicClient } from 'wagmi';
+import { mainnet } from 'wagmi/chains';
+
+export function useNameAvailability() {
+  const client = usePublicClient({ chainId: mainnet.id });
+
+  return async (label: string) => {
+    if (!client) throw new Error('No public client for mainnet');
+    const deployment = getEnsV2RegistrationDeployment(false);
+    return isEnsV2NameAvailable(client, deployment, label);
+  };
+}
+```
+
+Pass `true` to the deployment getters for Sepolia, and use a Sepolia public client.
+
+## ENSv2 helpers
+
+| Helper | Returns |
+| --- | --- |
+| `getEnsV2RegistrationDeployment(isTestnet)` | The registrar contracts and payment tokens for `.eth` registration. |
+| `isEnsV2NameAvailable(client, deployment, label)` | Whether `label.eth` can be registered. |
+| `getEnsV2RenewalDeployment(isTestnet)` | The contracts for `.eth` renewal. |
+| `getEnsV2RenewalTarget(client, deployment, label)` | The contract that renews the name, its expiry, owner, and whether it's in its grace period. |
+| `getEnsV2RenewPrice(client, renewer, label, duration, token)` | The renewal price in the given token. |
+| `getEnsV2Deployment(isTestnet)` | The Namespace activation contracts and payment tokens for subnames, or `null` when the network has none. |
+| `quoteEnsV2Mint(client, deployment, { parentName, label, minter, duration })` | Whether the address can mint the subname, the USD price, and why a mint is denied. |
+| `quoteEnsV2Payment(client, deployment, priceUsdRaw, token)` | The amount to pay in the given token. |
+| `quoteEnsV2Renewal(client, deployment, { parentName, label, renewer, duration })` | Whether the subname can be renewed, the price, and the parent's expiry. |
+
+Durations are `bigint` seconds.
+
+## Hooks
+
+| Hook | Use it to |
+| --- | --- |
+| `useENSResolver({ resolverChainId, isTestnet, version })` | Find a name's resolver, check it's supported, and send a records update from an `EnsRecordsDiff`. `version` defaults to `2`. |
+| `useAvatarClient({ isTestnet, domain })` | Upload an avatar or header image with `uploadAvatar` and `uploadHeader`, signed by the connected wallet. |
+| `useWaitTransaction({ isTestnet, chainId })` | Wait for a receipt with retries, a timeout, and a confirmation count, through `waitTx`. |
+| `useEthDollarValue()` | Read the current ETH to USD rate as `ethUsdRate`. |
+| `useOffchainManager(name, apiKeyOrToken, isTestnet)` | Create an Offchain Manager client for one parent name. |
+| `useRegisterENS({ isTestnet })` | Price, commit, and register through the ENSv1 registrar controller. |
+| `useMintManager({ isTestnet })` and `useMintSubname({ chainId })` | Read and mint old Namespace listings, the flow behind `SubnameMintForm version={1}`. |
+
+<Warning>
+  `useOffchainManager` puts the API key in the browser. Use it only with keys you are comfortable exposing, such as in a local demo. In production, keep the key on your server, as shown in [Offchain subnames](/developer-guide/sdks/ens-components/offchain-subnames).
+</Warning>
+
+`useRegisterENS` targets ENSv1, which is retired for registration. For ENSv2 registration, use `EnsNameRegistrationForm` or the ENSv2 helpers.
+
+## Upload an avatar
+
+```tsx
+'use client';
+
+import { useAvatarClient } from '@thenamespace/ens-components';
+
+export function AvatarInput({ ensName }: { ensName: string }) {
+  const { uploadAvatar, getErrorMessage } = useAvatarClient({ domain: 'app.example.com' });
+
+  const handleFile = async (file: File) => {
+    try {
+      await uploadAvatar({ ensName, file, onProgress: (percent) => console.log(percent) });
+    } catch (error) {
+      console.error(getErrorMessage(error, 'avatar'));
+    }
+  };
+
+  return (
+    <input
+      type="file"
+      accept="image/*"
+      onChange={(event) => {
+        const file = event.target.files?.[0];
+        if (file) void handleFile(file);
+      }}
+    />
+  );
+}
+```
+
+For the full upload API, see the [Avatar SDK](/developer-guide/sdks/avatar).
+
+## Other exports
+
+The package also exports the atoms and molecules the forms use, such as `Button`, `Input`, `Modal`, `Alert`, `TokenSelect`, and `DurationPicker`, plus record utilities such as `getEnsRecordsDiff`, `validateEnsRecords`, and `convertEVMChainIdToCoinType`. Their props are in the package's TypeScript types.

@@ -1,0 +1,58 @@
+---
+title: "Renew onchain subnames"
+description: "Extend ENSv2 subnames with SubnameRenewForm."
+sidebarTitle: "Renew subnames"
+icon: "clock-rotate-left"
+---
+
+`SubnameRenewForm` renews a subname minted under an ENSv2-activated parent, at the price the parent's owner set. Anyone can renew any subname, and the owner keeps it.
+
+A subname stops resolving when its parent expires, whatever its own expiry. When the new expiry would outlive the parent, the form warns the user. Pass `onRenewParent` to add a link in that warning, and open a [`NameRenewForm`](/developer-guide/sdks/ens-components/renew-names) for the parent from it.
+
+## Example
+
+```tsx
+'use client';
+
+import { NameRenewForm, SubnameRenewForm } from '@thenamespace/ens-components';
+import { useState } from 'react';
+
+export function RenewSubname() {
+  const [renewParent, setRenewParent] = useState(false);
+
+  if (renewParent) {
+    return <NameRenewForm name="yourname.eth" onCancel={() => setRenewParent(false)} />;
+  }
+
+  return (
+    <SubnameRenewForm
+      parentName="yourname.eth"
+      label="alice"
+      onRenewParent={() => setRenewParent(true)}
+      onRenewalSuccess={(data) => console.log(`${data.fullName} now expires ${data.newExpiry}`)}
+    />
+  );
+}
+```
+
+Leave out `label` to let the user type the subname.
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `parentName` | `string` | Required. The ENSv2-activated parent, such as `yourname.eth`. |
+| `label` | `string` | The subname label. Leave empty to let the user type one. |
+| `isTestnet` | `boolean` | Uses Sepolia instead of Ethereum mainnet. |
+| `title` | `string` | Replaces the form title. |
+| `subtitle` | `string` | Replaces the form subtitle. |
+| `noBorder` | `boolean` | Removes the card border. |
+| `className` | `string` | Class added to the form container. |
+| `onRenewalSuccess` | `(data: RenewalSuccessData) => void` | Called after the renewal confirms. |
+| `onRenewParent` | `() => void` | Adds a link to renew the parent when the subname would outlive it. |
+| `onConnectWallet` | `() => void` | Called when the user needs to connect a wallet. |
+| `onCancel` | `() => void` | Called when the user cancels. |
+
+`SubnameRenewForm` has no `version` prop. It renews ENSv2 subnames only.
+
+`onRenewalSuccess` receives the same [`RenewalSuccessData`](/developer-guide/sdks/ens-components/renew-names#success-data) as `NameRenewForm`.

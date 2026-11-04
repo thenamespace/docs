@@ -1,0 +1,50 @@
+---
+title: "Theme ENS Components"
+description: "Match the forms to your brand with CSS variables."
+sidebarTitle: "Theming"
+icon: "palette"
+---
+
+The forms are styled with CSS variables prefixed with `--ns-`. Override them in your own CSS, after the package stylesheet, to change the accent color, corners, fonts, and surfaces.
+
+## Override tokens
+
+```css globals.css
+:root {
+  --ns-ink: #212121; /* accent; buttons and highlights derive from it */
+  --ns-radius: 10px; /* every corner */
+  --ns-bg: #fbfaf9; /* page background */
+  --ns-surface: #ffffff; /* card background */
+  --ns-text: #1b1d1e;
+  --ns-link: #0080bc;
+  --ns-font-family: 'DM Sans', system-ui, sans-serif;
+  --ns-font-mono: 'DM Mono', ui-monospace, monospace; /* names, amounts, dates, hashes */
+  --ns-frame-width: 500px; /* width of every form card */
+}
+```
+
+The values above are the defaults.
+
+- Change the accent with `--ns-ink`. The rest of the accent scale is derived from it.
+- Change every corner at once with `--ns-radius`. Set it to `0` for square corners.
+- Older names such as `--ns-color-*` and `--ns-blue-*` still resolve, but they derive from the tokens above. Override the tokens, not the older names.
+
+## Match the page background
+
+The stylesheet doesn't set your page background. To match the forms, add it yourself:
+
+```css
+body {
+  background: var(--ns-bg);
+}
+```
+
+## Adjust a single form
+
+- `noBorder` removes the card border on every form.
+- `className` adds a class to the registration, renewal, records, subname renewal, and transaction progress components.
+- `title` and `subtitle` replace the default copy on most forms.
+
+## Dark mode
+
+The design ships light only. The package exports `ThemeProvider` and `useTheme`, and `ThemeProvider initialTheme="dark"` sets `data-theme="dark"`, but the dark palette hasn't been updated for the current design. Test it carefully before you offer dark mode to users.

@@ -5,6 +5,10 @@ sidebarTitle: "Normalization"
 icon: "text-cursor-input"
 ---
 
+import MintManagerDeprecated from '/snippets/mint-manager-deprecated.mdx';
+
+<MintManagerDeprecated />
+
 Every name and label you pass to the SDK is normalized per [ENSIP-15](https://docs.ens.domains/ensip/15) before it is hashed, sent to the API, or compared.
 
 Viem's `namehash()` does not normalize. Skip this step and `Alice.eth` and `alice.eth` hash to different nodes, so an availability check can report a registered name as free.

@@ -17,6 +17,10 @@
     }
   },
   "favicon": "/favicon.ico",
+  "banner": {
+    "content": "ENSv2 is live. [Read the migration guide](/overview/ensv2)",
+    "dismissible": true
+  },
   "integrations": {
     "posthog": {
       "apiKey": "phc_m34ZAW7cLSFC3o4eipnrMG3GONeV40GXARnD3bJCap7"
@@ -34,6 +38,7 @@
             "group": "Start here",
             "pages": [
               "getting-started",
+              "overview/ensv2",
               "learn-more",
               "overview/subnames"
             ]
@@ -144,30 +149,6 @@
                     ]
                   },
                   {
-                    "group": "Mint Manager",
-                    "icon": "gauge",
-                    "pages": [
-                      "developer-guide/sdks/mint-manager",
-                      "developer-guide/sdks/mint-manager/installation",
-                      "developer-guide/sdks/mint-manager/check-name",
-                      "developer-guide/sdks/mint-manager/get-mint-transaction-parameters",
-                      "developer-guide/sdks/mint-manager/normalization",
-                      "developer-guide/sdks/mint-manager/errors",
-                      "developer-guide/sdks/mint-manager/is-subname-available",
-                      "developer-guide/sdks/mint-manager/get-mint-details"
-                    ]
-                  },
-                  {
-                    "group": "Indexer Manager",
-                    "icon": "database",
-                    "pages": [
-                      "developer-guide/sdks/indexer-manager",
-                      "developer-guide/sdks/indexer-manager/installation",
-                      "developer-guide/sdks/indexer-manager/fetch-l2-subnames",
-                      "developer-guide/sdks/indexer-manager/fetch-l2-registries"
-                    ]
-                  },
-                  {
                     "group": "Avatar",
                     "icon": "image",
                     "pages": [
@@ -183,7 +164,50 @@
                     "group": "ENS Components",
                     "icon": "puzzle-piece",
                     "pages": [
-                      "developer-guide/sdks/ens-components"
+                      "developer-guide/sdks/ens-components",
+                      "developer-guide/sdks/ens-components/installation",
+                      "developer-guide/sdks/ens-components/register-names",
+                      "developer-guide/sdks/ens-components/renew-names",
+                      "developer-guide/sdks/ens-components/edit-records",
+                      "developer-guide/sdks/ens-components/mint-subnames",
+                      "developer-guide/sdks/ens-components/renew-subnames",
+                      "developer-guide/sdks/ens-components/offchain-subnames",
+                      "developer-guide/sdks/ens-components/transaction-progress",
+                      "developer-guide/sdks/ens-components/hooks",
+                      "developer-guide/sdks/ens-components/theming",
+                      "developer-guide/sdks/ens-components/upgrade"
+                    ]
+                  },
+                  {
+                    "group": "Legacy (ENSv1)",
+                    "icon": "box-archive",
+                    "pages": [
+                      {
+                        "group": "Mint Manager",
+                        "tag": "Deprecated",
+                        "icon": "gauge",
+                        "pages": [
+                          "developer-guide/sdks/mint-manager",
+                          "developer-guide/sdks/mint-manager/installation",
+                          "developer-guide/sdks/mint-manager/check-name",
+                          "developer-guide/sdks/mint-manager/get-mint-transaction-parameters",
+                          "developer-guide/sdks/mint-manager/normalization",
+                          "developer-guide/sdks/mint-manager/errors",
+                          "developer-guide/sdks/mint-manager/is-subname-available",
+                          "developer-guide/sdks/mint-manager/get-mint-details"
+                        ]
+                      },
+                      {
+                        "group": "Indexer Manager",
+                        "tag": "Deprecated",
+                        "icon": "database",
+                        "pages": [
+                          "developer-guide/sdks/indexer-manager",
+                          "developer-guide/sdks/indexer-manager/installation",
+                          "developer-guide/sdks/indexer-manager/fetch-l2-subnames",
+                          "developer-guide/sdks/indexer-manager/fetch-l2-registries"
+                        ]
+                      }
                     ]
                   }
                 ]
@@ -204,14 +228,6 @@
                     ]
                   },
                   {
-                    "group": "Mint API",
-                    "icon": "gauge",
-                    "pages": [
-                      "api-reference/mint-manager/estimate-mint-params",
-                      "api-reference/mint-manager/generate-mint-params"
-                    ]
-                  },
-                  {
                     "group": "Resolvio API",
                     "icon": "magnifying-glass",
                     "pages": [
@@ -225,6 +241,21 @@
                       "api-reference/resolvio/get-ens-texts",
                       "api-reference/resolvio/get-ens-contenthash",
                       "api-reference/resolvio/clear-ens-cache"
+                    ]
+                  },
+                  {
+                    "group": "Legacy (ENSv1)",
+                    "icon": "box-archive",
+                    "pages": [
+                      {
+                        "group": "Mint API",
+                        "tag": "Deprecated",
+                        "icon": "gauge",
+                        "pages": [
+                          "api-reference/mint-manager/estimate-mint-params",
+                          "api-reference/mint-manager/generate-mint-params"
+                        ]
+                      }
                     ]
                   }
                 ]
@@ -243,11 +274,11 @@
         "tab": "Changelog",
         "pages": [
           "changelog/offchain-sdk",
-          "changelog/address-sdk",
-          "changelog/indexer-sdk",
-          "changelog/mint-sdk",
           "changelog/avatar-sdk",
-          "changelog/ens-components"
+          "changelog/ens-components",
+          "changelog/address-sdk",
+          "changelog/mint-sdk",
+          "changelog/indexer-sdk"
         ]
       }
     ],
@@ -531,6 +562,10 @@
   {
     "source": "/user-guide/overview",
     "destination": "/getting-started"
+  },
+  {
+    "source": "/user-guide/app/ensv1",
+    "destination": "/user-guide/app"
   },
   {
     "source": "/user-guide/app/wizard",

@@ -4,6 +4,10 @@ description: "Generate contract calls to mint onchain subnames on Ethereum or L2
 icon: "eye"
 ---
 
+import MintManagerDeprecated from '/snippets/mint-manager-deprecated.mdx';
+
+<MintManagerDeprecated />
+
 `@thenamespace/mint-manager` checks mint eligibility and returns the contract call required to mint under a name activated in the Namespace App. It supports Ethereum mainnet and configured L2 networks such as Base and Optimism. Use viem or another compatible client to simulate and submit the returned transaction.
 
 The SDK never holds a private key and never sends a transaction.

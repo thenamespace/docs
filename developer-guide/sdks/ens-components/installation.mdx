@@ -1,0 +1,134 @@
+---
+title: "Install ENS Components"
+description: "Install the package and set up its providers."
+sidebarTitle: "Installation"
+icon: "download"
+---
+
+Install the package, wrap your app in wagmi and React Query providers, and import the stylesheet once. Then any form can read the connected wallet.
+
+## Requirements
+
+- React 19 or later
+- wagmi `^2.19.5` and viem `^2.46.3`, which are peer dependencies
+- `@tanstack/react-query`, which wagmi needs
+
+The forms don't include a wallet connect UI. Use your own, or a library such as RainbowKit, and pass its connect action to the forms through `onConnectWallet`.
+
+## Install the package
+
+<Tabs>
+<Tab title="npm">
+
+```bash
+npm install @thenamespace/ens-components@3 wagmi viem @tanstack/react-query
+```
+
+</Tab>
+<Tab title="pnpm">
+
+```bash
+pnpm add @thenamespace/ens-components@3 wagmi viem @tanstack/react-query
+```
+
+</Tab>
+<Tab title="Yarn">
+
+```bash
+yarn add @thenamespace/ens-components@3 wagmi viem @tanstack/react-query
+```
+
+</Tab>
+</Tabs>
+
+## Set up providers
+
+Add every chain you use to the wagmi config. ENSv2 flows need `mainnet`, and `sepolia` if you use `isTestnet`. Minting under an old Namespace listing can also need Base or Optimism.
+
+```tsx providers.tsx
+'use client';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState, type ReactNode } from 'react';
+import { WagmiProvider, createConfig, http } from 'wagmi';
+import { mainnet, sepolia } from 'wagmi/chains';
+import { injected } from 'wagmi/connectors';
+
+const wagmiConfig = createConfig({
+  chains: [mainnet, sepolia],
+  connectors: [injected()],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
+});
+
+export function Providers({ children }: { children: ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient());
+
+  return (
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </WagmiProvider>
+  );
+}
+```
+
+`http()` with no URL uses the chain's public RPC, which is rate limited. Pass your own RPC URL in production.
+
+## Import the styles
+
+Import the stylesheet once, at the root of your app. Without it the forms render unstyled.
+
+```tsx
+import '@thenamespace/ens-components/styles.css';
+```
+
+`@thenamespace/ens-components/styles` imports the same CSS from a JavaScript module, if your bundler prefers that.
+
+The stylesheet loads DM Sans and DM Mono from Google Fonts. To change fonts, colors, or corners, see [Theming](/developer-guide/sdks/ens-components/theming).
+
+## Render a form
+
+Wrap your app in `Providers`, then render a form. This example also wires the connect button:
+
+```tsx app/register/page.tsx
+'use client';
+
+import { EnsNameRegistrationForm } from '@thenamespace/ens-components';
+import { useConnect } from 'wagmi';
+import { injected } from 'wagmi/connectors';
+
+export default function RegisterPage() {
+  const { connect } = useConnect();
+
+  return (
+    <EnsNameRegistrationForm
+      avatarUploadDomain="app.example.com"
+      onConnectWallet={() => connect({ connector: injected() })}
+    />
+  );
+}
+```
+
+- **`onConnectWallet`:** Pass it to the registration, renewal, and subname forms. Without it, a disconnected user has no way to connect from inside the form.
+- **`avatarUploadDomain`:** The bare hostname your app is served from, such as `app.example.com`, with no protocol or path. It's the domain in the sign-in message the user signs to upload an avatar or header image. When you leave it out, the form uses `window.location.hostname`.
+
+## Use Next.js and other SSR frameworks
+
+The forms use wallet hooks and browser APIs such as `window` and `localStorage`. Render them only in client components (`'use client'`), and keep the providers in a client component too, as in the example above.
+
+## Use testnet
+
+Set `isTestnet` to use Sepolia instead of Ethereum mainnet. ENSv2 registration, renewal, subname minting, and subname renewal all work on Sepolia.
+
+```tsx
+<EnsNameRegistrationForm isTestnet />
+```
+
+For offchain subnames, create the client with `mode: 'sepolia'`. See [Offchain subnames](/developer-guide/sdks/ens-components/offchain-subnames).
+
+## Next steps
+
+- Pick a form from the [component overview](/developer-guide/sdks/ens-components#choose-a-component).
+- Restyle the forms with [Theming](/developer-guide/sdks/ens-components/theming).

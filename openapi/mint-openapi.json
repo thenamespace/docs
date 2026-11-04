@@ -103,7 +103,8 @@
           }
         },
         "summary": "Estimate mint params",
-        "tags": ["Mint Manager"]
+        "tags": ["Mint Manager"],
+        "deprecated": true
       }
     },
     "/api/v1/mint": {
@@ -175,7 +176,8 @@
           }
         },
         "summary": "Generate mint params",
-        "tags": ["Mint Manager"]
+        "tags": ["Mint Manager"],
+        "deprecated": true
       }
     }
   },

@@ -1,0 +1,158 @@
+---
+title: "Edit ENS records"
+description: "Update records with EnsRecordsForm and SelectRecordsForm."
+sidebarTitle: "Edit records"
+icon: "list"
+---
+
+`EnsRecordsForm` edits the records of a name the user already controls: addresses, text records, contenthash, avatar, and header image. It compares the user's edits with the records you pass in and writes only what changed, in one transaction.
+
+`SelectRecordsForm` is the same records editor without a wallet or transaction. Use it when your own screen saves the records.
+
+## Edit records on a name
+
+Fetch the name's current records before you render the form, and pass them as `existingRecords`. An empty placeholder for a name that has records hides those records from the user.
+
+```tsx
+'use client';
+
+import { EnsRecordsForm, type EnsRecords } from '@thenamespace/ens-components';
+import { useEffect, useState } from 'react';
+import { usePublicClient } from 'wagmi';
+import { mainnet } from 'wagmi/chains';
+import { normalize } from 'viem/ens';
+
+const TEXT_KEYS = ['avatar', 'description', 'url', 'com.twitter'];
+
+export function EditRecords({ name }: { name: string }) {
+  const client = usePublicClient({ chainId: mainnet.id });
+  const [records, setRecords] = useState<EnsRecords | null>(null);
+
+  useEffect(() => {
+    if (!client) return;
+
+    const loadRecords = async () => {
+      const ensName = normalize(name);
+      const texts = await Promise.all(
+        TEXT_KEYS.map(async (key) => ({
+          key,
+          value: (await client.getEnsText({ name: ensName, key })) ?? '',
+        })),
+      );
+      const ethAddress = await client.getEnsAddress({ name: ensName });
+
+      setRecords({
+        texts: texts.filter((text) => text.value),
+        addresses: ethAddress ? [{ coinType: 60, value: ethAddress }] : [],
+      });
+    };
+
+    loadRecords().catch((error) => console.error('Failed to load records', error));
+  }, [client, name]);
+
+  if (!records) return <p>Loading records…</p>;
+
+  return (
+    <EnsRecordsForm
+      name={name}
+      existingRecords={records}
+      avatarUploadDomain="app.example.com"
+      onRecordsUpdated={(diff) => console.log('Updated records', diff)}
+    />
+  );
+}
+```
+
+This example reads a few records with viem. Any source works, such as [Resolvio](/user-guide/resolvio), as long as you pass the result in the `EnsRecords` shape.
+
+### Resolvers
+
+By default the form finds the name's resolver through the ENSv2 Universal Resolver. It writes to standard ENS resolvers, ENSv2 PermissionedResolvers, and Namespace's SimplifiedResolver, and encodes records to match each one. Pass `resolverAddress` or `resolverChainId` only to override the lookup.
+
+### Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `name` | `string` | Required. The full name, such as `alice.eth`. DNS names imported into ENS also work. |
+| `existingRecords` | `EnsRecords` | Required. The name's current records. |
+| `isTestnet` | `boolean` | Uses Sepolia instead of Ethereum mainnet. |
+| `resolverAddress` | `Address` | Skips the resolver lookup and uses this resolver. |
+| `resolverChainId` | `number` | Chain of the resolver. Defaults to mainnet, or Sepolia with `isTestnet`. |
+| `txConfirmations` | `number` | Confirmations to wait for before the update counts as done. |
+| `avatarUploadDomain` | `string` | Hostname used in the avatar upload sign-in message. |
+| `noBorder` | `boolean` | Removes the card border. |
+| `className` | `string` | Class added to the form container. |
+| `version` | `1 \| 2` | Defaults to `2`, which finds the resolver through the ENSv2 Universal Resolver. `1` reads it from the ENSv1 registry. |
+| `onTransactionSent` | `(hash: Hash) => void` | Called when the update transaction is sent. |
+| `onRecordsUpdated` | `(diff: EnsRecordsDiff) => void` | Called after the records are saved, with what changed. |
+| `onGreat` | `() => void` | Called when the user closes the success screen. |
+| `onCancel` | `() => void` | Called when the user cancels. |
+
+## Collect records without a transaction
+
+Use `SelectRecordsForm` when the surrounding screen owns the records, such as a records step inside a larger flow or a custom save button. It doesn't need a connected wallet and sends no transactions.
+
+```tsx
+'use client';
+
+import { SelectRecordsForm, type EnsRecords } from '@thenamespace/ens-components';
+import { useState } from 'react';
+
+export function ProfileStep({ onSave }: { onSave: (records: EnsRecords) => void }) {
+  const [records, setRecords] = useState<EnsRecords>({ addresses: [], texts: [] });
+
+  return (
+    <SelectRecordsForm
+      records={records}
+      onRecordsUpdated={setRecords}
+      avatarUpload={{ ensName: 'alice.eth', siweDomain: 'app.example.com' }}
+      actionButtons={<button onClick={() => onSave(records)}>Save</button>}
+    />
+  );
+}
+```
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `records` | `EnsRecords` | Required. The starting records. |
+| `onRecordsUpdated` | `(records: EnsRecords) => void` | Required. Called with the full record set on every change. |
+| `actionButtons` | `ReactNode` | Buttons rendered at the bottom of the form. |
+| `avatarUpload` | `{ ensName: string; isTestnet?: boolean; siweDomain?: string }` | Turns on avatar and header upload for `ensName`. Without it, users can only paste image URLs. |
+| `noBorder` | `boolean` | Removes the card border. |
+
+## Avatar and header images
+
+Every form with a records step can upload images. The user signs a Sign-In with Ethereum message for `avatarUploadDomain`, or `avatarUpload.siweDomain` on `SelectRecordsForm`. EOAs and deployed smart contract wallets can both sign.
+
+- **Avatar:** square crop, up to 2 MB.
+- **Header:** rectangular crop, up to 5 MB.
+- **Formats:** JPEG, PNG, GIF, WebP, and SVG. GIF and SVG files skip the crop step.
+
+To upload images from your own UI, use the [Avatar SDK](/developer-guide/sdks/avatar) or the `useAvatarClient` hook.
+
+## Record types
+
+```ts
+interface EnsRecords {
+  addresses: { coinType: number; value: string }[];
+  texts: { key: string; value: string }[];
+  contenthash?: { protocol: ContenthashProtocol; value: string };
+}
+
+// ContenthashProtocol: 'ipfs' | 'onion3' | 'arweave' | 'skynet' | 'swarm'
+
+interface EnsRecordsDiff {
+  textsAdded: EnsTextRecord[];
+  textsModified: EnsTextRecord[];
+  textsRemoved: EnsTextRecord[];
+  addressesAdded: EnsAddressRecord[];
+  addressesModified: EnsAddressRecord[];
+  addressesRemoved: EnsAddressRecord[];
+  contenthashAdded?: EnsContenthashRecord;
+  contenthashModified?: EnsContenthashRecord;
+  contenthashRemoved: boolean;
+  isDifferent: boolean;
+}
+```
+
+Address records use [SLIP-44 coin types](https://github.com/satoshilabs/slips/blob/master/slip-0044.md), for example `60` for Ethereum. `convertEVMChainIdToCoinType(chainId)` returns the ENSIP-11 coin type for an EVM chain.
