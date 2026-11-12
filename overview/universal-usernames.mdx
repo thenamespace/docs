@@ -1,84 +1,60 @@
 ---
 title: "Universal usernames"
-description: "Connect ENS to your existing usernames."
+description: "Make the usernames you already issued work outside your app."
 sidebarTitle: "Universal usernames"
 icon: "globe"
 ---
 
 import { FlowExplainer } from '/snippets/flow-explainer.jsx'
 
-## Two ways teams create usernames today
+## Why it's needed
 
-Almost every product that ships usernames picks one of two approaches. Both leave the user stuck at the same place.
+Your users already have a username, like `@happy`. Inside your app it works: people send money to it, find each other with it, and see it on leaderboards.
 
-**Plain usernames:** usually displayed like `@alice` or `alice`. Fast to build, and inside your app they work exactly as intended. But the name only exists in your database. Send `@alice` to someone in another wallet or app, and it simply won't work. Users are back to copying and pasting an address.
+Outside your app, it doesn't exist. A friend in another wallet can't pay `@happy`, so they ask for an address and paste `0x71C7…F2a9`. That's slow, and one wrong character sends the money somewhere it can't come back from.
 
-**A custom TLD:** something like `alice.wallet` or `alice.pay`, whatever reads well next to your brand name. This looks like the better option but it's not. Your TLD isn't in DNS and isn't in ENS, so no wallet outside your product has any way to look it up. Making it work means asking every wallet, explorer, and app to integrate your naming system one at a time. Also, collisions are the other half of the problem: multiple projects have built competing versions of the same TLD, so `alice.wallet` can resolve to two different people depending on which app you ask.
+Naming services with their own TLD run into the same wall. `happy.brand` only resolves in the apps that integrated it, and every other wallet has to be convinced one at a time.
 
-## A better way with ENS
+## What Universal Usernames does
 
-Every username you've already issued gets a matching ENS name. One rule, applied across your whole user base:
+Every username you've issued gets a matching ENS name, under one rule:
 
 ```
-Your username:   happy.brand
+Your username:   happy
 ENS name:        happy.brand.eth
-        or       happy.brand.id, using a domain you already own
+        or       happy.brand.id, using a DNS domain imported into ENS
 ```
 
-Your system stays the source of truth and no data moves. The username just gains a form that ENS-aware wallets already know how to read.
+Wallets, explorers and apps that already read ENS can resolve it, with no integration on their side. You don't move users, mint names or sync records. Your system stays the source of truth.
 
-<Note>
-This does not turn `.brand` into a new ENS top-level domain. Each user gets an ENS name for the identity they already have.
-</Note>
+## How it works
 
-## ENS isn't limited to .eth or Ethereum
-
-Two (wrong) assumptions people usually make.
-
-**You don't need a `.eth` name.**
-
-`happy.brand.eth` and `happy.brand.id` resolve identically. The first means registering `brand.eth`. The second means taking a domain you already own, turning on DNSSEC, and [importing it into ENS](https://docs.ens.domains/learn/dns/). Same result, so pick on branding.
-
-**ENS isn't only for Ethereum.**
-
-One name holds a separate address record for every chain, and they don't have to be EVM chains. Bitcoin, Solana, Base, Arbitrum, and Ethereum sit side by side on the same name, along with profile fields like display name and avatar. Your user has one name and it works everywhere they hold funds.
-
-## Follow one lookup
-
-The diagram is a single name being looked up, start to finish. Its two toggles are the decisions above: the parent name, and where records are read from. Neither changes the path.
-
-It loops on its own. Hover to pause, or use the dots to step through it.
+You build one HTTP endpoint that takes a username and returns that user's public profile: addresses, avatar and other records. Then you point your ENS name at Namespace. When a wallet looks up `happy.brand.eth`, Namespace calls your endpoint, signs the answer and hands it back.
 
 <FlowExplainer />
 
-Nothing there asked you to move your users, usernames, or records. The wallet asked a question, your system answered, the wallet showed the result.
-
-## Your records stay where they are
-
-Records can live in the database you run today, on an L2, or on another chain. No second registry on Ethereum, nothing to keep in sync. Whatever answers the question inside your product answers it here too.
+The endpoint reads from wherever your usernames live. A neobank, wallet or payments app reads its own database. A naming service with names onchain reads its registry contract or indexer. Both return the same JSON, so the rest of the setup is identical.
 
 ## Decide before you build
 
-1. **The naming rule.** A parent name and a predictable pattern, such as `happy.brand` becoming `happy.brand.eth`. Nobody should have to learn a second identity.
-2. **Where the answer comes from.** Your database, a contract in your existing registry, or a proof Ethereum can verify.
-3. **Who runs it.** Someone holds the parent name, keeps the lookup path online, and fixes it when it breaks.
+- **The parent name.** `brand.eth`, or a domain you already own. Usernames need to be valid lowercase ENS labels.
+- **What's public.** Anyone can look up any username and read every record you return. Return `404` for accounts that shouldn't be found.
+- **Who keeps it running.** Your endpoint's uptime is the name's uptime. There's no fallback copy.
+- **Who holds the parent name.** Whoever controls `brand.eth` can redirect every username.
 
-## What this does not do
+## What it doesn't do
 
-- Your existing TLD does not become part of ENS. Users gain an ENS name; `.brand` stays yours.
-- Support varies. Most major wallets resolve these names, but not every app does, so test the ones your users actually use.
-- Anything served this way is public. Addresses, avatars, and profile fields are readable by anyone who asks.
+- `.brand` doesn't become an ENS TLD. Users gain an ENS name alongside the username they have.
+- Users don't own these names onchain. The name follows your system, so you can rename or remove it.
+- Most major wallets follow CCIP-Read, but not every app does. Test the ones your users rely on.
 
 ## Next steps
 
-<CardGroup cols={3}>
-  <Card title="Learn about subnames" icon="tag" href="/overview/subnames">
-    Compare offchain and onchain names before you pick how to issue them.
-  </Card>
-  <Card title="Issue gasless subnames" icon="cloud" href="/developer-guide/guide/create-offchain-subnames">
-    Create names and manage their records with the Offchain Manager SDK.
+<CardGroup cols={2}>
+  <Card title="Build the endpoint" icon="at" href="/developer-guide/guide/universal-usernames">
+    The request, the response format and how to connect it.
   </Card>
   <Card title="Talk to us" icon="compass-drafting" href="/user-guide/custom-solutions">
-    Bring your existing naming service and we will map it onto ENS with you.
+    Bring your username system or naming service and we'll map it onto ENS with you.
   </Card>
 </CardGroup>
