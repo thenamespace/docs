@@ -13,6 +13,40 @@ To learn why this works and what it changes for your users, read the [Universal 
 
 - **An ENS name**, such as `brand.eth`, owned by a wallet you control.
 - **An adapter.** A public HTTPS endpoint that reads a user from wherever your usernames live, such as your database, API or registry contract, and returns their profile. Step 1 covers it.
+- **Usernames that are valid ENS labels.** See [Username rules](#username-rules).
+
+## Username rules
+
+Each username becomes one ENS label, so it must pass [ENSIP-15](https://docs.ens.domains/ensip/15) normalization. Wallets normalize a name before they look it up, so your adapter always receives the normalized form.
+
+| Username | ENS label | Result |
+| --- | --- | --- |
+| `happy`, `happy-doe`, `123` | Same | Works |
+| `Happy`, `ＨＡＰＰＹ` | `happy` | Works, but lowercased |
+| `héllo`, `😀` | Same | Works. Other scripts and emoji are valid |
+| `_happy` | Same | Works. Underscores are allowed only at the start |
+| `happy_doe` | None | Invalid |
+| `happy.doe` | None | Never reaches your adapter. A dot splits it into two labels |
+| `happy doe`, `@happy`, `happy!`, `happy+1` | None | Invalid. Spaces and most punctuation are disallowed |
+| `ab--cd` | None | Invalid. No `--` in the third and fourth characters |
+
+Normalization also rewrites some characters, such as `'` to `’`, and removes invisible ones. So don't compare the raw username. Store a normalized copy next to each username and look users up by that:
+
+```ts
+import { normalize } from 'viem/ens';
+
+// Returns the ENS label for a username, or null if it can't be one.
+export function toEnsLabel(username: string): string | null {
+  try {
+    const label = normalize(username);
+    return label && !label.includes('.') ? label : null;
+  } catch {
+    return null;
+  }
+}
+```
+
+Users whose username returns `null` can't get an ENS name. If you're designing usernames from scratch, allow only `a-z`, `0-9` and `-` and every username will work.
 
 ## Step 1: Build the adapter
 
@@ -25,7 +59,7 @@ GET https://api.brand.example/ens/happy
 Authorization: Bearer YOUR_TOKEN
 ```
 
-The last path segment is the username, lowercase and URL-encoded. The `Authorization` header is sent only if you save a bearer token in the App. We recommend one, so only Namespace can call your adapter.
+The last path segment is the username, normalized and URL-encoded. The `Authorization` header is sent only if you save a bearer token in the App. We recommend one, so only Namespace can call your adapter.
 
 ### Response
 
@@ -107,7 +141,8 @@ export async function GET(
   }
 
   const { username } = await params;
-  const user = await db.user.findUnique({ where: { username } });
+  // ensLabel is the normalized copy from toEnsLabel.
+  const user = await db.user.findUnique({ where: { ensLabel: username } });
   if (!user || !user.isPublic) {
     return new Response(null, { status: 404 });
   }
@@ -201,8 +236,8 @@ Your adapter decides where payments to your users go, so treat it like a payment
   <Accordion title="Can I use this if my usernames live onchain?">
     Yes. The adapter can read from a registry contract or an indexer instead of a database. The response format is the same.
   </Accordion>
-  <Accordion title="My usernames allow uppercase or dots. Will they work?">
-    ENS names are lowercase, and each username has to be a single label. Look users up by a lowercased copy of their username. Usernames with dots won't resolve.
+  <Accordion title="Some of my usernames have underscores, dots or symbols. What happens to them?">
+    They don't get an ENS name. The rest of your users still do. See [Username rules](#username-rules) for what's valid.
   </Accordion>
   <Accordion title="Can I switch back later?">
     Yes. Point `brand.eth` at a different resolver at any time. Universal Usernames subnames stop resolving when you do.
