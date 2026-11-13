@@ -1,69 +1,40 @@
 ---
 title: "Set up Universal Usernames"
-description: "Give every user in your app an ENS name by building one adapter endpoint."
+description: "Make your in-app usernames work outside your app, as ENS names."
 sidebarTitle: "Universal usernames"
 icon: "at"
 ---
 
-This guide gets `happy` in your app resolving as `happy.brand.eth` in any ENS-aware wallet. You build one endpoint, save it in the Namespace App and set your resolver.
+This guide makes your in-app usernames universal, so `happy` in your app becomes `happy.brand.eth` everywhere else. All you need is an ENS name. Setup takes three steps:
 
-To learn why this works and what it changes for your users, read the [Universal usernames overview](/overview/universal-usernames).
+1. Build an API endpoint that returns a user's profile from your own data.
+2. Save the endpoint in the Namespace App.
+3. Set the resolver on your ENS name.
 
-## Prerequisites
+Your users don't sign up, mint or move anything. Every valid username you've issued works as soon as the resolver is set.
 
-- **An ENS name**, such as `brand.eth`, owned by a wallet you control.
-- **An adapter.** A public HTTPS endpoint that reads a user from wherever your usernames live, such as your database, API or registry contract, and returns their profile. Step 1 covers it.
-- **Usernames that are valid ENS labels.** See [Username rules](#username-rules).
+<Card title="How Universal Usernames work" icon="globe" href="/overview/universal-usernames">
+  Why it works, and what it changes for your users.
+</Card>
 
-## Username rules
+## Step 1: Build the API endpoint
 
-Each username becomes one ENS label, so it must pass [ENSIP-15](https://docs.ens.domains/ensip/15) normalization. Wallets normalize a name before they look it up, so your adapter always receives the normalized form.
-
-| Username | ENS label | Result |
-| --- | --- | --- |
-| `happy`, `happy-doe`, `123` | Same | Works |
-| `Happy`, `ＨＡＰＰＹ` | `happy` | Works, but lowercased |
-| `héllo`, `😀` | Same | Works. Other scripts and emoji are valid |
-| `_happy` | Same | Works. Underscores are allowed only at the start |
-| `happy_doe` | None | Invalid |
-| `happy.doe` | None | Never reaches your adapter. A dot splits it into two labels |
-| `happy doe`, `@happy`, `happy!`, `happy+1` | None | Invalid. Spaces and most punctuation are disallowed |
-| `ab--cd` | None | Invalid. No `--` in the third and fourth characters |
-
-Normalization also rewrites some characters, such as `'` to `’`, and removes invisible ones. So don't compare the raw username. Store a normalized copy next to each username and look users up by that:
-
-```ts
-import { normalize } from 'viem/ens';
-
-// Returns the ENS label for a username, or null if it can't be one.
-export function toEnsLabel(username: string): string | null {
-  try {
-    const label = normalize(username);
-    return label && !label.includes('.') ? label : null;
-  } catch {
-    return null;
-  }
-}
-```
-
-Users whose username returns `null` can't get an ENS name. If you're designing usernames from scratch, allow only `a-z`, `0-9` and `-` and every username will work.
-
-## Step 1: Build the adapter
+The endpoint takes a username, reads that user from wherever your usernames live, such as a database, an API or a registry contract, and returns their public profile.
 
 ### Request
 
-You choose a base URL, such as `https://api.brand.example/ens`. For `happy.brand.eth`, Namespace calls:
+You choose a base URL, such as `https://api.brand.example/ens`. When someone looks up `happy.brand.eth`, your endpoint gets:
 
 ```http
 GET https://api.brand.example/ens/happy
 Authorization: Bearer YOUR_TOKEN
 ```
 
-The last path segment is the username, normalized and URL-encoded. The `Authorization` header is sent only if you save a bearer token in the App. We recommend one, so only Namespace can call your adapter.
+The last path segment is the username, normalized and URL-encoded. The `Authorization` header is sent only if you save a bearer token in step 2. We recommend one, so nobody else can call your endpoint.
 
 ### Response
 
-Return `200` with the profile for a user that exists, and `404` for one that doesn't.
+Return `200` with the user's profile, or `404` if the user doesn't exist.
 
 ```json
 {
@@ -82,31 +53,69 @@ Return `200` with the profile for a user that exists, and `404` for one that doe
 }
 ```
 
-<ResponseField name="version" type="number" required>
-  Always `1`.
-</ResponseField>
-
-<ResponseField name="username" type="string" required>
-  The username from the request.
-</ResponseField>
-
-<ResponseField name="texts" type="Record<string, string>" required>
-  Profile fields. Use [ENSIP-5](https://docs.ens.domains/ensip/5) keys such as `name`, `avatar`, `description`, `url`, `email` and `com.twitter`. Use `{}` for none.
-</ResponseField>
-
-<ResponseField name="addresses" type="Record<string, string>" required>
-  Wallet addresses keyed by coin type. Use `{}` for none. See [Format addresses](#format-addresses).
-</ResponseField>
-
-<ResponseField name="contenthash" type="string">
-  Optional. A website for the user, as an `ipfs://`, `ipns://` or `ar://` URI.
-</ResponseField>
+| Field | Value |
+| --- | --- |
+| `version` | Always `1`. |
+| `username` | The username from the request. |
+| `texts` | Profile fields, as strings. See [Text records](#text-records). Use `{}` for none. |
+| `addresses` | Wallet addresses by coin type. See [Addresses](#addresses). Use `{}` for none. |
+| `contenthash` | Optional. A website for the user, such as `ipfs://…` or `ar://…`. |
 
 Don't add other top-level fields. The profile fails if you do.
 
-### Format addresses
+Before you write the endpoint, check that your usernames, text records and addresses fit the format below.
 
-Each key in `addresses` is a coin type, written as a decimal string. It tells wallets which chain the address is for.
+### Usernames
+
+Each username becomes one ENS label, so it must pass [ENSIP-15](https://docs.ens.domains/ensip/15) normalization. Wallets normalize a name before looking it up, so your endpoint always receives the normalized form.
+
+| Username | Result |
+| --- | --- |
+| `happy`, `happy-doe`, `123` | Works as is |
+| `Happy`, `ＨＡＰＰＹ` | Works, as `happy` |
+| `héllo`, `😀` | Works. Other scripts and emoji are valid |
+| `_happy` | Works. Underscores are allowed only at the start |
+| `happy_doe` | Invalid |
+| `happy.doe` | Never reaches your endpoint. A dot splits it into two labels |
+| `happy doe`, `@happy`, `happy!`, `happy+1` | Invalid. Spaces and most punctuation are disallowed |
+| `ab--cd` | Invalid. No `--` in the third and fourth characters |
+
+Normalization also rewrites some characters, such as `'` to `’`, and removes invisible ones. Store a normalized copy next to each username and look users up by that copy:
+
+```ts
+import { normalize } from 'viem/ens';
+
+// Returns the ENS label for a username, or null if it can't be one.
+export function toEnsLabel(username: string): string | null {
+  try {
+    const label = normalize(username);
+    return label && !label.includes('.') ? label : null;
+  } catch {
+    return null;
+  }
+}
+```
+
+Users whose username returns `null` don't get an ENS name. If you're designing usernames from scratch, allowing only `a-z`, `0-9` and `-` means every username works.
+
+### Text records
+
+`texts` holds everything that isn't an address. Use the standard [ENSIP-5](https://docs.ens.domains/ensip/5) keys where they fit, since wallets and apps know how to show them:
+
+| Key | Value |
+| --- | --- |
+| `name` | Display name |
+| `avatar` | Image URL (`https://`, `ipfs://`) or an NFT as `eip155:1/erc721:0x…/1` |
+| `description` | Short bio |
+| `url` | Website |
+| `email` | Email address |
+| `com.twitter`, `com.github`, `org.telegram` | Handle on that service |
+
+You can add your own keys too. Prefix them with your domain, such as `com.brand.tier` or `com.brand.member-since`, so they don't collide with anyone else's. Every value is a string, and a profile holds up to 128 text records.
+
+### Addresses
+
+Each key in `addresses` is a coin type, written as a decimal string. It tells wallets which chain the address belongs to.
 
 | Chain | Key | Why |
 | --- | --- | --- |
@@ -120,9 +129,9 @@ Each key in `addresses` is a coin type, written as a decimal string. It tells wa
 - **For a different address on one EVM chain**, add the key `0x80000000 | chainId`. viem's `toCoinType(chainId)` computes it for you.
 - **For non-EVM chains**, use the chain's SLIP-44 number.
 
-Return EVM addresses in checksum format (viem's `getAddress` does this) and Bitcoin addresses in their mainnet form. Namespace encodes them for ENS, so you send plain address strings.
+Send plain address strings, not encoded bytes. EVM addresses go in checksum format (viem's `getAddress`), and Bitcoin addresses in their mainnet form.
 
-### Example adapter
+### Example endpoint
 
 A Next.js route. Swap the database call for your own lookup.
 
@@ -160,13 +169,13 @@ export async function GET(
 }
 ```
 
-If your usernames live onchain, keep the same route and read the address from your registry contract instead of the database.
+If your usernames live onchain, keep the same route and read from your registry contract instead of the database.
 
 <Note>
-**Adapter requirements.** HTTPS with a valid certificate, `application/json`, uncompressed, under 256 KiB, and a reply within 5 seconds. Redirects, `401`, `403`, `429` and `5xx` responses fail the lookup. Only `404` means the user doesn't exist.
+The endpoint must use HTTPS with a valid certificate, return uncompressed `application/json` under 256 KiB, and reply within 5 seconds. Redirects, `401`, `403`, `429` and `5xx` responses fail the lookup. Only `404` means the user doesn't exist.
 </Note>
 
-## Step 2: Save the adapter in the Namespace App
+## Step 2: Save the endpoint in the Namespace App
 
 <Steps>
   <Step title="Open Universal Usernames">
@@ -176,17 +185,17 @@ If your usernames live onchain, keep the same route and read the address from yo
     Enter your base URL and, if you use one, your bearer token. Select **Save endpoint**.
   </Step>
   <Step title="Test a username">
-    Enter a username that exists in your app and select **Test username**. The App shows what your adapter returned.
+    Enter a username that exists in your app and select **Test username**. The App shows what your endpoint returned.
   </Step>
 </Steps>
 
 <Warning>
-The test runs from your browser, so it shows **Blocked by CORS or unreachable** unless your adapter allows `https://app.namespace.ninja` (plus the `Authorization` header if you use a token). Real lookups come from the Namespace server, so CORS doesn't affect resolution. You can skip the test.
+The test runs from your browser, so it shows **Blocked by CORS or unreachable** unless your endpoint allows `https://app.namespace.ninja` (plus the `Authorization` header if you use a token). Real lookups don't come from a browser, so CORS doesn't affect resolution. You can skip the test.
 </Warning>
 
 ## Step 3: Set the resolver
 
-Below your saved endpoint, the App walks you through up to three transactions:
+This is the step that makes your usernames live. Below your saved endpoint, the App walks you through up to three transactions:
 
 <Steps>
   <Step title="Transfer records (optional)">
@@ -196,7 +205,7 @@ Below your saved endpoint, the App walks you through up to three transactions:
     Points `brand.eth` at the Namespace resolver.
   </Step>
   <Step title="Enable Universal Usernames">
-    Routes every subname of `brand.eth` to your adapter. The step reads **Resolver set and configured** when you're done.
+    Routes every subname of `brand.eth` to your endpoint. The step reads **Resolver set and configured** when you're done.
   </Step>
 </Steps>
 
@@ -204,40 +213,32 @@ Below your saved endpoint, the App walks you through up to three transactions:
 A name serves one kind of subname at a time. If `brand.eth` already has offchain or L2 subnames, they stop resolving once you enable Universal Usernames.
 </Warning>
 
-That's it. `happy.brand.eth` now resolves with any ENS-compatible library or wallet, such as viem, ethers or wagmi, with no extra setup.
+That's it. `happy.brand.eth` now resolves outside your app, in any wallet or library that supports ENS, such as viem, ethers or wagmi.
 
 ## Security practices
 
-Your adapter decides where payments to your users go, so treat it like a payments API.
+Your endpoint decides where payments to your users go, so treat it like a payments API.
 
-- **Use a bearer token** so only Namespace can call your adapter.
+- **Use a bearer token** so nobody else can call your endpoint.
 - **Return `404` for private, suspended or deleted accounts.** Anyone can guess a username and look it up.
 - **Serve only addresses the user has proven they control**, for example by signing a message.
 - **Don't reassign a released username right away.** Payments meant for the old user would go to the new one.
 - **Protect the wallet that owns `brand.eth`** with a hardware wallet or multisig. Whoever controls it can redirect every username.
 
-## Pros and cons
-
-| Pros | Cons |
-| --- | --- |
-| Every existing user gets an ENS name at once, with nothing to mint | Users don't own the names onchain. Your system can rename or remove them |
-| Your database stays the source of truth, with no syncing | If your adapter is down, names stop resolving. There's no fallback copy |
-| No gas per user. Setup takes a few transactions on one name | A few apps don't support offchain (CCIP-Read) resolution yet |
-
 ## FAQ
 
 <AccordionGroup>
   <Accordion title="Does this make my users' data public?">
-    Only what your adapter returns. If people already see usernames, display names and avatars in your app, that data is public anyway. Exposing it through ENS doesn't change that. Leave out anything a user hasn't chosen to share.
+    Only what your endpoint returns. If people already see usernames, display names and avatars in your app, that data is public anyway, and showing it through ENS doesn't change that. Leave out anything a user hasn't chosen to share.
   </Accordion>
   <Accordion title="How fast do profile changes show up?">
-    Within 60 seconds. Namespace caches each profile for that long.
+    Usually right away. A profile is cached for at most a minute, so an edit can take up to that long to reach wallets.
   </Accordion>
   <Accordion title="Can I use this if my usernames live onchain?">
-    Yes. The adapter can read from a registry contract or an indexer instead of a database. The response format is the same.
+    Yes. The endpoint can read from a registry contract or an indexer instead of a database. The response format is the same.
   </Accordion>
   <Accordion title="Some of my usernames have underscores, dots or symbols. What happens to them?">
-    They don't get an ENS name. The rest of your users still do. See [Username rules](#username-rules) for what's valid.
+    They don't get an ENS name. The rest of your users still do. See [Usernames](#usernames) for what's valid.
   </Accordion>
   <Accordion title="Can I switch back later?">
     Yes. Point `brand.eth` at a different resolver at any time. Universal Usernames subnames stop resolving when you do.
