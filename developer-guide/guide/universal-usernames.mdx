@@ -29,14 +29,14 @@ You choose a base URL, such as `https://api.brand.example`. Each lookup adds the
 GET {base URL}/{username}
 ```
 
-So when someone looks up `happy.brand.eth`, your endpoint gets:
+So for the username `happy`, the request is:
 
 ```http
 GET https://api.brand.example/happy
 Authorization: Bearer YOUR_TOKEN
 ```
 
-The username arrives normalized and URL-encoded. Your base URL can include a path, such as `https://brand.example/api/ens`, if the endpoint lives inside an existing app. The `Authorization` header is sent only if you save a bearer token in step 2. We recommend one, so nobody else can call your endpoint.
+The username arrives normalized and URL-encoded. The `Authorization` header is sent only if you save a bearer token in step 2. We recommend one, so nobody else can call your endpoint.
 
 ### Response
 
