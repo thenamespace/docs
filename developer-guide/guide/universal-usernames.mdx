@@ -23,14 +23,20 @@ The endpoint takes a username, reads that user from wherever your usernames live
 
 ### Request
 
-You choose a base URL, such as `https://api.brand.example/ens`. When someone looks up `happy.brand.eth`, your endpoint gets:
+You choose a base URL, such as `https://api.brand.example`. Each lookup adds the username to the end of it:
 
 ```http
-GET https://api.brand.example/ens/happy
+GET {base URL}/{username}
+```
+
+So when someone looks up `happy.brand.eth`, your endpoint gets:
+
+```http
+GET https://api.brand.example/happy
 Authorization: Bearer YOUR_TOKEN
 ```
 
-The last path segment is the username, normalized and URL-encoded. The `Authorization` header is sent only if you save a bearer token in step 2. We recommend one, so nobody else can call your endpoint.
+The username arrives normalized and URL-encoded. Your base URL can include a path, such as `https://brand.example/api/ens`, if the endpoint lives inside an existing app. The `Authorization` header is sent only if you save a bearer token in step 2. We recommend one, so nobody else can call your endpoint.
 
 ### Response
 
@@ -42,8 +48,10 @@ Return `200` with the user's profile, or `404` if the user doesn't exist.
   "username": "happy",
   "texts": {
     "name": "Happy",
+    "alias": "Happy",
     "avatar": "https://cdn.brand.example/avatars/happy.png",
-    "com.twitter": "happy"
+    "com.twitter": "happy",
+    "com.brand.tier": "gold"
   },
   "addresses": {
     "2147483648": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
@@ -100,18 +108,21 @@ Users whose username returns `null` don't get an ENS name. If you're designing u
 
 ### Text records
 
-`texts` holds everything that isn't an address. Use the standard [ENSIP-5](https://docs.ens.domains/ensip/5) keys where they fit, since wallets and apps know how to show them:
+`texts` holds everything that isn't an address. Use the standard keys where they fit, since wallets and apps know how to show them. [ENSIP-5](https://docs.ens.domains/ensip/5) defines the base keys, and [ENSIP-18](https://docs.ens.domains/ensip/18) adds profile keys on top.
 
-| Key | Value |
-| --- | --- |
-| `name` | Display name |
-| `avatar` | Image URL (`https://`, `ipfs://`) or an NFT as `eip155:1/erc721:0x…/1` |
-| `description` | Short bio |
-| `url` | Website |
-| `email` | Email address |
-| `com.twitter`, `com.github`, `org.telegram` | Handle on that service |
+| Key | Value | Spec |
+| --- | --- | --- |
+| `name`, `alias` | Display name. ENSIP-18 renames `name` to `alias`, but many apps still read `name`, so set both | ENSIP-18 |
+| `avatar` | Image URL (`https://`, `ipfs://`) or an NFT as `eip155:1/erc721:0x…/1`. See [ENSIP-12](https://docs.ens.domains/ensip/12) | ENSIP-5 |
+| `header` | Banner image, same format as `avatar` | ENSIP-18 |
+| `description` | Short bio | ENSIP-5 |
+| `url` | Website | ENSIP-5 |
+| `email` | Email address | ENSIP-5 |
+| `location`, `timezone` | Where the user is, such as `Berlin, Germany` and `Europe/Berlin` | ENSIP-5, ENSIP-18 |
+| `com.twitter`, `com.github`, `org.telegram` | Handle on that service, without `@` | ENSIP-5 |
+| `com.brand.tier` | Your own data. Any key you prefix with your domain | Custom |
 
-You can add your own keys too. Prefix them with your domain, such as `com.brand.tier` or `com.brand.member-since`, so they don't collide with anyone else's. Every value is a string, and a profile holds up to 128 text records.
+Custom keys use reverse-domain notation, such as `com.brand.tier` or `com.brand.member-since`, so they never collide with anyone else's. Every value is a string, and a profile holds up to 128 text records.
 
 ### Addresses
 
@@ -133,9 +144,9 @@ Send plain address strings, not encoded bytes. EVM addresses go in checksum form
 
 ### Example endpoint
 
-A Next.js route. Swap the database call for your own lookup.
+A Next.js route, deployed at your base URL. Swap the database call for your own lookup.
 
-```ts app/ens/[username]/route.ts
+```ts app/[username]/route.ts
 import { getAddress } from 'viem';
 import { db } from '@/lib/db';
 
@@ -157,7 +168,7 @@ export async function GET(
   }
 
   const texts: Record<string, string> = {};
-  if (user.displayName) texts.name = user.displayName;
+  if (user.displayName) texts.name = texts.alias = user.displayName;
   if (user.avatarUrl) texts.avatar = user.avatarUrl;
 
   const addresses: Record<string, string> = {};
