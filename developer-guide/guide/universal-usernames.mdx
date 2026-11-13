@@ -1,43 +1,37 @@
 ---
-title: "Build a Universal Usernames endpoint"
-description: "Serve ENS names for your users from the username system you already run."
+title: "Set up Universal Usernames"
+description: "Give every user in your app an ENS name by building one adapter endpoint."
 sidebarTitle: "Universal usernames"
 icon: "at"
 ---
 
-This guide walks you through building the one endpoint Universal Usernames needs, then connecting it to your ENS name. When you're done, `happy` in your app resolves as `happy.brand.eth` in any ENS-aware wallet.
+This guide gets `happy` in your app resolving as `happy.brand.eth` in any ENS-aware wallet. You build one endpoint, save it in the Namespace App and set your resolver.
 
-The endpoint is a small HTTP service. It takes a username, reads that user from wherever your usernames live, and returns a profile in the format below. Where they live doesn't matter: a database behind your app, or a registry contract if you run a naming service. For why this works and what to decide first, read the [Universal usernames overview](/overview/universal-usernames).
+To learn why this works and what it changes for your users, read the [Universal usernames overview](/overview/universal-usernames).
 
 ## Prerequisites
 
-- An ENS name such as `brand.eth`, owned by a wallet you control.
-- Somewhere to host a public HTTPS route.
-- Usernames that are valid [ENSIP-15](https://docs.ens.domains/ensip/15) labels: lowercase, no dots. If yours allow uppercase, match against a lowercased copy.
+- **An ENS name**, such as `brand.eth`, owned by a wallet you control.
+- **An adapter.** A public HTTPS endpoint that reads a user from wherever your usernames live, such as your database, API or registry contract, and returns their profile. Step 1 covers it.
 
-## Step 1: Build the endpoint
+## Step 1: Build the adapter
 
-### The request
+### Request
 
-You pick a base URL, such as `https://api.brand.example/ens`. For `happy.brand.eth`, the Namespace gateway sends:
+You choose a base URL, such as `https://api.brand.example/ens`. For `happy.brand.eth`, Namespace calls:
 
 ```http
-GET /ens/happy HTTP/1.1
-Host: api.brand.example
-Accept: application/json
-Accept-Encoding: identity
+GET https://api.brand.example/ens/happy
 Authorization: Bearer YOUR_TOKEN
 ```
 
-- The last path segment is the username, URL-encoded and already normalized. Decode it before you look it up.
-- `Authorization` is only sent if you save a bearer token in the App.
-- Only single labels reach you. Nested names like `a.happy.brand.eth` never call your endpoint.
+The last path segment is the username, lowercase and URL-encoded. The `Authorization` header is sent only if you save a bearer token in the App. We recommend one, so only Namespace can call your adapter.
 
-### The response
+### Response
 
-Return `200` with this JSON for a user that exists, and `404` for one that doesn't:
+Return `200` with the profile for a user that exists, and `404` for one that doesn't.
 
-```json happy.json
+```json
 {
   "version": 1,
   "username": "happy",
@@ -55,185 +49,161 @@ Return `200` with this JSON for a user that exists, and `404` for one that doesn
 ```
 
 <ResponseField name="version" type="number" required>
-  Always the number `1`.
+  Always `1`.
 </ResponseField>
 
 <ResponseField name="username" type="string" required>
-  The requested username, exactly as it arrived after decoding.
+  The username from the request.
 </ResponseField>
 
 <ResponseField name="texts" type="Record<string, string>" required>
-  [ENSIP-5](https://docs.ens.domains/ensip/5) text records such as `name`, `avatar`, `description`, `url` and `com.twitter`. Use `{}` for none.
+  Profile fields. Use [ENSIP-5](https://docs.ens.domains/ensip/5) keys such as `name`, `avatar`, `description`, `url`, `email` and `com.twitter`. Use `{}` for none.
 </ResponseField>
 
 <ResponseField name="addresses" type="Record<string, string>" required>
-  Addresses keyed by ENS coin type as a decimal string. Use `{}` for none. See [Address keys](#address-keys).
+  Wallet addresses keyed by coin type. Use `{}` for none. See [Format addresses](#format-addresses).
 </ResponseField>
 
 <ResponseField name="contenthash" type="string">
-  Optional. An `ipfs://`, `ipns://`, `ar://` or other [ENSIP-7](https://docs.ens.domains/ensip/7) URI. Leave it out when there is none.
+  Optional. A website for the user, as an `ipfs://`, `ipns://` or `ar://` URI.
 </ResponseField>
 
-Any other top-level field fails the profile.
+Don't add other top-level fields. The profile fails if you do.
 
-### Address keys
+### Format addresses
 
-- `2147483648` is the default EVM address. It answers for Ethereum and every EVM chain without its own key, so most users need only this one.
-- Add `0x80000000 | chainId` for a chain where the address differs. Base (`8453`) is `2147492101`. viem's `toCoinType(chainId)` does the math.
-- Non-EVM chains use their [SLIP-44](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) number: Bitcoin is `0`, Solana is `501`.
-- Return EVM addresses checksummed. Bitcoin addresses must be mainnet.
+Each key in `addresses` is a coin type, written as a decimal string. It tells wallets which chain the address is for.
 
-### Example endpoint
+| Chain | Key | Why |
+| --- | --- | --- |
+| Every EVM chain (default) | `2147483648` | `0x80000000` in decimal, the ENS default EVM coin type |
+| Ethereum mainnet | `60` | The [SLIP-44](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) number for ETH |
+| Base | `2147492101` | `0x80000000` plus Base's chain ID, `8453` |
+| Bitcoin | `0` | SLIP-44 |
+| Solana | `501` | SLIP-44 |
 
-This route uses web-standard `Request` and `Response`, so it runs as a Next.js App Router route (`app/ens/[label]/route.ts`) or in any server that speaks Fetch. Swap `findUserByUsername` for your own lookup.
+- **Most users need only `2147483648`.** It answers for Ethereum and every EVM chain that doesn't have its own key.
+- **For a different address on one EVM chain**, add the key `0x80000000 | chainId`. viem's `toCoinType(chainId)` computes it for you.
+- **For non-EVM chains**, use the chain's SLIP-44 number.
 
-```ts route.ts
-import { timingSafeEqual } from 'node:crypto';
+Return EVM addresses in checksum format (viem's `getAddress` does this) and Bitcoin addresses in their mainnet form. Namespace encodes them for ENS, so you send plain address strings.
+
+### Example adapter
+
+A Next.js route. Swap the database call for your own lookup.
+
+```ts app/ens/[username]/route.ts
 import { getAddress } from 'viem';
-import { findUserByUsername } from './users';
+import { db } from '@/lib/db';
 
-const BEARER_TOKEN = process.env.UUN_BEARER_TOKEN;
-const DEFAULT_EVM_COIN_TYPE = '2147483648';
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ username: string }> },
+) {
+  const auth = request.headers.get('authorization');
+  if (auth !== `Bearer ${process.env.ENS_ADAPTER_TOKEN}`) {
+    return new Response(null, { status: 401 });
+  }
 
-function isAuthorized(request: Request): boolean {
-  if (!BEARER_TOKEN) return true;
-  const expected = Buffer.from(`Bearer ${BEARER_TOKEN}`);
-  const received = Buffer.from(request.headers.get('authorization') ?? '');
-  return (
-    received.length === expected.length && timingSafeEqual(received, expected)
-  );
-}
-
-// GET {base URL}/{username}
-export async function GET(request: Request): Promise<Response> {
-  if (!isAuthorized(request)) return new Response(null, { status: 401 });
-
-  const segment = new URL(request.url).pathname.split('/').pop() ?? '';
-  let username: string;
-  try {
-    username = decodeURIComponent(segment);
-  } catch {
+  const { username } = await params;
+  const user = await db.user.findUnique({ where: { username } });
+  if (!user || !user.isPublic) {
     return new Response(null, { status: 404 });
   }
 
-  const user = await findUserByUsername(username);
-  if (!user) return new Response(null, { status: 404 });
-
-  // Anyone can read these, so publish only what the user chose to share.
   const texts: Record<string, string> = {};
   if (user.displayName) texts.name = user.displayName;
   if (user.avatarUrl) texts.avatar = user.avatarUrl;
 
   const addresses: Record<string, string> = {};
   if (user.walletAddress) {
-    addresses[DEFAULT_EVM_COIN_TYPE] = getAddress(user.walletAddress);
+    addresses['2147483648'] = getAddress(user.walletAddress);
   }
 
   return Response.json({ version: 1, username, texts, addresses });
 }
 ```
 
-```ts users.ts
-export type User = {
-  displayName?: string;
-  avatarUrl?: string;
-  walletAddress?: string;
-};
+If your usernames live onchain, keep the same route and read the address from your registry contract instead of the database.
 
-// Replace with a query against your users table.
-export async function findUserByUsername(username: string): Promise<User | null> {
-  throw new Error(`findUserByUsername is not implemented: ${username}`);
-}
-```
+<Note>
+**Adapter requirements.** HTTPS with a valid certificate, `application/json`, uncompressed, under 256 KiB, and a reply within 5 seconds. Redirects, `401`, `403`, `429` and `5xx` responses fail the lookup. Only `404` means the user doesn't exist.
+</Note>
 
-### If your usernames live onchain
-
-Running a naming service with its own registry? Keep the same route and read the user from your contract instead. This version of `findUserByUsername` reads the address with viem. Replace the ABI and function with your registry's own lookup.
-
-```ts users.ts
-import { createPublicClient, http, parseAbi, zeroAddress } from 'viem';
-
-const client = createPublicClient({ transport: http(process.env.RPC_URL) });
-
-const REGISTRY_ADDRESS = process.env.REGISTRY_ADDRESS as `0x${string}`;
-const REGISTRY_ABI = parseAbi([
-  'function resolve(string name) view returns (address)',
-]);
-
-export type User = {
-  displayName?: string;
-  avatarUrl?: string;
-  walletAddress?: string;
-};
-
-export async function findUserByUsername(username: string): Promise<User | null> {
-  const walletAddress = await client.readContract({
-    address: REGISTRY_ADDRESS,
-    abi: REGISTRY_ABI,
-    functionName: 'resolve',
-    args: [username],
-  });
-  if (walletAddress === zeroAddress) return null;
-  return { walletAddress };
-}
-```
-
-Every lookup hits your RPC, so use a reliable provider. The gateway caches each profile for 60 seconds.
-
-### Test it
-
-```bash
-curl -i https://api.brand.example/ens/happy -H 'Authorization: Bearer YOUR_TOKEN'
-```
-
-Expect `200`, `content-type: application/json` and `"username": "happy"`. An unknown username should return `404`.
-
-### Rules the gateway enforces
-
-The gateway fails the lookup instead of guessing, so check these before you go live:
-
-- The base URL is `https://`, with no query string or fragment, up to 2048 characters.
-- The host resolves to public IPs only and has a valid TLS certificate.
-- The response is `application/json`, uncompressed, at most 256 KiB, and arrives within 5 seconds.
-- Redirects, `401`, `403`, `429` and `5xx` all fail the lookup. Only `404` means "no such user".
-- At most 128 text records and 128 addresses.
-
-## Step 2: Connect it in the Namespace App
+## Step 2: Save the adapter in the Namespace App
 
 <Steps>
+  <Step title="Open Universal Usernames">
+    Go to [Universal Usernames](https://app.namespace.ninja/universal-usernames), connect the wallet that owns `brand.eth` and select the name.
+  </Step>
   <Step title="Save the endpoint">
-    Open [Universal Usernames](https://app.namespace.ninja/universal-usernames), connect the wallet that owns `brand.eth`, and enter your base URL and optional bearer token.
+    Enter your base URL and, if you use one, your bearer token. Select **Save endpoint**.
   </Step>
-  <Step title="Check a few usernames">
-    Enter a real username and select **Check endpoint**. The check runs in your browser, so allow `https://app.namespace.ninja` with CORS (plus `Access-Control-Allow-Headers: Authorization` if you use a token). It's optional.
-  </Step>
-  <Step title="Set the resolver">
-    Send the transaction the App shows. When it reads **Resolver set and configured**, every `username.brand.eth` resolves from your endpoint.
+  <Step title="Test a username">
+    Enter a username that exists in your app and select **Test username**. The App shows what your adapter returned.
   </Step>
 </Steps>
 
 <Warning>
-A name serves one kind of subname at a time. If `brand.eth` already serves offchain or L2 subnames, those stop resolving once you switch.
+The test runs from your browser, so it shows **Blocked by CORS or unreachable** unless your adapter allows `https://app.namespace.ninja` (plus the `Authorization` header if you use a token). Real lookups come from the Namespace server, so CORS doesn't affect resolution. You can skip the test.
 </Warning>
 
-Profile changes reach wallets within 60 seconds. A new endpoint or token takes effect within about 5 seconds.
+## Step 3: Set the resolver
 
-## Before you go live
+Below your saved endpoint, the App walks you through up to three transactions:
 
-Your endpoint now decides where payments to your users go.
+<Steps>
+  <Step title="Transfer records (optional)">
+    Copies the records `brand.eth` has today, such as its address and avatar, to the new resolver so they keep resolving.
+  </Step>
+  <Step title="Set resolver">
+    Points `brand.eth` at the Namespace resolver.
+  </Step>
+  <Step title="Enable Universal Usernames">
+    Routes every subname of `brand.eth` to your adapter. The step reads **Resolver set and configured** when you're done.
+  </Step>
+</Steps>
 
-- Return `404` for private, suspended or deleted accounts. Anyone can guess usernames.
-- Serve only addresses the user has proven they control.
-- Don't hand a released username to someone new right away, or payments meant for the old user go to them.
-- Require a bearer token, and keep the wallet that owns `brand.eth` on a hardware wallet or multisig.
+<Warning>
+A name serves one kind of subname at a time. If `brand.eth` already has offchain or L2 subnames, they stop resolving once you enable Universal Usernames.
+</Warning>
 
-## Next steps
+That's it. `happy.brand.eth` now resolves with any ENS-compatible library or wallet, such as viem, ethers or wagmi, with no extra setup.
 
-<CardGroup cols={2}>
-  <Card title="Universal usernames overview" icon="globe" href="/overview/universal-usernames">
-    Why it works and what to decide before you build.
-  </Card>
-  <Card title="Open Universal Usernames" icon="at" href="https://app.namespace.ninja/universal-usernames">
-    Save your endpoint and set the resolver.
-  </Card>
-</CardGroup>
+## Security practices
+
+Your adapter decides where payments to your users go, so treat it like a payments API.
+
+- **Use a bearer token** so only Namespace can call your adapter.
+- **Return `404` for private, suspended or deleted accounts.** Anyone can guess a username and look it up.
+- **Serve only addresses the user has proven they control**, for example by signing a message.
+- **Don't reassign a released username right away.** Payments meant for the old user would go to the new one.
+- **Protect the wallet that owns `brand.eth`** with a hardware wallet or multisig. Whoever controls it can redirect every username.
+
+## Pros and cons
+
+| Pros | Cons |
+| --- | --- |
+| Every existing user gets an ENS name at once, with nothing to mint | Users don't own the names onchain. Your system can rename or remove them |
+| Your database stays the source of truth, with no syncing | If your adapter is down, names stop resolving. There's no fallback copy |
+| No gas per user. Setup takes a few transactions on one name | A few apps don't support offchain (CCIP-Read) resolution yet |
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion title="Does this make my users' data public?">
+    Only what your adapter returns. If people already see usernames, display names and avatars in your app, that data is public anyway. Exposing it through ENS doesn't change that. Leave out anything a user hasn't chosen to share.
+  </Accordion>
+  <Accordion title="How fast do profile changes show up?">
+    Within 60 seconds. Namespace caches each profile for that long.
+  </Accordion>
+  <Accordion title="Can I use this if my usernames live onchain?">
+    Yes. The adapter can read from a registry contract or an indexer instead of a database. The response format is the same.
+  </Accordion>
+  <Accordion title="My usernames allow uppercase or dots. Will they work?">
+    ENS names are lowercase, and each username has to be a single label. Look users up by a lowercased copy of their username. Usernames with dots won't resolve.
+  </Accordion>
+  <Accordion title="Can I switch back later?">
+    Yes. Point `brand.eth` at a different resolver at any time. Universal Usernames subnames stop resolving when you do.
+  </Accordion>
+</AccordionGroup>
