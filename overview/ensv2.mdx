@@ -6,6 +6,8 @@ icon: "bolt"
 tag: "New"
 ---
 
+import Ensv2OnchainPaused from '/snippets/ensv2-onchain-paused.mdx';
+
 ## What is ENSv2?
 
 [ENSv2](https://ens.domains/blog/post/ensv2-live-on-mainnet) is the new version of ENS, now live on Ethereum mainnet. New `.eth` names are registered on ENSv2. Names registered before it are ENSv1 names, and they keep resolving. See the [ENSv2 overview](https://docs.ens.domains/ensv2/overview) in the ENS docs.
@@ -28,10 +30,12 @@ They're deprecated. They keep working for existing ENSv1 listings but don't supp
 
 ## Which products work with ENSv2?
 
+<Ensv2OnchainPaused />
+
 | Product | ENSv1 names | ENSv2 names |
 | --- | --- | --- |
 | [Offchain subnames](/user-guide/dev-portal) in the App, SDK, and API | Yes | Yes |
-| [Onchain subnames](/user-guide/app) in the Namespace App | Existing listings only | Yes, on Ethereum (L1) |
+| [Onchain subnames](/user-guide/app) in the Namespace App | Existing listings only | Paused for now |
 | [Resolvio](/user-guide/resolvio) | Yes | Yes |
 | [ENS Widget](/user-guide/ens-widget) and [Subpages](/user-guide/subpages) | Existing listings only | No |
 | Mint Manager, Indexer Manager, and the Mint API | Existing listings only | No |
