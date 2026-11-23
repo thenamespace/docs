@@ -20,6 +20,8 @@ No. Offchain subnames work with ENSv1 and ENSv2 names. Namespace stores them and
 
 Upgrading resets the name's resolver. If the name has offchain subnames, [set the Namespace resolver again](/user-guide/dev-portal#configure-the-resolver) so they keep resolving. Your subnames, API keys, and SDK code don't change.
 
+If the app shows **Old resolver version** for your name, the name uses the previous Namespace resolver, which doesn't support ENSv2. Your subnames still resolve, but Namespace suggests you [migrate to the current resolver](/user-guide/dev-portal#configure-the-resolver).
+
 ## Do my onchain listings move to ENSv2?
 
 No. Listings on ENSv1 names stay on ENSv1, keep working, and can still be edited. See [ENSv1 listings](/user-guide/app#ensv1-deprecated) in the Namespace App guide.
