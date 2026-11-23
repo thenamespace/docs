@@ -20,7 +20,7 @@ Creating, editing, and deleting offchain subnames and their records is free. The
 
 ## Configure the resolver
 
-Set the parent ENS name to use the Namespace Hybrid Resolver. This initial setup requires an onchain transaction and gas fees. Skip this section if resolution is already configured.
+Point the parent ENS name at the Namespace Hybrid Resolver so its subnames resolve. This takes an onchain transaction and gas fees. If the **Resolution** tab already shows **Resolver set and configured** with **Done**, skip this section.
 
 <Tip>
   If you upgrade an ENSv1 name to ENSv2, the upgrade resets its resolver. Run these steps again afterwards. See [Namespace ENSv2 migration](/overview/ensv2#what-happens-if-i-upgrade-my-name-to-ensv2).
@@ -28,23 +28,31 @@ Set the parent ENS name to use the Namespace Hybrid Resolver. This initial setup
 
 <Steps>
   <Step title="Select your parent name">
-    Connect the wallet that owns the ENS name. In **Offchain**, select the name and open **Resolution**.
+    Connect the wallet that owns the ENS name. Open **Offchain subnames** in the sidebar, select the name, and open **Resolution**.
+  </Step>
+
+  <Step title="Migrate from the old resolver">
+    Skip this step if you don't see an **Old resolver version** warning.
+
+    Names set up with the previous Namespace resolver show the warning above **Resolver set and configured**. Their subnames keep resolving until the ENSv2 migration, but the old resolver doesn't support ENSv2. Click **Migrate** to switch to the current resolver.
+
+    <Frame>
+      <img src="/assets/offchain/resolver-configured.webp" alt="Resolution tab for alias.eth with the Old resolver version warning and a Resolver set and configured step with a Migrate button" />
+    </Frame>
   </Step>
 
   <Step title="Update the resolver">
-    Click **Update resolver** and confirm in your wallet. Skip this step if it shows **Updated**.
+    Click **Update resolver** and confirm in your wallet. The button reads **Set resolver** if the name uses a resolver from outside Namespace, or none.
 
     <Frame>
-      <img src="/assets/offchain/update-resolver.webp" alt="Resolution tab with Update resolver and Configure buttons for the selected parent name" />
+      <img src="/assets/offchain/update-resolver.webp" alt="Resolution tab with the Old resolver version warning and step 1, Update resolver, with the Update resolver button" />
     </Frame>
+
+    If the current resolver holds records, such as an address or avatar, the app lists them under **Transfer records** and copies them to the new resolver by default. Some wallets need a separate transaction for the copy. The step shows how many transactions it takes.
   </Step>
 
-  <Step title="Configure offchain resolution">
-    Click **Configure** and complete the wallet prompts. Check that the status reads **Configured**.
-
-    <Frame>
-      <img src="/assets/offchain/resolver-configured.webp" alt="Resolution setup completed with Updated and Configured statuses" />
-    </Frame>
+  <Step title="Check the status">
+    After the transaction confirms, the step reads **Resolver set and configured** with **Done**. If it reads **Enable offchain resolution**, click **Enable** and confirm in your wallet.
   </Step>
 </Steps>
 
@@ -55,7 +63,7 @@ Set the parent ENS name to use the Namespace Hybrid Resolver. This initial setup
     Select the parent name in **Subnames**, then click **Mint subname**.
 
     <Frame>
-      <img src="/assets/offchain/subnames.webp" alt="Subnames tab with a parent ENS name selected and the Mint subname button" />
+      <img src="/assets/offchain/subnames.webp" alt="Subnames tab for alias.eth with the Mint subname button above a list of subnames, their record counts, and edit and delete buttons" />
     </Frame>
   </Step>
 

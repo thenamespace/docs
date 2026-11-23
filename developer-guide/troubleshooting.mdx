@@ -19,7 +19,7 @@ Before you dig in, rule out the usual suspects:
 
 **Likely cause:** the parent name isn't using the Namespace resolver, or the app reading the name doesn't support CCIP Read.
 
-1. In the [Namespace App](https://app.namespace.ninja/offchain), open **Offchain**, select the parent name, and open **Resolution**. Click **Update resolver**, then **Configure**, until the status reads **Configured**.
+1. In the [Namespace App](https://app.namespace.ninja/offchain), open **Offchain subnames**, select the parent name, and open **Resolution**. Follow the step it shows until it reads **Resolver set and configured** with **Done**.
 2. Look the name up with [Resolvio](/user-guide/resolvio). If it resolves there, the problem is in the consuming app.
 3. Confirm the consuming wallet or library supports CCIP Read. Offchain subnames don't support reverse resolution, so looking up a name from an address won't return them.
 
@@ -29,10 +29,10 @@ See [Configure the resolver](/user-guide/dev-portal#configure-the-resolver).
 
 **Likely cause:** upgrading a name to ENSv2 resets its resolver.
 
-1. Open the name in the Namespace App, go to **Offchain** > **Resolution**, and set the Namespace resolver again with **Update resolver** and **Configure**.
-2. Check that the status reads **Configured**.
+1. Open the name in the Namespace App, go to **Offchain subnames** > **Resolution**, and click **Set resolver**.
+2. Check that the step reads **Resolver set and configured** with **Done**.
 
-Your existing subnames and SDK code don't need to change. See [Namespace ENSv2 migration](/overview/ensv2#upgrade-to-ensv2-in-the-namespace-app).
+Your existing subnames and SDK code don't need to change. See [Namespace ENSv2 migration](/overview/ensv2#what-happens-if-i-upgrade-my-name-to-ensv2).
 
 ### `401` from the Offchain API
 
