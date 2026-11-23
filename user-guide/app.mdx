@@ -111,9 +111,7 @@ New activations need an ENSv2 name. Listings on ENSv1 names keep working and can
     - **Label length pricing**: a price per year for labels of an exact length. Click **Add length tier**, then enter the number of characters and the price, such as $50 for 1 character, $20 for 2, and $10 for 3.
     - **Character-class pricing**: one price for labels made only of letters (**Letters only**) and one for labels made only of numbers (**Numbers only**). Labels that mix letters and numbers match neither.
 
-    Length and character-class pricing each have their own toggle. A [reservation](#reservations) overrides all of them.
-
-    {/* TODO: confirm precedence. State which price applies when a label matches both a length tier and a character class (for example, "abc" with a 3-character tier and a Letters only price). */}
+    Length and character-class pricing each have their own toggle. When a label matches both, the length tier wins. For example, `abc` costs the 3-character price, not the **Letters only** price. A [reservation](#reservations) overrides all of them.
 
     <Frame>
       <img src="/assets/onchain/configure-prices.png" alt="Prices tab with label length pricing at 50, 20, and 10 dollars per year for one, two, and three characters, and character-class pricing at 5 dollars for letters only and 2 dollars for numbers only" />
